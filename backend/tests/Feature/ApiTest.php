@@ -157,6 +157,38 @@ class ApiTest extends TestCase
     }
 
 
+    public function testCreateUser()
+    {
+        $this->seed();
+        $this->assertDatabaseCount('users', 2);
+        $user = factory(User::class)->make();
+
+        $request_data = [
+            "data" => [
+                "type" => "users",
+                "attributes" => [
+                    "name" => $user->name,
+                    "email" => $user->email,
+                    "password" => $user->password,
+                    "roles" => $user->roles,
+                ],
+            ],
+        ];
+
+        $response = $this->actingAs($user)
+            ->postJson("/api/v1/users", $request_data);
+        $response->assertStatus(201);
+        $response->assertJson([
+            "data" => [
+                "type" => "users",
+                "id" => "3",
+            ]
+        ]);
+
+        $this->assertDatabaseCount('users', 3);
+    }
+
+
     public function testCreateTimesheet()
     {
         $this->seed();
