@@ -7,6 +7,7 @@ use App\Timesheet;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ApiTest extends TestCase
@@ -23,7 +24,7 @@ class ApiTest extends TestCase
      * @param  array  $headers
      * @return \Illuminate\Testing\TestResponse
      */
-    public function json($method, $uri, array $data = [], array $headers = [])
+    public function jsonApi($method, $uri, array $data = [], array $headers = [])
     {
         $headers = array_merge([
             "Content-Type" => "application/vnd.api+json",
@@ -81,13 +82,49 @@ class ApiTest extends TestCase
     }
 
 
+    public function testSuccessfulLogin()
+    {
+        $plain_password = $this->faker()->password();
+        $user = factory(User::class)->create([
+            'password' => Hash::make($plain_password),
+        ]);
+        $request_data = [
+            'email' => $user->email,
+            'password' => $plain_password,
+        ];
+        $response = $this->postJson("/api/v1/login/", $request_data);
+        $response->assertStatus(200);
+        $data = $response->json();
+        $this->assertEquals([
+            'id' => (string) $user->id,
+            'email' => $user->email,
+            'name' => $user->name,
+        ], $data);
+    }
+
+
+    public function testFailedLogin()
+    {
+        $plain_password = $this->faker()->password();
+        $user = factory(User::class)->create([
+            'password' => Hash::make($plain_password),
+        ]);
+        $request_data = [
+            'email' => $user->email,
+            'password' => $plain_password . "!",
+        ];
+        $response = $this->postJson("/api/v1/login/", $request_data);
+        $response->assertUnauthorized();
+    }
+
+
     public function testFetchTimesheet()
     {
         $this->seed();
         $timesheet = Timesheet::first();
         $user = $timesheet->user;
         $response = $this->actingAs($user)
-            ->get("/api/v1/timesheets/{$timesheet->id}");
+            ->jsonApi("GET", "/api/v1/timesheets/{$timesheet->id}");
         $response->assertStatus(200);
         $id = $response->json("data.id");
         $this->assertEquals("1", $id);
@@ -100,7 +137,7 @@ class ApiTest extends TestCase
         $timesheet = Timesheet::first();
         $user = $timesheet->user;
         $response = $this->actingAs($user)
-            ->get("/api/v1/timesheets/{$timesheet->id}?include=shifts");
+            ->jsonApi("GET", "/api/v1/timesheets/{$timesheet->id}?include=shifts");
         $response->assertStatus(200);
         $id = $response->json("data.id");
         $this->assertEquals("1", $id);
@@ -115,7 +152,7 @@ class ApiTest extends TestCase
         $this->seed();
         $user = User::find(1);
         $response = $this->actingAs($user)
-            ->getJson("/api/v1/timesheets");
+            ->jsonApi("GET", "/api/v1/timesheets");
         $response->assertStatus(403);
     }
 
@@ -139,7 +176,7 @@ class ApiTest extends TestCase
         $this->seed();
         $user = User::first();
         $response = $this->actingAs($user)
-            ->getJson("/api/v1/users/{$user->id}/timesheets");
+            ->jsonApi("GET", "/api/v1/users/{$user->id}/timesheets");
         $response->assertStatus(200);
         $data = $response->json("data");
         $this->assertEquals(1, count($data));
@@ -152,7 +189,7 @@ class ApiTest extends TestCase
         $user = User::find(1);
         $other_user = User::find(2);
         $response = $this->actingAs($user)
-            ->getJson("/api/v1/users/{$other_user->id}/timesheets");
+            ->jsonApi("GET", "/api/v1/users/{$other_user->id}/timesheets");
         $response->assertStatus(403);
     }
 
@@ -176,7 +213,7 @@ class ApiTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-            ->postJson("/api/v1/users", $request_data);
+            ->jsonApi("POST", "/api/v1/users", $request_data);
         $response->assertStatus(201);
         $response->assertJson([
             "data" => [
@@ -197,7 +234,7 @@ class ApiTest extends TestCase
             "data" => $this->fakeTimesheetData($user),
         ];
         $response = $this->actingAs($user)
-            ->postJson("/api/v1/timesheets", $request_data);
+            ->jsonApi("POST", "/api/v1/timesheets", $request_data);
         $response->assertStatus(201);
         $response->assertJson([
             "data" => [
@@ -218,7 +255,7 @@ class ApiTest extends TestCase
             "data" => $this->fakeTimesheetData($other_user),
         ];
         $response = $this->actingAs($user)
-            ->postJson("/api/v1/timesheets", $request_data);
+            ->jsonApi("POST", "/api/v1/timesheets", $request_data);
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
     }
@@ -233,7 +270,7 @@ class ApiTest extends TestCase
             "data" => $this->fakeShiftData($timesheet, $this->faker->date()),
         ];
         $response = $this->actingAs($user)
-            ->postJson("/api/v1/shifts", $request_data);
+            ->jsonApi("POST", "/api/v1/shifts", $request_data);
         $response->assertStatus(201);
         $response->assertJson([
             "data" => [
@@ -259,7 +296,7 @@ class ApiTest extends TestCase
                 "data" => $this->fakeShiftData($timesheet, $date),
             ];
             $response = $this->actingAs($user)
-                ->postJson("/api/v1/shifts", $request_data);
+                ->jsonApi("POST", "/api/v1/shifts", $request_data);
             $response->assertStatus(201);
             $response->assertJson([
                 "data" => [
@@ -279,7 +316,7 @@ class ApiTest extends TestCase
         $user = $timesheet->user;
 
         $response = $this->actingAs($user)
-            ->deleteJson("/api/v1/timesheets/{$timesheet->id}");
+            ->jsonApi("DELETE", "/api/v1/timesheets/{$timesheet->id}");
 
         $response->assertStatus(204);
         $this->assertDatabaseCount("timesheets", 1);
@@ -294,7 +331,7 @@ class ApiTest extends TestCase
         $user = $timesheet->user;
 
         $response = $this->actingAs($user)
-            ->deleteJson("/api/v1/timesheets/{$other_timesheet->id}");
+            ->jsonApi("DELETE", "/api/v1/timesheets/{$other_timesheet->id}");
 
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
