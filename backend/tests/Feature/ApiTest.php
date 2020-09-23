@@ -109,9 +109,10 @@ class ApiTest extends TestCase
         $user = factory(User::class)->create([
             'password' => Hash::make($plain_password),
         ]);
+        $incorrect_password = $plain_password . "!";
         $request_data = [
             'email' => $user->email,
-            'password' => $plain_password . "!",
+            'password' => $incorrect_password,
         ];
         $response = $this->postJson("/api/v1/login/", $request_data);
         $response->assertUnauthorized();
