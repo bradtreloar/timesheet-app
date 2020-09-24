@@ -57,3 +57,29 @@ test("Invalid email address detected", () => {
   userEvent.click(screen.getByText(/Log in/));
   screen.getByText(/Email address is not valid/i);
 });
+
+test("Form handles pending authentication", () => {
+  const mockEmail = mockUser.email;
+
+  render(
+    <LoginForm
+      onSubmit={async (email, password) => {}}
+      pending
+    />
+  );
+
+  userEvent.click(screen.getByText(/Logging in/));
+});
+
+test("Form displays authentication error", () => {
+  const mockEmail = mockUser.email;
+
+  render(
+    <LoginForm
+      onSubmit={async (email, password) => {}}
+      error="Login failed."
+    />
+  );
+
+  userEvent.click(screen.getByText(/Login failed/));
+});

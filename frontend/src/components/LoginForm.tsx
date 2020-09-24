@@ -3,9 +3,11 @@ import * as EmailValidator from "email-validator";
 
 interface LoginFormProps {
   onSubmit: (email: string, password: string) => Promise<void>;
+  pending?: boolean;
+  error?: string;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending, error }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [emailError, setEmailError] = React.useState<string | null>(null);
@@ -38,13 +40,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
     <form
       className="login-form"
       onSubmit={(event) => {
-        event.preventDefault();
-        const isValid = validate();
-        if (isValid) {
-          onSubmit(email, password);
+        if (!pending) {
+          event.preventDefault();
+          const isValid = validate();
+          if (isValid) {
+            onSubmit(email, password);
+          }
         }
       }}
     >
+      {error && <div className="alert alert-error">{error}</div>}
       <div className="form-group">
         <label htmlFor="email">Email Address</label>
         <input
@@ -54,9 +59,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
           name="email"
           value={email}
           onChange={(event) => {
-            setEmail(event.target.value)
+            setEmail(event.target.value);
           }}
           required
+          disabled={pending}
         />
         {emailError && <div className="invalid-feedback">{emailError}</div>}
       </div>
@@ -70,13 +76,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
+          disabled={pending}
         />
         {passwordError && (
           <div className="invalid-feedback">{passwordError}</div>
         )}
       </div>
-      <button className="btn btn-primary" type="submit">
-        Log in
+      <button className="btn btn-primary" type="submit" disabled={pending}>
+        {pending ? `Logging in` : `Log in`}
       </button>
     </form>
   );
