@@ -82,7 +82,7 @@ class ApiTest extends TestCase
     }
 
 
-    public function testSuccessfulLogin()
+    public function testSuccessfulLoginAttempt()
     {
         $plain_password = $this->faker()->password();
         $user = factory(User::class)->create([
@@ -103,7 +103,7 @@ class ApiTest extends TestCase
     }
 
 
-    public function testFailedLogin()
+    public function testFailedLoginAttempt()
     {
         $plain_password = $this->faker()->password();
         $user = factory(User::class)->create([
@@ -116,6 +116,23 @@ class ApiTest extends TestCase
         ];
         $response = $this->postJson("/api/v1/login/", $request_data);
         $response->assertUnauthorized();
+    }
+
+
+    public function testInvalidLoginRequest()
+    {
+        $plain_password = $this->faker()->password();
+        $user = factory(User::class)->create([
+            'password' => Hash::make($plain_password),
+        ]);
+        $incorrect_password = $plain_password . "!";
+        $request_data = [
+            'email' => $user->email,
+            'password' => $incorrect_password,
+        ];
+        // Post the request without JSON headers.
+        $response = $this->post("/api/v1/login/", $request_data);
+        $response->assertStatus(401);
     }
 
 
