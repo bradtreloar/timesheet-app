@@ -32,12 +32,13 @@ Route::post('/api/v1/login', function (Request $request) {
     }
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:sanctum')
+    ->get('/user', function (Request $request) {
+        return $request->user();
+    });
 
 JsonApi::register('default')
-    ->middleware('auth')
+    ->middleware('auth:sanctum')
     ->routes(function (RouteRegistrar $api) {
         $api->resource('users')->relationships(function ($relations) {
             $relations->hasMany('timesheets');
