@@ -1,24 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { useAuth } from "./context/auth";
+import LoginForm from "./components/LoginForm";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const { isAuthenticated, login, logout } = useAuth();
+
+  return isAuthenticated ? (
+    <div>
+      <p>You are signed in.</p>
+      <a
+        onClick={() => {
+          logout();
+        }}
+      >Log out</a>
+    </div>
+  ) : (
+    <div>
+      <p>You must sign in to continue.</p>
+      <LoginForm
+        onSubmit={async (email, password) => {
+          await login(email, password);
+        }}
+      />
     </div>
   );
 }
