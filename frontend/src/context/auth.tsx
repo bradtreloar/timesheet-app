@@ -66,8 +66,9 @@ const AuthProvider: React.FC = ({ children }) => {
     try {
       await datastore.logout();
       setUser(null);
+      setError(null);
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
