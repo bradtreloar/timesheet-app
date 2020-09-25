@@ -4,7 +4,7 @@ import * as EmailValidator from "email-validator";
 interface LoginFormProps {
   onSubmit: (email: string, password: string) => Promise<void>;
   pending?: boolean;
-  error?: string;
+  error?: string | null;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending, error }) => {
