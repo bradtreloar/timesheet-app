@@ -57,6 +57,25 @@ test("initial state is authenticated", () => {
   screen.getByText(/User is logged in/);
 });
 
+test("initial state is authenticated and user is admin", () => {
+  const mockUser = getMockUser(true);
+  (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
+
+  const Fixture = () => {
+    const { isAuthenticated, isAdmin } = useAuth();
+
+    return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} isAdmin={isAdmin} />;
+  };
+
+  render(
+    <AuthProvider>
+      <Fixture />
+    </AuthProvider>
+  );
+
+  screen.getByText(/User is admin/);
+});
+
 test("successful login", async () => {
   const mockUser = getMockUser();
   const mockPassword = getMockPassword();
