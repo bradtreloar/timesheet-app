@@ -6,6 +6,7 @@ type Status = "idle" | "pending" | "fulfilled" | "rejected";
 
 interface AuthContextState {
   isAuthenticated: boolean;
+  isAdmin: boolean;
   user: User | null;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
