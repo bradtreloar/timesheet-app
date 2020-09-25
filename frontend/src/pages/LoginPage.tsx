@@ -1,6 +1,7 @@
 import React from "react";
 import LoginForm from "../components/LoginForm";
 import { useAuth } from "../context/auth";
+import DefaultLayout from "../layouts/DefaultLayout";
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -18,14 +19,14 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
+    <DefaultLayout>
       <p>You must sign in to continue.</p>
       <LoginForm
         onSubmit={handleSubmitLogin}
         error={loginError}
         pending={loginPending}
       ></LoginForm>
-    </div>
+    </DefaultLayout>
   );
 };
 

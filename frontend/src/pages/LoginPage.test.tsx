@@ -35,24 +35,13 @@ test("login succeeds", async () => {
   mockClient.onPost("/api/v1/login").reply(200, mockUser);
   const mockEmail = mockUser.email;
 
-  const Fixture: React.FC = () => {
-    const { isAuthenticated } = useAuth();
-
-    return (
-      <>
-        <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
-        {isAuthenticated || <LoginPage />}
-      </>
-    );
-  };
-
   render(
     <AuthProvider>
-      <Fixture />
+      <LoginPage />
     </AuthProvider>
   );
 
-  screen.getByText(/User is not logged in/i);
+  screen.getByText(/You must sign in to continue/i);
   userEvent.type(screen.getByLabelText(/Email Address/), mockEmail);
   userEvent.type(screen.getByLabelText(/Password/), mockPassword);
   // Wrap login action in asynchronous act call because it updates
@@ -60,31 +49,20 @@ test("login succeeds", async () => {
   await act(async () => {
     userEvent.click(screen.getByText(/Log in/));
   });
-  screen.getByText(/User is logged in/i);
+  screen.getByText(/Log out/i);
 });
 
 test("invalid login attempt fails", async () => {
   mockClient.onPost("/api/v1/login").reply(401);
   const mockEmail = mockUser.email;
 
-  const Fixture: React.FC = () => {
-    const { isAuthenticated } = useAuth();
-
-    return (
-      <>
-        <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
-        {isAuthenticated || <LoginPage />}
-      </>
-    );
-  };
-
   render(
     <AuthProvider>
-      <Fixture />
+      <LoginPage />
     </AuthProvider>
   );
 
-  screen.getByText(/User is not logged in/i);
+  screen.getByText(/You must sign in to continue/i);
   userEvent.type(screen.getByLabelText(/Email Address/), mockEmail);
   userEvent.type(screen.getByLabelText(/Password/), mockPassword);
   // Wrap login action in asynchronous act call because it updates
@@ -92,5 +70,5 @@ test("invalid login attempt fails", async () => {
   await act(async () => {
     userEvent.click(screen.getByText(/Log in/));
   });
-  screen.getByText(/User is not logged in/i);
+  screen.getByText(/You must sign in to continue/i);
 });
