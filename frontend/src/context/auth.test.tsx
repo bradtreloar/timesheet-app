@@ -7,10 +7,10 @@ import { User } from "../types";
 import { client } from "../services/datastore";
 import { mockPassword, mockUser } from "../fixtures/mocks";
 import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
+import MockAdapter from "axios-mock-adapter";
 
 // Mock the HTTP client used by the datastore.
-var MockAdapter = require("axios-mock-adapter");
-var mockClient = new MockAdapter(client);
+const mockClient = new MockAdapter(client);
 mockClient.onGet("/sanctum/csrf-cookie").reply(204);
 mockClient.onPost("/api/v1/login").reply(200, mockUser);
 mockClient.onGet("/api/v1/logout").reply(200);
