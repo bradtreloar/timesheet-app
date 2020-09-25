@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { useAuth } from "./context/auth";
-import LoginForm from "./components/LoginForm";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   const { isAuthenticated, login, logout } = useAuth();
@@ -18,12 +18,7 @@ function App() {
     </div>
   ) : (
     <div>
-      <p>You must sign in to continue.</p>
-      <LoginForm
-        onSubmit={async (email, password) => {
-          await login(email, password);
-        }}
-      />
+      <LoginPage />
     </div>
   );
 }
