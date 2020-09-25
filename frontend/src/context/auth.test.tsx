@@ -11,9 +11,17 @@ import MockAdapter from "axios-mock-adapter";
 
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);
-mockClient.onGet("/sanctum/csrf-cookie").reply(204);
-mockClient.onPost("/api/v1/login").reply(200, mockUser);
-mockClient.onGet("/api/v1/logout").reply(200);
+
+beforeEach(() => {
+  mockClient.onGet("/sanctum/csrf-cookie").reply(204);
+});
+
+afterEach(() => {
+  mockClient.reset();
+
+  // Clear the stored user object.
+  (window as any).sessionStorage.removeItem("user");
+});
 
 test("initial state is unauthenticated", () => {
   const Fixture = () => {
@@ -47,11 +55,11 @@ test("initial state is authenticated", () => {
   );
 
   screen.getByText(/User is logged in/);
-
-  (window as any).sessionStorage.removeItem("user");
 });
 
 test("successful login", async () => {
+  mockClient.onPost("/api/v1/login").reply(200, mockUser);
+
   const Fixture = () => {
     const { isAuthenticated, login } = useAuth();
     const { email } = mockUser;
@@ -84,8 +92,44 @@ test("successful login", async () => {
   screen.findByText(/User is logged in/);
 });
 
+test("invalid login attempt fails", async () => {
+  mockClient.onPost("/api/v1/login").reply(401);
+  
+  const Fixture = () => {
+    const { isAuthenticated, login } = useAuth();
+    const { email } = mockUser;
+
+    return (
+      <>
+        <button
+          onClick={async () => {
+            // Wrap call to login in asynchronous act call because it updates
+            // the AuthProvider's state.
+            await act(async () => {
+              login(email, mockPassword);
+            });
+          }}
+        >
+          Log in
+        </button>
+        <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
+      </>
+    );
+  };
+
+  render(
+    <AuthProvider>
+      <Fixture />
+    </AuthProvider>
+  );
+
+  userEvent.click(screen.getByText(/Log in/));
+  screen.findByText(/User is not logged in/);
+});
+
 test("successful logout", async () => {
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
+  mockClient.onGet("/api/v1/logout").reply(200);
 
   const Fixture = () => {
     const { isAuthenticated, logout } = useAuth();
