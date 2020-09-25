@@ -3,7 +3,6 @@ import { render, act } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider, useAuth } from "./auth";
-import { User } from "../types";
 import { client } from "../services/datastore";
 import { mockPassword, mockUser } from "../fixtures/mocks";
 import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
