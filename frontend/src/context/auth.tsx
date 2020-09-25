@@ -54,7 +54,6 @@ const AuthProvider: React.FC = ({ children }) => {
       setUser(user);
       setError(null);
     } catch (error) {
-      console.log(error);
       setError(error);
       return;
     }
