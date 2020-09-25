@@ -1,13 +1,12 @@
-
 export type User = {
   id: string;
   name: string;
   email: string;
-}
+};
 
 export type Timesheet = {
   shifts: Shift[];
-}
+};
 
 export type Shift = {
   date: string;
@@ -15,4 +14,4 @@ export type Shift = {
   endAt: string;
   breakDuration: string;
   status: "worked" | "not_rostered" | "sick" | "public_holiday";
-}
+};
