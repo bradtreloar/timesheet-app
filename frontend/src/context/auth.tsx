@@ -34,6 +34,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const [user, setUser] = React.useState(initialUser);
   const [error, setError] = React.useState<string | null>(null);
   const isAuthenticated = user !== null;
+  const isAdmin = user !== null && user.isAdmin;
 
   /**
    * Persist the user's information.
@@ -74,6 +75,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const value = {
     isAuthenticated,
+    isAdmin,
     user,
     login,
     logout,

@@ -4,10 +4,11 @@ import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import LoginForm from "./LoginForm";
 import { User } from "../types";
-import { mockPassword, mockUser } from "../fixtures/mocks";
+import { getMockPassword, getMockUser } from "../fixtures/mocks";
 
 test("Form submission succeeds", (done) => {
-  const mockEmail = mockUser.email;
+  const mockEmail = getMockUser().email;
+  const mockPassword = getMockPassword();
 
   render(
     <LoginForm
@@ -25,8 +26,6 @@ test("Form submission succeeds", (done) => {
 });
 
 test("Empty form submission fails", () => {
-  const mockEmail = mockUser.email;
-
   render(
     <LoginForm
       onSubmit={(email, password) => {
@@ -41,6 +40,8 @@ test("Empty form submission fails", () => {
 });
 
 test("Invalid email address detected", () => {
+  const mockUser = getMockUser();
+  const mockPassword = getMockPassword();
   // Remove the "@"" symbol from the email to make it invalid.
   const mockEmail = mockUser.email.replace("@", "_");
 
@@ -59,26 +60,14 @@ test("Invalid email address detected", () => {
 });
 
 test("Form handles pending authentication", () => {
-  const mockEmail = mockUser.email;
-
-  render(
-    <LoginForm
-      onSubmit={async (email, password) => {}}
-      pending
-    />
-  );
+  render(<LoginForm onSubmit={async (email, password) => {}} pending />);
 
   userEvent.click(screen.getByText(/Logging in/));
 });
 
 test("Form displays authentication error", () => {
-  const mockEmail = mockUser.email;
-
   render(
-    <LoginForm
-      onSubmit={async (email, password) => {}}
-      error="Login failed."
-    />
+    <LoginForm onSubmit={async (email, password) => {}} error="Login failed." />
   );
 
   userEvent.click(screen.getByText(/Login failed/));

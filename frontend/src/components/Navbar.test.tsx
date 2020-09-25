@@ -4,7 +4,7 @@ import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider } from "../context/auth";
 import { client } from "../services/datastore";
-import { mockPassword, mockUser } from "../fixtures/mocks";
+import { getMockPassword, getMockUser } from "../fixtures/mocks";
 import Navbar from "./Navbar";
 import MockAdapter from "axios-mock-adapter";
 
@@ -33,6 +33,8 @@ test("displays Navbar for unauthenticated user", () => {
 });
 
 test("displays Navbar for authenticated user", () => {
+  const mockUser = getMockUser();
+  const mockPassword = getMockPassword();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
 
   render(
@@ -45,6 +47,7 @@ test("displays Navbar for authenticated user", () => {
 });
 
 test("logout link successfully logs user out", async () => {
+  const mockUser = getMockUser();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
   mockClient.onGet("/api/v1/logout").reply(200);
 

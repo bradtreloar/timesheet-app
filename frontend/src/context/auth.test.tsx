@@ -4,7 +4,7 @@ import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider, useAuth } from "./auth";
 import { client } from "../services/datastore";
-import { mockPassword, mockUser } from "../fixtures/mocks";
+import { getMockPassword, getMockUser } from "../fixtures/mocks";
 import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
 import MockAdapter from "axios-mock-adapter";
 
@@ -39,6 +39,7 @@ test("initial state is unauthenticated", () => {
 });
 
 test("initial state is authenticated", () => {
+  const mockUser = getMockUser();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
 
   const Fixture = () => {
@@ -57,6 +58,8 @@ test("initial state is authenticated", () => {
 });
 
 test("successful login", async () => {
+  const mockUser = getMockUser();
+  const mockPassword = getMockPassword();
   mockClient.onPost("/api/v1/login").reply(200, mockUser);
 
   const Fixture = () => {
@@ -92,6 +95,8 @@ test("successful login", async () => {
 });
 
 test("invalid login attempt fails", async () => {
+  const mockUser = getMockUser();
+  const mockPassword = getMockPassword();
   mockClient.onPost("/api/v1/login").reply(401);
   
   const Fixture = () => {
@@ -127,6 +132,7 @@ test("invalid login attempt fails", async () => {
 });
 
 test("successful logout", async () => {
+  const mockUser = getMockUser();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
   mockClient.onGet("/api/v1/logout").reply(200);
 

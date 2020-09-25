@@ -4,7 +4,7 @@ import { screen } from "@testing-library/dom";
 import App from "./App";
 import { AuthProvider } from "./context/auth";
 import { client } from "./services/datastore";
-import { mockPassword, mockUser } from "./fixtures/mocks";
+import { getMockPassword, getMockUser } from "./fixtures/mocks";
 import userEvent from "@testing-library/user-event";
 import MockAdapter from "axios-mock-adapter";
 
@@ -32,6 +32,7 @@ test("renders unauthenticated app", () => {
 });
 
 test("renders authenticated app", () => {
+  const mockUser = getMockUser();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
 
   render(
@@ -45,6 +46,8 @@ test("renders authenticated app", () => {
 });
 
 test("successful login", async () => {
+  const mockUser = getMockUser();
+  const mockPassword = getMockPassword();
   const mockEmail = mockUser.email;
   mockClient.onPost("/api/v1/login").reply(200, mockUser);
 
@@ -68,6 +71,7 @@ test("successful login", async () => {
 });
 
 test("successful logout", async () => {
+  const mockUser = getMockUser();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
   mockClient.onGet("/api/v1/logout").reply(200);
 

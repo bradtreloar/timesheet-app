@@ -4,7 +4,7 @@ import { screen } from "@testing-library/dom";
 import LoginPage from "./LoginPage";
 import { AuthProvider, useAuth } from "../context/auth";
 import { client } from "../services/datastore";
-import { mockPassword, mockUser } from "../fixtures/mocks";
+import { getMockPassword, getMockUser } from "../fixtures/mocks";
 import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
 import userEvent from "@testing-library/user-event";
 import MockAdapter from "axios-mock-adapter";
@@ -32,6 +32,8 @@ test("renders login page", () => {
 });
 
 test("login succeeds", async () => {
+  const mockUser = getMockUser();
+  const mockPassword = getMockPassword();
   mockClient.onPost("/api/v1/login").reply(200, mockUser);
   const mockEmail = mockUser.email;
 
@@ -53,8 +55,10 @@ test("login succeeds", async () => {
 });
 
 test("invalid login attempt fails", async () => {
-  mockClient.onPost("/api/v1/login").reply(401);
+  const mockUser = getMockUser();
+  const mockPassword = getMockPassword();
   const mockEmail = mockUser.email;
+  mockClient.onPost("/api/v1/login").reply(401);
 
   render(
     <AuthProvider>
