@@ -6,16 +6,16 @@ import { AuthProvider } from "./context/auth";
 import { client } from "./services/datastore";
 import { mockPassword, mockUser } from "./fixtures/mocks";
 import userEvent from "@testing-library/user-event";
+import MockAdapter from "axios-mock-adapter";
 
 // Mock the HTTP client used by the datastore.
-var MockAdapter = require("axios-mock-adapter");
-var mockClient = new MockAdapter(client);
+const mockClient = new MockAdapter(client);
 mockClient.onGet("/sanctum/csrf-cookie").reply(204);
 mockClient.onPost("/api/v1/login").reply(200, mockUser);
 mockClient.onGet("/api/v1/logout").reply(200);
 
 test("renders unauthenticated app", () => {
-  const { getByText } = render(
+  render(
     <AuthProvider>
       <App />
     </AuthProvider>
@@ -26,7 +26,7 @@ test("renders unauthenticated app", () => {
 test("renders authenticated app", () => {
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
 
-  const { getByText } = render(
+  render(
     <AuthProvider>
       <App />
     </AuthProvider>
