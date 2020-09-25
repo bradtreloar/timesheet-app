@@ -10,9 +10,17 @@ import MockAdapter from "axios-mock-adapter";
 
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);
-mockClient.onGet("/sanctum/csrf-cookie").reply(204);
-mockClient.onPost("/api/v1/login").reply(200, mockUser);
-mockClient.onGet("/api/v1/logout").reply(200);
+
+beforeEach(() => {
+  mockClient.onGet("/sanctum/csrf-cookie").reply(204);
+});
+
+afterEach(() => {
+  mockClient.reset();
+
+  // Clear the stored user object.
+  (window as any).sessionStorage.removeItem("user");
+});
 
 test("renders unauthenticated app", () => {
   render(
@@ -38,6 +46,7 @@ test("renders authenticated app", () => {
 
 test("successful login", async () => {
   const mockEmail = mockUser.email;
+  mockClient.onPost("/api/v1/login").reply(200, mockUser);
 
   await act(async () => {
     render(
@@ -60,6 +69,7 @@ test("successful login", async () => {
 
 test("successful logout", async () => {
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
+  mockClient.onGet("/api/v1/logout").reply(200);
 
   render(
     <AuthProvider>
