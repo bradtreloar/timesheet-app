@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import { User } from "../types";
-import FormData from "form-data";
 
 const HOST = "https://timesheet.allbizsupplies.biz";
 
