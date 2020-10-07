@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/functions.scss";
+@import "~bootstrap/scss/variables.scss";
+@import "~bootstrap/scss/mixins.scss";
+
+.page {
+  min-height: calc(100vh - 80px);
+}
+
+.blockquote {
+  font-size: 1em;
+}
+
+.text-small {
+  font-size: 0.65em;
+}
+
+.position-lg-absolute {
+  @include media-breakpoint-up(lg) {
+    position: absolute !important;
+  }
+}
