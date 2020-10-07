@@ -1,3 +1,5 @@
+import { SimpleTime } from "./helpers/date";
+
 export type User = {
   isAdmin: boolean;
   id: string;
@@ -6,13 +8,14 @@ export type User = {
 };
 
 export type Timesheet = {
+  userID: string;
   shifts: Shift[];
 };
 
 export type Shift = {
-  date: string;
-  startAt: string;
-  endAt: string;
-  breakDuration: string;
+  date: Date;
+  startAt: SimpleTime;
+  endAt: SimpleTime;
+  breakDuration: SimpleTime;
   status: "worked" | "not_rostered" | "sick" | "public_holiday";
 };
