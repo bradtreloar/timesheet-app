@@ -1,5 +1,6 @@
 import React from "react";
 import * as EmailValidator from "email-validator";
+import "../styles/components/LoginForm.scss";
 
 interface LoginFormProps {
   onSubmit: (email: string, password: string) => Promise<void>;
@@ -12,7 +13,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending, error }) => {
   const [password, setPassword] = React.useState("");
   const [emailError, setEmailError] = React.useState<string | null>(null);
   const [passwordError, setPasswordError] = React.useState<string | null>(null);
-  const [validated, setValidated] = React.useState(false);
 
   const validate = () => {
     let isValid = true;
@@ -49,7 +49,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending, error }) => {
         }
       }}
     >
-      {error && <div className="alert alert-error">{error}</div>}
+      {error && <div className="alert alert-danger">{error}</div>}
       <div className="form-group">
         <label htmlFor="email">Email Address</label>
         <input
@@ -66,7 +66,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending, error }) => {
         />
         {emailError && <div className="invalid-feedback">{emailError}</div>}
       </div>
-      <div className="form-congrouptrol">
+      <div className="form-group">
         <label htmlFor="password">Password</label>
         <input
           id="password"
@@ -82,7 +82,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending, error }) => {
           <div className="invalid-feedback">{passwordError}</div>
         )}
       </div>
-      <button className="btn btn-primary" type="submit" disabled={pending}>
+      <button
+        className="btn btn-primary"
+        data-testid="login-form-submit"
+        type="submit"
+        disabled={pending}
+      >
         {pending ? `Logging in` : `Log in`}
       </button>
     </form>

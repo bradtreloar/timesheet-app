@@ -3,12 +3,11 @@ import { render, act } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import LoginForm from "./LoginForm";
-import { User } from "../types";
-import { getMockPassword, getMockUser } from "../fixtures/mocks";
+import { randomPassword, randomUser } from "../fixtures/random";
 
 test("Form submission succeeds", (done) => {
-  const mockEmail = getMockUser().email;
-  const mockPassword = getMockPassword();
+  const mockEmail = randomUser().email;
+  const mockPassword = randomPassword();
 
   render(
     <LoginForm
@@ -40,8 +39,8 @@ test("Empty form submission fails", () => {
 });
 
 test("Invalid email address detected", () => {
-  const mockUser = getMockUser();
-  const mockPassword = getMockPassword();
+  const mockUser = randomUser();
+  const mockPassword = randomPassword();
   // Remove the "@"" symbol from the email to make it invalid.
   const mockEmail = mockUser.email.replace("@", "_");
 
