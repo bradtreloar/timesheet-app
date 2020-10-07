@@ -1,10 +1,14 @@
 import React from "react";
 import { MemoryRouter, Route } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import randomstring from "randomstring";
 import ProtectedRoute from "./ProtectedRoute";
 import { AuthProvider } from "../context/auth";
 import { randomUser } from "../fixtures/random";
+import { client } from "../services/datastore";
+import MockAdapter from "axios-mock-adapter";
+
+// Mock the HTTP client used by the datastore.
+const mockClient = new MockAdapter(client);
 
 const Fixture = () => (
   <AuthProvider>
@@ -25,6 +29,7 @@ afterEach(() => {
 
 test("renders protected route when authenticated", async () => {
   const mockUser = randomUser();
+  mockClient.onGet("/api/v1/user").reply(200, mockUser);
   (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
   await act(async () => {
     render(<Fixture />);
