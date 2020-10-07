@@ -72,7 +72,7 @@ afterEach(() => {
   (window as any).localStorage.removeItem("user");
 });
 
-test("initial state is unauthenticated", () => {
+test("user is unauthenticated", () => {
   render(
     <AuthProvider>
       <PassiveFixture />
@@ -82,7 +82,7 @@ test("initial state is unauthenticated", () => {
   screen.getByText(/User is not logged in/);
 });
 
-test("initial state is authenticated", () => {
+test("user is authenticated", () => {
   const mockUser = randomUser();
   (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
 
@@ -95,7 +95,7 @@ test("initial state is authenticated", () => {
   screen.getByText(/User is logged in/);
 });
 
-test("initial state is authenticated and user is admin", () => {
+test("admin user is authenticated", () => {
   const mockUser = randomUser(true);
   (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
 
@@ -134,7 +134,7 @@ test("user logs in successfully", async () => {
   screen.findByText(/User is logged in/);
 });
 
-test("invalid login attempt fails", async () => {
+test("invalid user fails to log in", async () => {
   const mockUser = randomUser();
   const mockPassword = randomPassword();
   mockClient.onPost("/api/v1/login").reply(401);
@@ -149,7 +149,7 @@ test("invalid login attempt fails", async () => {
   screen.findByText(/User is not logged in/);
 });
 
-test("successful logout", async () => {
+test("user logs out successfully", async () => {
   const mockUser = randomUser();
   (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
   mockClient.onGet("/api/v1/logout").reply(200);
