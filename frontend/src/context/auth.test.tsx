@@ -19,13 +19,12 @@ afterEach(() => {
   mockClient.reset();
 
   // Clear the stored user object.
-  (window as any).sessionStorage.removeItem("user");
+  (window as any).localStorage.removeItem("user");
 });
 
 test("initial state is unauthenticated", () => {
   const Fixture = () => {
     const { isAuthenticated } = useAuth();
-
     return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />;
   };
 
@@ -40,11 +39,10 @@ test("initial state is unauthenticated", () => {
 
 test("initial state is authenticated", () => {
   const mockUser = randomUser();
-  (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
+  (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
 
   const Fixture = () => {
     const { isAuthenticated } = useAuth();
-
     return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />;
   };
 
@@ -59,7 +57,7 @@ test("initial state is authenticated", () => {
 
 test("initial state is authenticated and user is admin", () => {
   const mockUser = randomUser(true);
-  (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
+  (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
 
   const Fixture = () => {
     const { isAuthenticated, isAdmin } = useAuth();
@@ -157,7 +155,7 @@ test("invalid login attempt fails", async () => {
 
 test("successful logout", async () => {
   const mockUser = randomUser();
-  (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
+  (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
   mockClient.onGet("/api/v1/logout").reply(200);
 
   const Fixture = () => {

@@ -30,7 +30,7 @@ export const useAuth = () => {
 const AuthProvider: React.FC = ({ children }) => {
   // Hydrate the user value from session storage.
   const initialUser: User | null = JSON.parse(
-    (window as any).sessionStorage.getItem("user")
+    (window as any).localStorage.getItem("user")
   );
   const [user, setUser] = React.useState(initialUser);
   const [error, setError] = React.useState<string | null>(null);
@@ -41,7 +41,7 @@ const AuthProvider: React.FC = ({ children }) => {
    * Persist the user's information.
    */
   React.useEffect(() => {
-    (window as any).sessionStorage.setItem("user", JSON.stringify(user));
+    (window as any).localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
 
   /**
