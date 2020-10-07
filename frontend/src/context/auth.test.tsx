@@ -11,6 +11,56 @@ import MockAdapter from "axios-mock-adapter";
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);
 
+const PassiveFixture = () => {
+  const { isAuthenticated, user } = useAuth();
+  return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />;
+};
+
+const LoginFixture: React.FC<{ email: string; password: string }> = ({
+  email,
+  password,
+}) => {
+  const { isAuthenticated, login } = useAuth();
+
+  return (
+    <>
+      <button
+        onClick={async () => {
+          // Wrap call to login in asynchronous act call because it updates
+          // the AuthProvider's state.
+          await act(async () => {
+            login(email, password);
+          });
+        }}
+      >
+        Log in
+      </button>
+      <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
+    </>
+  );
+};
+
+const LogoutFixture = () => {
+  const { isAuthenticated, logout } = useAuth();
+
+  return (
+    <>
+      <button
+        onClick={async () => {
+          // Wrap call to login in act because it updates the
+          // AuthProvider's state.
+          await act(async () => {
+            logout();
+          });
+        }}
+      >
+        Log out
+      </button>
+      <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
+    </>
+  );
+};
+
 beforeEach(() => {
   mockClient.onGet("/sanctum/csrf-cookie").reply(204);
 });
@@ -23,14 +73,9 @@ afterEach(() => {
 });
 
 test("initial state is unauthenticated", () => {
-  const Fixture = () => {
-    const { isAuthenticated } = useAuth();
-    return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />;
-  };
-
   render(
     <AuthProvider>
-      <Fixture />
+      <PassiveFixture />
     </AuthProvider>
   );
 
@@ -41,14 +86,9 @@ test("initial state is authenticated", () => {
   const mockUser = randomUser();
   (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
 
-  const Fixture = () => {
-    const { isAuthenticated } = useAuth();
-    return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />;
-  };
-
   render(
     <AuthProvider>
-      <Fixture />
+      <PassiveFixture />
     </AuthProvider>
   );
 
@@ -79,36 +119,14 @@ test("initial state is authenticated and user is admin", () => {
   screen.getByText(/User is admin/);
 });
 
-test("successful login", async () => {
+test("user logs in successfully", async () => {
   const mockUser = randomUser();
   const mockPassword = randomPassword();
   mockClient.onPost("/api/v1/login").reply(200, mockUser);
 
-  const Fixture = () => {
-    const { isAuthenticated, login } = useAuth();
-    const { email } = mockUser;
-
-    return (
-      <>
-        <button
-          onClick={async () => {
-            // Wrap call to login in asynchronous act call because it updates
-            // the AuthProvider's state.
-            await act(async () => {
-              login(email, mockPassword);
-            });
-          }}
-        >
-          Log in
-        </button>
-        <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
-      </>
-    );
-  };
-
   render(
     <AuthProvider>
-      <Fixture />
+      <LoginFixture email={mockUser.email} password={mockPassword} />;
     </AuthProvider>
   );
 
@@ -121,31 +139,9 @@ test("invalid login attempt fails", async () => {
   const mockPassword = randomPassword();
   mockClient.onPost("/api/v1/login").reply(401);
 
-  const Fixture = () => {
-    const { isAuthenticated, login } = useAuth();
-    const { email } = mockUser;
-
-    return (
-      <>
-        <button
-          onClick={async () => {
-            // Wrap call to login in asynchronous act call because it updates
-            // the AuthProvider's state.
-            await act(async () => {
-              login(email, mockPassword);
-            });
-          }}
-        >
-          Log in
-        </button>
-        <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
-      </>
-    );
-  };
-
   render(
     <AuthProvider>
-      <Fixture />
+      <LoginFixture email={mockUser.email} password={mockPassword} />;
     </AuthProvider>
   );
 
@@ -158,31 +154,9 @@ test("successful logout", async () => {
   (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
   mockClient.onGet("/api/v1/logout").reply(200);
 
-  const Fixture = () => {
-    const { isAuthenticated, logout } = useAuth();
-    const { email } = mockUser;
-
-    return (
-      <>
-        <button
-          onClick={async () => {
-            // Wrap call to login in act because it updates the
-            // AuthProvider's state.
-            await act(async () => {
-              logout();
-            });
-          }}
-        >
-          Log out
-        </button>
-        <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />
-      </>
-    );
-  };
-
   render(
     <AuthProvider>
-      <Fixture />
+      <LogoutFixture />
     </AuthProvider>
   );
 
