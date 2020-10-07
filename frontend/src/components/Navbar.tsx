@@ -1,28 +1,71 @@
 import React from "react";
-import { Nav, Navbar } from "react-bootstrap";
+import { Link, useHistory } from "react-router-dom";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useAuth } from "../context/auth";
+import getMenu from "../data/menus";
+import classNames from "classnames";
+import logoImage from "../assets/logo.svg";
+import "../styles/components/Navbar.scss";
 
-const NavbarWrapper: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+interface NavbarWrapperProps {
+  className?: string;
+}
+
+const NavbarWrapper: React.FC<NavbarWrapperProps> = ({ className }) => {
+  const { user } = useAuth();
+
+  const menuItems = getMenu("main", user);
+
+  const navItems = menuItems.map(({ label, url }, index) => (
+    <div key={index} className="nav-item">
+      <Link className="nav-link" to={url}>
+        {label}
+      </Link>
+    </div>
+  ));
 
   return (
-    <div className="navbar-wrapper">
+    <div
+      className={classNames("navbar-wrapper bg-light border-bottom", className)}
+    >
       <Navbar expand="lg">
-        <Navbar.Collapse>
-          <Nav>
-            {isAuthenticated && (
-              <Nav.Item>
-                <a className="nav-link" onClick={(event) => {
-                  event.preventDefault();
-                  logout()
-                }}>Log out</a>
-              </Nav.Item>
-            )}
+        <Navbar.Brand>
+          <Link className="navbar-brand" to="/">
+            Allbiz Timesheet
+          </Link>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbar-nav" />
+        <Navbar.Collapse id="navbar-nav">
+          <Nav className="ml-auto">
+            {navItems}
+            <UserMenu />
           </Nav>
         </Navbar.Collapse>
       </Navbar>
     </div>
   );
+};
+
+const UserMenu: React.FC = () => {
+  const { user, logout } = useAuth();
+  const history = useHistory();
+
+  const handleLogout = async () => {
+    await logout();
+    history.push("/");
+  };
+
+  if (user) {
+    return (
+      <NavDropdown id="user-menu" title={user.name}>
+        <NavDropdown.Item data-testid="logout-button" onClick={handleLogout}>
+          Log out
+        </NavDropdown.Item>
+      </NavDropdown>
+    );
+  }
+
+  return null;
 };
 
 export default NavbarWrapper;
