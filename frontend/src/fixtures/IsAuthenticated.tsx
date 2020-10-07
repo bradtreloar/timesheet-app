@@ -4,8 +4,6 @@ const IsAuthenticatedFixture: React.FC<{
   isAuthenticated: boolean;
   isAdmin?: boolean;
 }> = ({ isAuthenticated, isAdmin }) => {
-  if (isAdmin !== undefined) console.log(isAdmin);
-
   return (
     <>
       {isAuthenticated ? (
