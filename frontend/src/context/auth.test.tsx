@@ -4,7 +4,7 @@ import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider, useAuth } from "./auth";
 import { client } from "../services/datastore";
-import { getMockPassword, getMockUser } from "../fixtures/mocks";
+import { randomPassword, randomUser } from "../fixtures/random";
 import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
 import MockAdapter from "axios-mock-adapter";
 
@@ -39,7 +39,7 @@ test("initial state is unauthenticated", () => {
 });
 
 test("initial state is authenticated", () => {
-  const mockUser = getMockUser();
+  const mockUser = randomUser();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
 
   const Fixture = () => {
@@ -58,7 +58,7 @@ test("initial state is authenticated", () => {
 });
 
 test("initial state is authenticated and user is admin", () => {
-  const mockUser = getMockUser(true);
+  const mockUser = randomUser(true);
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
 
   const Fixture = () => {
@@ -82,8 +82,8 @@ test("initial state is authenticated and user is admin", () => {
 });
 
 test("successful login", async () => {
-  const mockUser = getMockUser();
-  const mockPassword = getMockPassword();
+  const mockUser = randomUser();
+  const mockPassword = randomPassword();
   mockClient.onPost("/api/v1/login").reply(200, mockUser);
 
   const Fixture = () => {
@@ -119,8 +119,8 @@ test("successful login", async () => {
 });
 
 test("invalid login attempt fails", async () => {
-  const mockUser = getMockUser();
-  const mockPassword = getMockPassword();
+  const mockUser = randomUser();
+  const mockPassword = randomPassword();
   mockClient.onPost("/api/v1/login").reply(401);
 
   const Fixture = () => {
@@ -156,7 +156,7 @@ test("invalid login attempt fails", async () => {
 });
 
 test("successful logout", async () => {
-  const mockUser = getMockUser();
+  const mockUser = randomUser();
   (window as any).sessionStorage.setItem("user", JSON.stringify(mockUser));
   mockClient.onGet("/api/v1/logout").reply(200);
 
