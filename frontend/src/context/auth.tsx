@@ -1,6 +1,7 @@
 import React, { useContext, createContext } from "react";
 import { User } from "../types";
 import * as datastore from "../services/datastore";
+import { isEqual } from "lodash";
 
 type Status = "idle" | "pending" | "fulfilled" | "rejected";
 
@@ -32,6 +33,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const initialUser: User | null = JSON.parse(
     (window as any).localStorage.getItem("user")
   );
+  const [isStale, setIsStale] = React.useState(initialUser !== null);
   const [user, setUser] = React.useState(initialUser);
   const [error, setError] = React.useState<string | null>(null);
   const isAuthenticated = user !== null;
@@ -73,6 +75,31 @@ const AuthProvider: React.FC = ({ children }) => {
       setError(error);
     }
   };
+
+  /**
+   * Refreshes the user from the server.
+   */
+  React.useEffect(() => {
+    if (isStale) {
+      (async () => {
+        try {
+          const currentUser = await datastore.fetchCurrentUser();
+          // Update the user if the logged in user differs from the stored user.
+          if (!isEqual(user, currentUser)) {
+            setUser(currentUser);
+          }
+        } catch (error) {
+          // Unset the user if no user is logged in.
+          if (error instanceof datastore.NoCurrentUserException) {
+            setUser(null);
+          } else {
+            throw error;
+          }
+        }
+        setIsStale(false);
+      })();
+    }
+  }, [isStale, user]);
 
   const value = {
     isAuthenticated,

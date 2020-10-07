@@ -21,7 +21,14 @@ export const jsonApiClient = axios.create({
   },
 });
 
-const login = async (email: string, password: string): Promise<User> => {
+export class NoCurrentUserException extends Error {
+  constructor() {
+    super("No user is logged in.");
+    Object.setPrototypeOf(this, NoCurrentUserException.prototype);
+  }
+}
+
+export const login = async (email: string, password: string): Promise<User> => {
   await client.get("/sanctum/csrf-cookie");
   const response: AxiosResponse<User> = await client.post("/api/v1/login", {
     email,
@@ -30,8 +37,25 @@ const login = async (email: string, password: string): Promise<User> => {
   return response.data;
 };
 
-const logout = async () => {
-  await client.get("/api/v1/logout");
+export const logout = async () => {
+  try {
+    await client.get("/api/v1/logout");
+  } catch (error) {
+    if (error.response?.status === "403") {
+      throw new NoCurrentUserException();
+    }
+    throw error;
+  }
 };
 
-export { login, logout };
+export const fetchCurrentUser = async (): Promise<User> => {
+  try {
+    const response = await client.get(`/api/v1/user`);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === "403") {
+      throw new NoCurrentUserException();
+    }
+    throw error;
+  }
+};
