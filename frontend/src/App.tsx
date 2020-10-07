@@ -13,7 +13,9 @@ function App() {
         onClick={() => {
           logout();
         }}
-      >Log out</a>
+      >
+        Log out
+      </a>
     </div>
   ) : (
     <div>

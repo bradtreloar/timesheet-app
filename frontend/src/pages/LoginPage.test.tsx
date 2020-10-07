@@ -17,7 +17,7 @@ beforeEach(() => {
 
 afterEach(() => {
   mockClient.reset();
-  
+
   // Clear the stored user object.
   (window as any).sessionStorage.removeItem("user");
 });

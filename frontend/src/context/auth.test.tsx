@@ -64,7 +64,12 @@ test("initial state is authenticated and user is admin", () => {
   const Fixture = () => {
     const { isAuthenticated, isAdmin } = useAuth();
 
-    return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} isAdmin={isAdmin} />;
+    return (
+      <IsAuthenticatedFixture
+        isAuthenticated={isAuthenticated}
+        isAdmin={isAdmin}
+      />
+    );
   };
 
   render(
@@ -117,7 +122,7 @@ test("invalid login attempt fails", async () => {
   const mockUser = getMockUser();
   const mockPassword = getMockPassword();
   mockClient.onPost("/api/v1/login").reply(401);
-  
+
   const Fixture = () => {
     const { isAuthenticated, login } = useAuth();
     const { email } = mockUser;

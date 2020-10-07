@@ -24,7 +24,8 @@ export const jsonApiClient = axios.create({
 const login = async (email: string, password: string): Promise<User> => {
   await client.get("/sanctum/csrf-cookie");
   const response: AxiosResponse<User> = await client.post("/api/v1/login", {
-    email, password
+    email,
+    password,
   });
   return response.data;
 };
