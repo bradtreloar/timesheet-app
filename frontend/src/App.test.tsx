@@ -9,6 +9,10 @@ import { randomPassword, randomUser } from "./fixtures/random";
 import * as datastore from "./services/datastore";
 jest.mock("./services/datastore");
 
+const mockUser = randomUser();
+const mockPassword = randomPassword();
+const mockLogoutToken = randomstring.generate();
+
 const AppFixture: React.FC<{
   routerEntries: string[];
 }> = ({ routerEntries }) => {
@@ -23,9 +27,7 @@ const AppFixture: React.FC<{
 
 describe("unauthenticated user", () => {
   beforeEach(() => {
-    jest
-      .spyOn(datastore, "fetchCurrentUser")
-      .mockRejectedValue(new datastore.NoCurrentUserException());
+    jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
   });
 
   test("triggers 404 page", async () => {
@@ -47,8 +49,6 @@ describe("unauthenticated user", () => {
   });
 
   test("logs in", async () => {
-    const mockUser = randomUser();
-    const mockPassword = randomPassword();
     jest.spyOn(datastore, "login").mockResolvedValue(mockUser);
 
     await act(async () => {
@@ -65,8 +65,6 @@ describe("unauthenticated user", () => {
   });
 
   test("receives error when login fails", async () => {
-    const mockUser = randomUser();
-    const mockPassword = randomPassword();
     jest.spyOn(datastore, "login").mockRejectedValue("login failed");
 
     await act(async () => {
@@ -87,9 +85,7 @@ describe("unauthenticated user", () => {
 describe("authenticated user", () => {
   beforeEach(() => {
     // Store a current user in state.
-    const mockUser = randomUser();
-    const mockLogoutToken = randomstring.generate();
-    (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
+    localStorage.setItem("user", JSON.stringify(mockUser));
     jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(mockUser);
   });
 
@@ -103,14 +99,13 @@ describe("authenticated user", () => {
   });
 
   test("logs out", async () => {
-    const user = JSON.parse((window as any).localStorage.getItem("user"));
     jest.spyOn(datastore, "logout").mockResolvedValue();
     jest.spyOn(window, "alert").mockImplementation(() => {});
 
     render(<AppFixture routerEntries={["/"]} />);
 
     expect(screen.getByRole("heading")).toHaveTextContent(/home page/i);
-    userEvent.click(screen.getByText(user.name));
+    userEvent.click(screen.getByText(mockUser.name));
     await act(async () => {
       userEvent.click(screen.getByTestId("logout-button"));
     });
