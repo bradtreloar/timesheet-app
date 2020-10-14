@@ -19,7 +19,7 @@ jest.mock("../services/datastore");
 beforeEach(() => {
   jest.useFakeTimers();
   const { timesheets } = selectTimesheets(store.getState());
-  expect(timesheets).toEqual([]);
+  expect(timesheets).toStrictEqual([]);
 });
 
 afterEach(() => {
@@ -30,7 +30,7 @@ afterEach(() => {
   // Clear the store
   store.dispatch(clearTimesheets());
   const emptyTimesheets = selectTimesheets(store.getState());
-  expect(emptyTimesheets.timesheets).toEqual([]);
+  expect(emptyTimesheets.timesheets).toStrictEqual([]);
 });
 
 test("fetch timesheet", async () => {
@@ -45,7 +45,7 @@ test("fetch timesheet", async () => {
   expect(action.type).toBe("timesheets/fetch/fulfilled");
   const { status, timesheets } = selectTimesheets(store.getState());
   expect(status).toBe("fulfilled");
-  expect(timesheets).toEqual([mockTimesheet]);
+  expect(timesheets).toStrictEqual([mockTimesheet]);
 });
 
 test("fetch timesheet twice without side effects", async () => {
@@ -62,7 +62,7 @@ test("fetch timesheet twice without side effects", async () => {
     const { status, timesheets } = selectTimesheets(store.getState());
     expect(status).toBe("fulfilled");
     expect(timesheets).toHaveLength(1);
-    expect(timesheets).toEqual([mockTimesheet]);
+    expect(timesheets).toStrictEqual([mockTimesheet]);
   }
 });
 
@@ -77,7 +77,7 @@ test("fetch timesheets", async () => {
   expect(action.type).toBe("timesheets/fetchAll/fulfilled");
   const { status, timesheets } = selectTimesheets(store.getState());
   expect(status).toBe("fulfilled");
-  expect(timesheets).toEqual(mockTimesheets);
+  expect(timesheets).toStrictEqual(mockTimesheets);
 });
 
 test("handle failure to fetch timesheets", async () => {
@@ -87,7 +87,7 @@ test("handle failure to fetch timesheets", async () => {
   expect(action.type).toBe("timesheets/fetchAll/rejected");
   const { status, timesheets } = selectTimesheets(store.getState());
   expect(status).toBe("rejected");
-  expect(timesheets).toEqual([]);
+  expect(timesheets).toStrictEqual([]);
 });
 
 test("add timesheet", async () => {
@@ -100,11 +100,11 @@ test("add timesheet", async () => {
     return Promise.resolve(mockTimesheet);
   });
   const action = await store.dispatch(addTimesheet(mockNewTimesheet));
-  expect(action.payload).toEqual(mockTimesheet);
+  expect(action.payload).toStrictEqual(mockTimesheet);
   expect(action.type).toBe("timesheets/add/fulfilled");
   const { status, timesheets } = selectTimesheets(store.getState());
   expect(status).toBe("fulfilled");
-  expect(timesheets).toEqual([mockTimesheet]);
+  expect(timesheets).toStrictEqual([mockTimesheet]);
 });
 
 test("handle failure to add timesheet", async () => {
@@ -119,7 +119,7 @@ test("handle failure to add timesheet", async () => {
   expect(action.type).toBe("timesheets/add/rejected");
   const { status, timesheets } = selectTimesheets(store.getState());
   expect(status).toBe("rejected");
-  expect(timesheets).toEqual([]);
+  expect(timesheets).toStrictEqual([]);
 });
 
 test("delete timesheet", async () => {
@@ -134,7 +134,7 @@ test("delete timesheet", async () => {
     .spyOn(datastore, "deleteTimesheet")
     .mockResolvedValue(deletedTimesheet);
   const action = await store.dispatch(removeTimesheet(deletedTimesheet));
-  expect(action.payload).toEqual(deletedTimesheet);
+  expect(action.payload).toStrictEqual(deletedTimesheet);
   expect(action.type).toBe("timesheets/remove/fulfilled");
   const { status, timesheets } = selectTimesheets(store.getState());
   expect(status).toBe("fulfilled");
