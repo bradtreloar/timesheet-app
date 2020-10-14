@@ -7,10 +7,35 @@ import { isInteger } from "lodash";
  * @param days
  */
 export const addDays = (date: Date, days: number) => {
-  var result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
+  var newDate = new Date(date);
+  newDate.setDate(newDate.getDate() + days);
+  return newDate;
 };
+
+/**
+ * Add hours to a Date
+ * 
+ * @param date 
+ * @param hours 
+ */
+export const addHours = (date: Date, hours: number) => {
+  var newDate = new Date(date);
+  newDate.setHours(newDate.getHours() + hours);
+  return newDate;
+};
+
+/**
+ * Add hours to a Date
+ * 
+ * @param date 
+ * @param hours 
+ */
+export const addMinutes = (date: Date, minutes: number) => {
+  var newDate = new Date(date);
+  newDate.setHours(newDate.getHours() + minutes);
+  return newDate;
+};
+
 
 /**
  * Converts date to string in format YYYY-MM-DD

@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from "axios";
-import { User } from "../types";
-
-const HOST = "https://timesheet.allbizsupplies.biz";
+import { Timesheet, User } from "../types";
+import { TimesheetResource } from "./resourceTypes";
+import { HOST } from "../settings";
+import { parseTimesheet, makeTimesheetResource } from "../helpers/jsonAPI";
 
 export const client = axios.create({
   baseURL: `${HOST}`,
@@ -12,7 +13,7 @@ export const client = axios.create({
   },
 });
 
-export const jsonApiClient = axios.create({
+export const jsonAPIClient = axios.create({
   baseURL: `${HOST}/api/v1`,
   withCredentials: true,
   headers: {
@@ -58,4 +59,50 @@ export const fetchCurrentUser = async (): Promise<User> => {
     }
     throw error;
   }
+};
+
+
+
+export const fetchTimesheet = async (id: string): Promise<Timesheet> => {
+  const response: AxiosResponse<{
+    data: TimesheetResource;
+  }> = await jsonAPIClient.get(`/timesheets/${id}`);
+  const { data: resource } = response.data;
+  return parseTimesheet(resource);
+};
+
+export const fetchTimesheets = async (): Promise<Timesheet[]> => {
+  const response: AxiosResponse<{
+    data: TimesheetResource[];
+  }> = await jsonAPIClient.get(`/timesheets`);
+  const { data: resources } = response.data;
+  return resources.map((resource: TimesheetResource) => {
+    return parseTimesheet(resource);
+  });
+};
+
+export const createTimesheet = async (
+  timesheet: Timesheet
+): Promise<Timesheet> => {
+  const timesheetResource: TimesheetResource = makeTimesheetResource(
+    timesheet
+  );
+  const response: AxiosResponse<{
+    data: TimesheetResource;
+  }> = await jsonAPIClient.post(`/timesheets`, {
+    data: timesheetResource,
+  });
+  const {
+    data: { id },
+  } = response.data;
+  return Object.assign({}, timesheet, { id });
+};
+
+export const deleteTimesheet = async (
+  timesheet: Timesheet
+): Promise<Timesheet> => {
+  const response: AxiosResponse<{
+    data: TimesheetResource;
+  }> = await jsonAPIClient.delete(`/timesheets`);
+  return timesheet;
 };

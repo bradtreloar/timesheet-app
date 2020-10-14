@@ -8,14 +8,16 @@ export type User = {
 };
 
 export type Timesheet = {
+  id?: string;
   userID: string;
-  shifts: Shift[];
+  shifts?: Shift[];
+  created?: string;
+  changed?: string;
 };
 
 export type Shift = {
-  date: Date;
-  startAt: SimpleTime;
-  endAt: SimpleTime;
-  breakDuration: SimpleTime;
-  status: "worked" | "not_rostered" | "sick" | "public_holiday";
+  id?: string;
+  start: string;
+  end: string;
+  breakDuration: number;
 };
