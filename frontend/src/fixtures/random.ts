@@ -60,23 +60,25 @@ export const randomShiftDates = (date: Date) => {
   return [start, end];
 };
 
+export const randomShift = (weekStartDate: Date, dateOffset: number): Shift => {
+  const [start, end] = randomShiftDates(addDays(weekStartDate, dateOffset));
+  return {
+    start,
+    end,
+    breakDuration: randomMinutes(30, 60),
+  };
+};
+
 export const randomTimesheet = (user: User): Timesheet => {
   const weekStartDate = new Date(Date.now());
-  const shifts = range(5).map(
-    (days): Shift => {
-      const [start, end] = randomShiftDates(addDays(weekStartDate, days));
-      return {
-        start,
-        end,
-        breakDuration: randomMinutes(30, 60),
-      };
-    }
-  );
   return {
     id: randomID(),
     userID: user.id,
-    shifts,
+    shifts: range(5).map(
+      (dateOffset): Shift => randomShift(weekStartDate, dateOffset)
+    ),
     created: new Date().toISOString(),
+    changed: new Date().toISOString(),
   };
 };
 
