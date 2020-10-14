@@ -29,11 +29,10 @@ export const useAuth = () => {
 };
 
 const AuthProvider: React.FC = ({ children }) => {
-  // Hydrate the user value from session storage.
-  const initialUser: User | null = JSON.parse(
-    (window as any).localStorage.getItem("user")
-  );
-  const [isStale, setIsStale] = React.useState(initialUser !== null);
+  // Rehydrate the user value from local storage.
+  const storedUserData = localStorage.getItem("user");
+  const initialUser: User | null = storedUserData ? JSON.parse(storedUserData) : null;
+  const [isStale, setIsStale] = React.useState(true);
   const [user, setUser] = React.useState(initialUser);
   const [error, setError] = React.useState<string | null>(null);
   const isAuthenticated = user !== null;
@@ -58,8 +57,18 @@ const AuthProvider: React.FC = ({ children }) => {
       setUser(user);
       setError(null);
     } catch (error) {
+      if (error.response) {
+        const { status } = error.response;
+        if (status === 401) {
+          setError("Unrecognized email or password.");
+          return;
+        }
+        if (status === 403) {
+          setIsStale(true);
+          return;
+        }
+      }
       setError(error);
-      return;
     }
   };
 
@@ -72,6 +81,13 @@ const AuthProvider: React.FC = ({ children }) => {
       setUser(null);
       setError(null);
     } catch (error) {
+      if (error.response) {
+        const { status } = error.response;
+        if (status === 403) {
+          setIsStale(true);
+          return;
+        }
+      }
       setError(error);
     }
   };
@@ -82,19 +98,10 @@ const AuthProvider: React.FC = ({ children }) => {
   React.useEffect(() => {
     if (isStale) {
       (async () => {
-        try {
-          const currentUser = await datastore.fetchCurrentUser();
-          // Update the user if the logged in user differs from the stored user.
-          if (!isEqual(user, currentUser)) {
-            setUser(currentUser);
-          }
-        } catch (error) {
-          // Unset the user if no user is logged in.
-          if (error instanceof datastore.NoCurrentUserException) {
-            setUser(null);
-          } else {
-            throw error;
-          }
+        const currentUser = await datastore.fetchCurrentUser();
+        // Update the user if the logged in user differs from the stored user.
+        if (!isEqual(user, currentUser)) {
+          setUser(currentUser);
         }
         setIsStale(false);
       })();

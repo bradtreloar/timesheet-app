@@ -22,13 +22,6 @@ export const jsonAPIClient = axios.create({
   },
 });
 
-export class NoCurrentUserException extends Error {
-  constructor() {
-    super("No user is logged in.");
-    Object.setPrototypeOf(this, NoCurrentUserException.prototype);
-  }
-}
-
 export const login = async (email: string, password: string): Promise<User> => {
   await client.get("/sanctum/csrf-cookie");
   const response: AxiosResponse<User> = await client.post("/api/v1/login", {
@@ -39,29 +32,21 @@ export const login = async (email: string, password: string): Promise<User> => {
 };
 
 export const logout = async () => {
-  try {
-    await client.get("/api/v1/logout");
-  } catch (error) {
-    if (error.response?.status === "403") {
-      throw new NoCurrentUserException();
-    }
-    throw error;
-  }
+  await client.get("/api/v1/logout");
 };
 
-export const fetchCurrentUser = async (): Promise<User> => {
+export const fetchCurrentUser = async (): Promise<User | null> => {
   try {
     const response = await client.get(`/api/v1/user`);
+    if (response.status === 204) {
+      // No current user.
+      return null;
+    }
     return response.data;
   } catch (error) {
-    if (error.response?.status === "403") {
-      throw new NoCurrentUserException();
-    }
     throw error;
   }
 };
-
-
 
 export const fetchTimesheet = async (id: string): Promise<Timesheet> => {
   const response: AxiosResponse<{

@@ -11,6 +11,10 @@ import MockAdapter from "axios-mock-adapter";
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);
 
+const mockUser = randomUser();
+const mockAdminUser = randomUser(true);
+const mockPassword = randomPassword();
+
 const PassiveFixture = () => {
   const { isAuthenticated, user } = useAuth();
   return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />;
@@ -63,118 +67,160 @@ const LogoutFixture = () => {
 
 beforeEach(() => {
   mockClient.onGet("/sanctum/csrf-cookie").reply(204);
-
-  // Clear the stored user object.
-  (window as any).localStorage.removeItem("user");
+  localStorage.clear();
 });
 
 afterEach(() => {
   mockClient.reset();
 });
 
-test("user is unauthenticated", async () => {
-  await act(async () => {
-    render(
-      <AuthProvider>
-        <PassiveFixture />
-      </AuthProvider>
-    );
+describe("unauthenticated user", () => {
+  beforeEach(() => {
+    mockClient.onGet("/api/v1/user").reply(204);
   });
 
-  screen.getByText(/User is not logged in/);
+  test("user is unauthenticated", async () => {
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <PassiveFixture />
+        </AuthProvider>
+      );
+    });
+
+    screen.getByText(/User is not logged in/);
+  });
+
+  test("user logs in successfully", async () => {
+    mockClient.onPost("/api/v1/login").reply(200, mockUser);
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <LoginFixture email={mockUser.email} password={mockPassword} />;
+        </AuthProvider>
+      );
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText(/Log in/));
+    });
+    screen.getByText(/User is logged in/);
+  });
+
+  test("invalid user fails to log in", async () => {
+    mockClient.onPost("/api/v1/login").reply(401);
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <LoginFixture email={mockUser.email} password={mockPassword} />;
+        </AuthProvider>
+      );
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText(/Log in/));
+    });
+    screen.getByText(/User is not logged in/);
+  });
+
+  test("has pre-existing session", async () => {
+    mockClient.onGet("/api/v1/user").reply(200, mockUser);
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <LogoutFixture />
+        </AuthProvider>
+      );
+    });
+
+    screen.getByText(/User is logged in/);
+  });
 });
 
-test("user is authenticated", async () => {
-  const mockUser = randomUser();
-  mockClient.onGet("/api/v1/user").reply(200, mockUser);
-  (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
-
-  await act(async () => {
-    render(
-      <AuthProvider>
-        <PassiveFixture />
-      </AuthProvider>
-    );
+describe("authenticated user", () => {
+  beforeEach(() => {
+    localStorage.setItem("user", JSON.stringify(mockUser));
+    mockClient.onGet("/api/v1/user").reply(200, mockUser);
   });
 
-  screen.getByText(/User is logged in/);
+  test("user is authenticated", async () => {
+    mockClient.onGet("/api/v1/user").reply(200, mockUser);
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <PassiveFixture />
+        </AuthProvider>
+      );
+    });
+
+    screen.getByText(/User is logged in/);
+  });
+
+  test("user logs out successfully", async () => {
+    mockClient.onGet("/api/v1/user").reply(200, mockUser);
+    mockClient.onGet("/api/v1/logout").reply(200);
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <LogoutFixture />
+        </AuthProvider>
+      );
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText(/Log out/));
+    });
+    screen.getByText(/User is not logged in/);
+  });
+
+  test("session has expired", async () => {
+    mockClient.onGet("/api/v1/user").reply(204, mockUser);
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <LogoutFixture />
+        </AuthProvider>
+      );
+    });
+
+    screen.getByText(/User is not logged in/);
+  });
 });
 
-test("admin user is authenticated", async () => {
-  const mockUser = randomUser(true);
-  mockClient.onGet("/api/v1/user").reply(200, mockUser);
-  (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
-
-  const Fixture = () => {
-    const { isAuthenticated, isAdmin } = useAuth();
-
-    return (
-      <IsAuthenticatedFixture
-        isAuthenticated={isAuthenticated}
-        isAdmin={isAdmin}
-      />
-    );
-  };
-
-  await act(async () => {
-    render(
-      <AuthProvider>
-        <Fixture />
-      </AuthProvider>
-    );
+describe("admin user", () => {
+  beforeEach(() => {
+    localStorage.setItem("user", JSON.stringify(mockAdminUser));
+    mockClient.onGet("/api/v1/user").reply(200, mockAdminUser);
   });
 
-  screen.getByText(/User is admin/);
-});
+  test("admin user is authenticated", async () => {
+    mockClient.onGet("/api/v1/user").reply(200, mockAdminUser);
 
-test("user logs in successfully", async () => {
-  const mockUser = randomUser();
-  const mockPassword = randomPassword();
-  mockClient.onPost("/api/v1/login").reply(200, mockUser);
+    const Fixture = () => {
+      const { isAuthenticated, isAdmin } = useAuth();
 
-  await act(async () => {
-    render(
-      <AuthProvider>
-        <LoginFixture email={mockUser.email} password={mockPassword} />;
-      </AuthProvider>
-    );
+      return (
+        <IsAuthenticatedFixture
+          isAuthenticated={isAuthenticated}
+          isAdmin={isAdmin}
+        />
+      );
+    };
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <Fixture />
+        </AuthProvider>
+      );
+    });
+
+    screen.getByText(/User is admin/);
   });
-
-  userEvent.click(screen.getByText(/Log in/));
-  screen.findByText(/User is logged in/);
-});
-
-test("invalid user fails to log in", async () => {
-  const mockUser = randomUser();
-  const mockPassword = randomPassword();
-  mockClient.onPost("/api/v1/login").reply(401);
-
-  await act(async () => {
-    render(
-      <AuthProvider>
-        <LoginFixture email={mockUser.email} password={mockPassword} />;
-      </AuthProvider>
-    );
-  });
-
-  userEvent.click(screen.getByText(/Log in/));
-  screen.findByText(/User is not logged in/);
-});
-
-test("user logs out successfully", async () => {
-  const mockUser = randomUser();
-  (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
-  mockClient.onGet("/api/v1/user").reply(200, mockUser);
-  mockClient.onGet("/api/v1/logout").reply(200);
-
-  await act(async () => {
-    render(
-      <AuthProvider>
-        <LogoutFixture />
-      </AuthProvider>
-    );
-  });
-
-  userEvent.click(screen.getByText(/Log out/));
-  screen.findByText(/User is not logged in/);
 });
