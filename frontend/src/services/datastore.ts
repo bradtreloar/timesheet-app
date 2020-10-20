@@ -1,8 +1,13 @@
 import axios, { AxiosResponse } from "axios";
-import { Timesheet, User } from "../types";
-import { TimesheetResource } from "./resourceTypes";
+import { Shift, Timesheet, User } from "../types";
+import { ShiftResource, TimesheetResource } from "./resourceTypes";
 import { HOST } from "../settings";
-import { parseTimesheet, makeTimesheetResource } from "../helpers/jsonAPI";
+import {
+  parseTimesheet,
+  makeTimesheetResource,
+  parseShift,
+  makeShiftResource,
+} from "../helpers/jsonAPI";
 
 export const client = axios.create({
   baseURL: `${HOST}`,
@@ -51,36 +56,68 @@ export const fetchCurrentUser = async (): Promise<User | null> => {
 export const fetchTimesheet = async (id: string): Promise<Timesheet> => {
   const response: AxiosResponse<{
     data: TimesheetResource;
-  }> = await jsonAPIClient.get(`/timesheets/${id}`);
-  const { data: resource } = response.data;
-  return parseTimesheet(resource);
+    included: ShiftResource[];
+  }> = await jsonAPIClient.get(`/timesheets/${id}`, {
+    params: {
+      include: "shifts",
+    },
+  });
+  const { data, included } = response.data;
+  const timesheet = parseTimesheet(data);
+  timesheet.shifts = included.map((resource) => parseShift(resource));
+  return timesheet;
 };
 
 export const fetchTimesheets = async (): Promise<Timesheet[]> => {
   const response: AxiosResponse<{
     data: TimesheetResource[];
-  }> = await jsonAPIClient.get(`/timesheets`);
-  const { data: resources } = response.data;
-  return resources.map((resource: TimesheetResource) => {
+    included: ShiftResource[];
+  }> = await jsonAPIClient.get(`/timesheets`, {
+    params: {
+      include: "shifts",
+    },
+  });
+  const { data, included } = response.data;
+  const timesheets = data.map((resource: TimesheetResource) => {
     return parseTimesheet(resource);
   });
+  const allShifts = included.map((resource) => parseShift(resource));
+  timesheets.forEach((timesheet) => {
+    const shifts = allShifts.filter(({ id }) => {
+      id === timesheet.id;
+    });
+    timesheet.shifts = shifts;
+  });
+  return timesheets;
+};
+
+export const createShifts = async (
+  shifts: Shift[],
+  timesheet: Timesheet
+): Promise<Shift[]> => {
+  const shiftResources: ShiftResource[] = shifts.map((shift) =>
+    makeShiftResource(shift, timesheet)
+  );
+  const response: AxiosResponse<{
+    data: ShiftResource[];
+  }> = await jsonAPIClient.post(`/shifts`, {
+    data: shiftResources,
+  });
+  const { data } = response.data;
+  return data.map((shiftResource) => parseShift(shiftResource));
 };
 
 export const createTimesheet = async (
   timesheet: Timesheet
 ): Promise<Timesheet> => {
-  const timesheetResource: TimesheetResource = makeTimesheetResource(
-    timesheet
-  );
+  const timesheetResource: TimesheetResource = makeTimesheetResource(timesheet);
   const response: AxiosResponse<{
     data: TimesheetResource;
   }> = await jsonAPIClient.post(`/timesheets`, {
     data: timesheetResource,
   });
-  const {
-    data: { id },
-  } = response.data;
-  return Object.assign({}, timesheet, { id });
+  const { data } = response.data;
+  return parseTimesheet(data);
 };
 
 export const deleteTimesheet = async (

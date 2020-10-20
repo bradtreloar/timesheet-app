@@ -42,11 +42,11 @@ export interface ShiftResource {
   id?: string;
   type: "shifts";
   attributes: {
-    start: string;
-    end: string;
-    break_duration: string;
     created?: string;
     changed?: string;
+    start: string;
+    end: string;
+    break_duration: number;
   };
   relationships: {
     timesheet: RelatedResource<"timesheets">;
