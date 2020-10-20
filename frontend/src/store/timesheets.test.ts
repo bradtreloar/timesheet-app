@@ -69,9 +69,7 @@ test("fetch timesheet twice without side effects", async () => {
 test("fetch timesheets", async () => {
   const mockUser = randomUser();
   const mockTimesheets = randomTimesheets(mockUser, randomInt(5, 10));
-  jest
-    .spyOn(datastore, "fetchTimesheets")
-    .mockResolvedValue(mockTimesheets);
+  jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(mockTimesheets);
   const action = await store.dispatch(fetchTimesheets());
   expect(action.payload).toBe(mockTimesheets);
   expect(action.type).toBe("timesheets/fetchAll/fulfilled");
@@ -125,14 +123,10 @@ test("handle failure to add timesheet", async () => {
 test("delete timesheet", async () => {
   const mockUser = randomUser();
   const mockTimesheets = randomTimesheets(mockUser, randomInt(5, 10));
-  jest
-    .spyOn(datastore, "fetchTimesheets")
-    .mockResolvedValue(mockTimesheets);
+  jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(mockTimesheets);
   await store.dispatch(fetchTimesheets());
   const deletedTimesheet = mockTimesheets[0];
-  jest
-    .spyOn(datastore, "deleteTimesheet")
-    .mockResolvedValue(deletedTimesheet);
+  jest.spyOn(datastore, "deleteTimesheet").mockResolvedValue(deletedTimesheet);
   const action = await store.dispatch(removeTimesheet(deletedTimesheet));
   expect(action.payload).toStrictEqual(deletedTimesheet);
   expect(action.type).toBe("timesheets/remove/fulfilled");
@@ -144,9 +138,7 @@ test("delete timesheet", async () => {
 test("fail to delete timesheet", async () => {
   const mockUser = randomUser();
   const mockTimesheets = randomTimesheets(mockUser, randomInt(5, 10));
-  jest
-    .spyOn(datastore, "fetchTimesheets")
-    .mockResolvedValue(mockTimesheets);
+  jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(mockTimesheets);
   jest.spyOn(datastore, "deleteTimesheet").mockRejectedValue(undefined);
   await store.dispatch(fetchTimesheets());
   const deletedTimesheet = mockTimesheets[0];

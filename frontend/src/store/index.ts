@@ -1,13 +1,11 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import timesheets from "./timesheets";
 
-const middleware = [
-  ...getDefaultMiddleware(),
-];
+const middleware = [...getDefaultMiddleware()];
 
 const store = configureStore({
   reducer: {
-    timesheets
+    timesheets,
   },
   middleware,
 });

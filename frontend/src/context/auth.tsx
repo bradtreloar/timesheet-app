@@ -31,7 +31,9 @@ export const useAuth = () => {
 const AuthProvider: React.FC = ({ children }) => {
   // Rehydrate the user value from local storage.
   const storedUserData = localStorage.getItem("user");
-  const initialUser: User | null = storedUserData ? JSON.parse(storedUserData) : null;
+  const initialUser: User | null = storedUserData
+    ? JSON.parse(storedUserData)
+    : null;
   const [isStale, setIsStale] = React.useState(true);
   const [user, setUser] = React.useState(initialUser);
   const [error, setError] = React.useState<string | null>(null);

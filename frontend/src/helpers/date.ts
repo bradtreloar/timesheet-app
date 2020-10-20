@@ -14,9 +14,9 @@ export const addDays = (date: Date, days: number) => {
 
 /**
  * Add hours to a Date
- * 
- * @param date 
- * @param hours 
+ *
+ * @param date
+ * @param hours
  */
 export const addHours = (date: Date, hours: number) => {
   var newDate = new Date(date);
@@ -26,9 +26,9 @@ export const addHours = (date: Date, hours: number) => {
 
 /**
  * Add hours to a Date
- * 
- * @param date 
- * @param hours 
+ *
+ * @param date
+ * @param hours
  */
 export const addMinutes = (date: Date, minutes: number) => {
   var newDate = new Date(date);
@@ -36,12 +36,11 @@ export const addMinutes = (date: Date, minutes: number) => {
   return newDate;
 };
 
-
 /**
  * Converts date to string in format YYYY-MM-DD
- * 
+ *
  * @param date  The date to format
- * 
+ *
  * @return string  The formatted date.
  */
 export const formatDate = (date: Date) => {
@@ -50,7 +49,7 @@ export const formatDate = (date: Date) => {
   const day = date.getDate().toString().padStart(2, "0");
 
   return `${year}-${month}-${day}`;
-}
+};
 
 /**
  * A class for storing a time with only hours and minutes.
