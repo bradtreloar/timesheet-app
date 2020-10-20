@@ -38,7 +38,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "prettier": "prettier --write ./src/**.ts* ./src/**/*.ts*"
+    "prettier": "prettier --write ./src/**.ts* ./src/**/*.ts*",
+    "lint": "eslint ./src/**.ts* ./src/**/*.ts*"
   },
   "eslintConfig": {
     "extends": "react-app"
