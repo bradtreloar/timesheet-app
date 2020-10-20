@@ -1,17 +1,12 @@
-import { Store } from "redux";
 import { Shift, Timesheet, User } from "../types";
 import randomstring from "randomstring";
 import { addDays, addHours, SimpleTime } from "../helpers/date";
-
-const formattedDate = (date: Date) =>
-  `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}`;
 
 const randomID = () => randomstring.generate();
 
 const range = (length: number) => [...Array.from(new Array(length).keys())];
 
 export const randomUser = (userIsAdmin?: boolean): User => {
-  const isAdmin = userIsAdmin !== undefined && userIsAdmin;
   return {
     id: randomID(),
     name: randomstring.generate({

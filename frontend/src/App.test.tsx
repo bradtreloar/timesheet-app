@@ -1,7 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import App from "./App";
-import randomstring from "randomstring";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider } from "./context/auth";
 import { MemoryRouter } from "react-router-dom";
@@ -11,7 +10,6 @@ jest.mock("./services/datastore");
 
 const mockUser = randomUser();
 const mockPassword = randomPassword();
-const mockLogoutToken = randomstring.generate();
 
 const AppFixture: React.FC<{
   routerEntries: string[];

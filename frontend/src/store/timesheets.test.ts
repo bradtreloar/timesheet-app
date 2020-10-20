@@ -37,10 +37,7 @@ test("fetch timesheet", async () => {
   const mockUser = randomUser();
   const mockTimesheet = randomTimesheet(mockUser);
   jest.spyOn(datastore, "fetchTimesheet").mockResolvedValue(mockTimesheet);
-  if (mockTimesheet.id === undefined) {
-    throw "Mock timesheet ID is undefined.";
-  }
-  const action = await store.dispatch(fetchTimesheet(mockTimesheet.id));
+  const action = await store.dispatch(fetchTimesheet(mockTimesheet.id as string));
   expect(action.payload).toBe(mockTimesheet);
   expect(action.type).toBe("timesheets/fetch/fulfilled");
   const { status, timesheets } = selectTimesheets(store.getState());
@@ -52,11 +49,8 @@ test("fetch timesheet twice without side effects", async () => {
   const mockUser = randomUser();
   const mockTimesheet = randomTimesheet(mockUser);
   jest.spyOn(datastore, "fetchTimesheet").mockResolvedValue(mockTimesheet);
-  if (mockTimesheet.id === undefined) {
-    throw "Mock timesheet ID is undefined.";
-  }
   for (let i = 0; i < 2; i++) {
-    const action = await store.dispatch(fetchTimesheet(mockTimesheet.id));
+    const action = await store.dispatch(fetchTimesheet(mockTimesheet.id as string));
     expect(action.payload).toBe(mockTimesheet);
     expect(action.type).toBe("timesheets/fetch/fulfilled");
     const { status, timesheets } = selectTimesheets(store.getState());

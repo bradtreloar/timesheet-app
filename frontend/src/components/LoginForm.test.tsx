@@ -1,5 +1,5 @@
 import React from "react";
-import { render, act } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import LoginForm from "./LoginForm";
@@ -28,7 +28,7 @@ test("Empty form submission fails", () => {
   render(
     <LoginForm
       onSubmit={(email, password) => {
-        throw "onSubmit should not be called.";
+        throw new Error("onSubmit should not be called.");
       }}
     />
   );
@@ -47,7 +47,7 @@ test("Invalid email address detected", () => {
   render(
     <LoginForm
       onSubmit={(email, password) => {
-        throw "onSubmit should not be called.";
+        throw new Error("onSubmit should not be called.");
       }}
     />
   );

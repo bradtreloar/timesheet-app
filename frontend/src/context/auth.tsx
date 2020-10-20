@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextState | undefined>(undefined);
 export const useAuth = () => {
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
-    throw "AuthContext is undefined";
+    throw new Error("AuthContext is undefined");
   }
   return authContext;
 };

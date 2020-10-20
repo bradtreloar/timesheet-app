@@ -4,7 +4,6 @@ import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useAuth } from "../context/auth";
 import getMenu from "../data/menus";
 import classNames from "classnames";
-import logoImage from "../assets/logo.svg";
 import "../styles/components/Navbar.scss";
 
 interface NavbarWrapperProps {

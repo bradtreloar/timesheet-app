@@ -4,7 +4,6 @@ import { Shift, Timesheet } from "../types";
 export const parseShift = (resource: ShiftResource): Shift => {
   const {
     id,
-    relationships: { timesheet },
     attributes: { created, changed, start, end, break_duration: breakDuration },
   } = resource;
   return {
@@ -73,7 +72,7 @@ export const makeShiftResource = (
 export const makeTimesheetResource = (
   timesheet: Timesheet
 ): TimesheetResource => {
-  const { id, userID, changed, created, shifts } = timesheet;
+  const { id, userID, changed, created } = timesheet;
   const resource: TimesheetResource = {
     type: "timesheets",
     attributes: {},

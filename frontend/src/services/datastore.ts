@@ -83,9 +83,7 @@ export const fetchTimesheets = async (): Promise<Timesheet[]> => {
   });
   const allShifts = included.map((resource) => parseShift(resource));
   timesheets.forEach((timesheet) => {
-    const shifts = allShifts.filter(({ id }) => {
-      id === timesheet.id;
-    });
+    const shifts = allShifts.filter(({ id }) => id === timesheet.id);
     timesheet.shifts = shifts;
   });
   return timesheets;
@@ -123,8 +121,6 @@ export const createTimesheet = async (
 export const deleteTimesheet = async (
   timesheet: Timesheet
 ): Promise<Timesheet> => {
-  const response: AxiosResponse<{
-    data: TimesheetResource;
-  }> = await jsonAPIClient.delete(`/timesheets`);
+  await jsonAPIClient.delete(`/timesheets`);
   return timesheet;
 };

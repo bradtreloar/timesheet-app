@@ -1,5 +1,3 @@
-import { SimpleTime } from "./helpers/date";
-
 export type User = {
   isAdmin: boolean;
   id: string;

@@ -16,7 +16,7 @@ const mockAdminUser = randomUser(true);
 const mockPassword = randomPassword();
 
 const PassiveFixture = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   return <IsAuthenticatedFixture isAuthenticated={isAuthenticated} />;
 };
 
