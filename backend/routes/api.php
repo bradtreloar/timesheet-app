@@ -33,7 +33,7 @@ Route::post('/api/v1/login', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')
-    ->get('/user', function (Request $request) {
+    ->get('/api/v1/user', function (Request $request) {
         return $request->user();
     });
 
