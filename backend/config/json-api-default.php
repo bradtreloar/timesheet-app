@@ -105,7 +105,7 @@ return [
     */
     'url' => [
         'host' => null,
-        'namespace' => '/api/v1',
+        'namespace' => '',
         'name' => 'api:v1:',
     ],
 

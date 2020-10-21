@@ -3,6 +3,7 @@
 use App\Http\Middleware\CheckAccess;
 use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,23 +19,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/api/v1/login', function (Request $request) {
-    $credentials = $request->only(['email', 'password']);
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-        return response([
-            "id" => $user->id,
-            "email" => $user->email,
-            "name" => $user->name,
-        ], 200);
-    } else {
-        return response(null, 401);
-    }
-});
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout');
 
 Route::middleware('auth:sanctum')
-    ->get('/api/v1/user', function (Request $request) {
-        return $request->user();
+    ->get('user', function (Request $request) {
+        $user = $request->user();
+        return new JsonResponse([
+            'id' => $user->id,
+            'email' => $user->email,
+            'name' => $user->name,
+            'is_admin' => $user->is_admin,
+        ], 200);
     });
 
 JsonApi::register('default')
