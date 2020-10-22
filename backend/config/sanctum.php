@@ -44,4 +44,8 @@ return [
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
     ],
 
+
+    // Change route prefix
+    'prefix' => 'api',
+
 ];
