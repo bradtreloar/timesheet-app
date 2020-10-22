@@ -37,7 +37,9 @@ test("fetch timesheet", async () => {
   const mockUser = randomUser();
   const mockTimesheet = randomTimesheet(mockUser);
   jest.spyOn(datastore, "fetchTimesheet").mockResolvedValue(mockTimesheet);
-  const action = await store.dispatch(fetchTimesheet(mockTimesheet.id as string));
+  const action = await store.dispatch(
+    fetchTimesheet(mockTimesheet.id as string)
+  );
   expect(action.payload).toBe(mockTimesheet);
   expect(action.type).toBe("timesheets/fetch/fulfilled");
   const { status, timesheets } = selectTimesheets(store.getState());
@@ -50,7 +52,9 @@ test("fetch timesheet twice without side effects", async () => {
   const mockTimesheet = randomTimesheet(mockUser);
   jest.spyOn(datastore, "fetchTimesheet").mockResolvedValue(mockTimesheet);
   for (let i = 0; i < 2; i++) {
-    const action = await store.dispatch(fetchTimesheet(mockTimesheet.id as string));
+    const action = await store.dispatch(
+      fetchTimesheet(mockTimesheet.id as string)
+    );
     expect(action.payload).toBe(mockTimesheet);
     expect(action.type).toBe("timesheets/fetch/fulfilled");
     const { status, timesheets } = selectTimesheets(store.getState());
