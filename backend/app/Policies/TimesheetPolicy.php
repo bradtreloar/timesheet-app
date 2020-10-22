@@ -14,7 +14,7 @@ class TimesheetPolicy
     public function before($user, $ability)
     {
         // Allow all actions by admin users.
-        if ($user->hasRole('admin')) {
+        if ($user->is_admin) {
             return true;
         }
 
