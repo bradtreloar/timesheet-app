@@ -46,10 +46,10 @@ class CreateUser extends Command
             $user = new User([
                 "name" => $this->argument("name"),
                 "email" => $this->argument("email"),
-                'email_verified_at' => now(),
                 "password" => Hash::make($plain_password),
                 'is_admin' => $this->option("admin"),
             ]);
+            $user->markEmailAsVerified();
             $user->save();
             return 0;
         } catch (QueryException $ex) {

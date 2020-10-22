@@ -15,13 +15,9 @@ class CreateShiftsTable extends Migration
     {
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->time('start_at');
-            $table->time('end_at');
-            $table->time('break_duration');
-            $table->enum('status', [
-                'worked', 'not_rostered', 'sick', 'public_holiday'
-            ]);
+            $table->datetime('start');
+            $table->datetime('end');
+            $table->integer('break_duration');
             $table->bigInteger('timesheet_id');
             $table->timestamps();
         });

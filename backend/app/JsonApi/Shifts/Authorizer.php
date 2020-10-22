@@ -44,8 +44,9 @@ class Authorizer extends AbstractAuthorizer
      */
     public function create($type, $request)
     {
-        $timesheet_id = $request->json("data.relationships.timesheet.data.id");
-        $timesheet = Timesheet::find($timesheet_id);
+        $data = $request->json("data");
+        $tid = $data["relationships"]["timesheet"]["data"]["id"];
+        $timesheet = Timesheet::find($tid);
         $this->can("create", $type, $timesheet);
     }
 
@@ -96,5 +97,4 @@ class Authorizer extends AbstractAuthorizer
     {
         $this->can("delete", $record);
     }
-
 }

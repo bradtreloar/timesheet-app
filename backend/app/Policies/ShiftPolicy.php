@@ -19,7 +19,7 @@ class ShiftPolicy
         }
 
         // Deny all actions by users without a verified email address.
-        if (! $user->hasVerifiedEmail()) {
+        if (!$user->hasVerifiedEmail()) {
             return false;
         }
     }

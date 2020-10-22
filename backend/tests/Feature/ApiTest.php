@@ -59,16 +59,14 @@ class ApiTest extends TestCase
     }
 
 
-    protected function fakeShiftData(Timesheet $timesheet, string $date): array
+    protected function fakeShiftData(Timesheet $timesheet): array
     {
         return [
             "type" => "shifts",
             "attributes" => [
-                "date" => $date,
-                "start_at" => "09:30:00",
-                "end_at" => "17:30:00",
-                "break_duration" => "00:45:00",
-                "status" => "worked",
+                "start" => $this->faker->iso8601(),
+                "end" => $this->faker->iso8601(),
+                "break_duration" => 45,
             ],
             "relationships" => [
                 "timesheet" => [
@@ -285,7 +283,7 @@ class ApiTest extends TestCase
         $timesheet = Timesheet::find(1);
         $user = $timesheet->user;
         $request_data = [
-            "data" => $this->fakeShiftData($timesheet, $this->faker->date()),
+            "data" => $this->fakeShiftData($timesheet),
         ];
         $response = $this->actingAs($user)
             ->jsonApi("POST", "/api/shifts", $request_data);
@@ -305,13 +303,9 @@ class ApiTest extends TestCase
         $this->seed();
         $timesheet = Timesheet::find(1);
         $user = $timesheet->user;
-        $week_ending_date_components = explode("-", $this->faker->date());
         for ($i = 0; $i < 5; $i++) {
-            $date_components = $week_ending_date_components;
-            $date_components[2] -= $i;
-            $date = implode("-", $date_components);
             $request_data = [
-                "data" => $this->fakeShiftData($timesheet, $date),
+                "data" => $this->fakeShiftData($timesheet),
             ];
             $response = $this->actingAs($user)
                 ->jsonApi("POST", "/api/shifts", $request_data);

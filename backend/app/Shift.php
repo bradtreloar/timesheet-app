@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Shift extends Model
 {
     protected $fillable = [
-        'date', 'start_at', 'end_at', 'break_duration', 'status'
+        'start', 'end', 'break_duration',
     ];
 
     public function timesheet(): BelongsTo
