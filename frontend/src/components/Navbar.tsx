@@ -27,20 +27,22 @@ const NavbarWrapper: React.FC<NavbarWrapperProps> = ({ className }) => {
     <div
       className={classNames("navbar-wrapper bg-light border-bottom", className)}
     >
-      <Navbar expand="lg">
-        <Navbar.Brand>
-          <Link className="navbar-brand" to="/">
-            Allbiz Timesheet
-          </Link>
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbar-nav" />
-        <Navbar.Collapse id="navbar-nav">
-          <Nav className="ml-auto">
-            {navItems}
-            <UserMenu />
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <div className="container px-0">
+        <Navbar expand="lg">
+          <Navbar.Brand>
+            <Link className="navbar-brand" to="/">
+              Allbiz Timesheet
+            </Link>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="navbar-nav" />
+          <Navbar.Collapse id="navbar-nav">
+            <Nav className="ml-auto">
+              {navItems}
+              <UserMenu />
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+      </div>
     </div>
   );
 };
