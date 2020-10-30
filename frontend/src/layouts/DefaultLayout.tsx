@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import "../styles/layouts/default.scss";
+import "./DefaultLayout.scss";
 
 const DefaultLayout: React.FC = ({ children }) => {
   return (
