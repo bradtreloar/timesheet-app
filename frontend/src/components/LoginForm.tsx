@@ -1,6 +1,6 @@
 import React from "react";
 import * as EmailValidator from "email-validator";
-import "../styles/components/LoginForm.scss";
+import "./LoginForm.scss";
 
 interface LoginFormProps {
   onSubmit: (email: string, password: string) => Promise<void>;
