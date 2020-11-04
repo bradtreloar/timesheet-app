@@ -19,7 +19,7 @@ export const client = axios.create({
 });
 
 export const jsonAPIClient = axios.create({
-  baseURL: `${HOST}/api/v1`,
+  baseURL: `${HOST}/api`,
   withCredentials: true,
   headers: {
     Accept: "application/vnd.api+json",
@@ -28,8 +28,8 @@ export const jsonAPIClient = axios.create({
 });
 
 export const login = async (email: string, password: string): Promise<User> => {
-  await client.get("/sanctum/csrf-cookie");
-  const response: AxiosResponse<User> = await client.post("/api/v1/login", {
+  await client.get("/api/csrf-cookie");
+  const response: AxiosResponse<User> = await client.post("/api/login", {
     email,
     password,
   });
@@ -37,12 +37,12 @@ export const login = async (email: string, password: string): Promise<User> => {
 };
 
 export const logout = async () => {
-  await client.get("/api/v1/logout");
+  await client.get("/api/logout");
 };
 
 export const fetchCurrentUser = async (): Promise<User | null> => {
   try {
-    const response = await client.get(`/api/v1/user`);
+    const response = await client.get(`/api/user`);
     if (response.status === 204) {
       // No current user.
       return null;
