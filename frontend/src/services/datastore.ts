@@ -37,7 +37,7 @@ export const login = async (email: string, password: string): Promise<User> => {
 };
 
 export const logout = async () => {
-  await client.get("/api/logout");
+  await client.post("/api/logout");
 };
 
 export const fetchCurrentUser = async (): Promise<User | null> => {
