@@ -61,7 +61,7 @@ const AuthProvider: React.FC = ({ children }) => {
     } catch (error) {
       if (error.response) {
         const { status } = error.response;
-        if (status === 401) {
+        if (status === 422) {
           setError("Unrecognized email or password.");
           return;
         }
@@ -69,6 +69,9 @@ const AuthProvider: React.FC = ({ children }) => {
           setIsStale(true);
           return;
         }
+        setError("Unable to log in. An error has occurred");
+        console.error(error);
+        return;
       }
       setError(error);
     }
