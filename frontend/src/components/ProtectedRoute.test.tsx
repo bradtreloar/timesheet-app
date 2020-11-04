@@ -29,7 +29,7 @@ afterEach(() => {
 
 test("renders protected route when authenticated", async () => {
   const mockUser = randomUser();
-  mockClient.onGet("/api/v1/user").reply(200, mockUser);
+  mockClient.onGet("/api/user").reply(200, mockUser);
   (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
   await act(async () => {
     render(<Fixture />);
