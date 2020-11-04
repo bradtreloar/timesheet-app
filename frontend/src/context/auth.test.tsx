@@ -66,7 +66,7 @@ const LogoutFixture = () => {
 };
 
 beforeEach(() => {
-  mockClient.onGet("/sanctum/csrf-cookie").reply(204);
+  mockClient.onGet("/api/csrf-cookie").reply(204);
   localStorage.clear();
 });
 
@@ -76,7 +76,7 @@ afterEach(() => {
 
 describe("unauthenticated user", () => {
   beforeEach(() => {
-    mockClient.onGet("/api/v1/user").reply(204);
+    mockClient.onGet("/api/user").reply(204);
   });
 
   test("user is unauthenticated", async () => {
@@ -92,7 +92,7 @@ describe("unauthenticated user", () => {
   });
 
   test("user logs in successfully", async () => {
-    mockClient.onPost("/api/v1/login").reply(200, mockUser);
+    mockClient.onPost("/api/login").reply(200, mockUser);
 
     await act(async () => {
       render(
@@ -109,7 +109,7 @@ describe("unauthenticated user", () => {
   });
 
   test("invalid user fails to log in", async () => {
-    mockClient.onPost("/api/v1/login").reply(401);
+    mockClient.onPost("/api/login").reply(422);
 
     await act(async () => {
       render(
@@ -126,7 +126,7 @@ describe("unauthenticated user", () => {
   });
 
   test("has pre-existing session", async () => {
-    mockClient.onGet("/api/v1/user").reply(200, mockUser);
+    mockClient.onGet("/api/user").reply(200, mockUser);
 
     await act(async () => {
       render(
@@ -143,11 +143,11 @@ describe("unauthenticated user", () => {
 describe("authenticated user", () => {
   beforeEach(() => {
     localStorage.setItem("user", JSON.stringify(mockUser));
-    mockClient.onGet("/api/v1/user").reply(200, mockUser);
+    mockClient.onGet("/api/user").reply(200, mockUser);
   });
 
   test("user is authenticated", async () => {
-    mockClient.onGet("/api/v1/user").reply(200, mockUser);
+    mockClient.onGet("/api/user").reply(200, mockUser);
 
     await act(async () => {
       render(
@@ -161,8 +161,8 @@ describe("authenticated user", () => {
   });
 
   test("user logs out successfully", async () => {
-    mockClient.onGet("/api/v1/user").reply(200, mockUser);
-    mockClient.onGet("/api/v1/logout").reply(200);
+    mockClient.onGet("/api/user").reply(200, mockUser);
+    mockClient.onPost("/api/logout").reply(200);
 
     await act(async () => {
       render(
@@ -179,7 +179,7 @@ describe("authenticated user", () => {
   });
 
   test("session has expired", async () => {
-    mockClient.onGet("/api/v1/user").reply(204, mockUser);
+    mockClient.onGet("/api/user").reply(204, mockUser);
 
     await act(async () => {
       render(
@@ -196,11 +196,11 @@ describe("authenticated user", () => {
 describe("admin user", () => {
   beforeEach(() => {
     localStorage.setItem("user", JSON.stringify(mockAdminUser));
-    mockClient.onGet("/api/v1/user").reply(200, mockAdminUser);
+    mockClient.onGet("/api/user").reply(200, mockAdminUser);
   });
 
   test("admin user is authenticated", async () => {
-    mockClient.onGet("/api/v1/user").reply(200, mockAdminUser);
+    mockClient.onGet("/api/user").reply(200, mockAdminUser);
 
     const Fixture = () => {
       const { isAuthenticated, isAdmin } = useAuth();
