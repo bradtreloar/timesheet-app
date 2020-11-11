@@ -37,7 +37,7 @@ const expectTimesEqual = (shiftInput: HTMLElement, shiftTimes: ShiftTimes) => {
     const expectedHours =
       value && value.hours !== null ? value.hours.toString() : "";
     const expectedMinutes =
-      value && value.minutes !== null ? value.minutes.toString() : "";
+      value && value.minutes !== null ? value.minutes.toString().padStart(2, "0") : "";
     expect(
       within(timeInput).getByLabelText(/hours/i).getAttribute("value")
     ).toEqual(expectedHours);
