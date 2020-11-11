@@ -15,11 +15,21 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   const [hours, minutes] = time !== null ? time.toArray() : [null, null];
   const [hasFocus, setHasFocus] = React.useState(true);
 
-  const parseValue = (value: string) => {
-    return value === "" ? null : parseInt(value);
+  const parseValue = (value: string, defaultValue: number | null) => {
+    if (value === "") {
+      return null;
+    }
+    const integerValue = parseInt(value);
+    if (isNaN(integerValue)) {
+      return defaultValue;
+    }
+    if (integerValue < 0) {
+      return integerValue * -1;
+    }
+    return integerValue;
   };
 
-  const formattedValue = (value: number, isPadded: boolean) => {
+  const formattedValue = (value: number | null, isPadded: boolean) => {
     return value !== null
       ? isPadded
         ? value.toString().padStart(2, "0")
@@ -38,7 +48,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
         required
         value={hours !== null ? hours.toString() : ""}
         onChange={(event) => {
-          const newHours = parseValue(event.target.value);
+          const newHours = parseValue(event.target.value, hours);
           onChange(new SimpleTime(newHours, minutes));
         }}
       />
@@ -52,7 +62,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
         required
         value={formattedValue(minutes, hasFocus)}
         onChange={(event) => {
-          const newMinutes = parseValue(event.target.value);
+          const newMinutes = parseValue(event.target.value, minutes);
           onChange(new SimpleTime(hours, newMinutes));
         }}
         onFocus={() => {
