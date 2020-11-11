@@ -60,7 +60,8 @@ test("handles hours input", () => {
 
   render(<TimeInput time={null} onChange={onChange} />);
 
-  userEvent.type(screen.getByLabelText(/hours/i), hours.toString());
+  const hoursInput = screen.getByLabelText(/hours/i);
+  userEvent.type(hoursInput, hours.toString());
 
   expect(onChange).toHaveBeenCalledTimes(2);
   for (let char of hours.toString()) {
@@ -69,6 +70,10 @@ test("handles hours input", () => {
       minutes: null,
     });
   }
+
+  // The input element's value should remain blank as we aren't updating
+  // its time prop.
+  expect(hoursInput.getAttribute("value")).toEqual("");
 });
 
 test("handles minutes input", () => {
@@ -86,6 +91,10 @@ test("handles minutes input", () => {
       minutes: parseInt(char),
     });
   }
+
+  // The input element's value should remain blank as we aren't updating
+  // its time prop.
+  expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual("");
 });
 
 test("handles hours input with existing value", () => {
@@ -95,9 +104,10 @@ test("handles hours input with existing value", () => {
 
   render(<TimeInput time={time} onChange={onChange} />);
 
-  expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual("1");
+  const hoursInput = screen.getByLabelText(/hours/i);
+  expect(hoursInput.getAttribute("value")).toEqual("1");
 
-  userEvent.type(screen.getByLabelText(/hours/i), hours.toString());
+  userEvent.type(hoursInput, hours.toString());
 
   const expectedHours = hours + 10;
   expect(onChange).toHaveBeenCalledTimes(1);
@@ -105,6 +115,10 @@ test("handles hours input with existing value", () => {
     hours: expectedHours,
     minutes: null,
   });
+
+  // The input element's value should remain unchanged as we aren't updating
+  // its time prop.
+  expect(hoursInput.getAttribute("value")).toEqual("1");
 });
 
 test("ignores invalid input", () => {
@@ -113,11 +127,13 @@ test("ignores invalid input", () => {
   const onChange = jest.fn();
 
   render(<TimeInput time={time} onChange={onChange} />);
-  expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(hours.toString());
 
-  fireEvent.keyPress(screen.getByLabelText(/hours/i), "a");
+  const hoursInput = screen.getByLabelText(/hours/i);
+  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
 
+  fireEvent.keyPress(hoursInput, "a");
   expect(onChange).toHaveBeenCalledTimes(0);
+  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
 });
 
 test("handles erase existing hours value", () => {
@@ -126,13 +142,14 @@ test("handles erase existing hours value", () => {
   const onChange = jest.fn();
 
   render(<TimeInput time={time} onChange={onChange} />);
-  expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(hours.toString());
+  const hoursInput = screen.getByLabelText(/hours/i);
+  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
 
-  userEvent.clear(screen.getByLabelText(/hours/i));
-
+  userEvent.clear(hoursInput);
   expect(onChange).toHaveBeenCalledTimes(1);
   expect(onChange).toHaveBeenCalledWith({
     hours: null,
     minutes: null,
   });
+  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
 });
