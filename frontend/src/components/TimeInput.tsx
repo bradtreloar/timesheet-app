@@ -13,15 +13,15 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   "aria-label": ariaLabel,
 }) => {
   const [hours, minutes] = time !== null ? time.toArray() : [null, null];
-  const [padded, setPadded] = React.useState(true);
+  const [hasFocus, setHasFocus] = React.useState(true);
 
   const parseValue = (value: string) => {
     return value === "" ? null : parseInt(value);
   };
 
-  const formattedValue = (value: number) => {
+  const formattedValue = (value: number, isPadded: boolean) => {
     return value !== null
-      ? padded
+      ? isPadded
         ? value.toString().padStart(2, "0")
         : value.toString()
       : "";
@@ -41,12 +41,6 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           const newHours = parseValue(event.target.value);
           onChange(new SimpleTime(newHours, minutes));
         }}
-        onFocus={() => {
-          setPadded(false);
-        }}
-        onBlur={() => {
-          setPadded(true);
-        }}
       />
       <span className="mx-1">:</span>
       <input
@@ -56,16 +50,16 @@ export const TimeInput: React.FC<TimeInputProps> = ({
         max={59}
         step={1}
         required
-        value={minutes !== null ? minutes.toString() : ""}
+        value={formattedValue(minutes, hasFocus)}
         onChange={(event) => {
           const newMinutes = parseValue(event.target.value);
           onChange(new SimpleTime(hours, newMinutes));
         }}
         onFocus={() => {
-          setPadded(false);
+          setHasFocus(false);
         }}
         onBlur={() => {
-          setPadded(true);
+          setHasFocus(true);
         }}
       />
     </div>

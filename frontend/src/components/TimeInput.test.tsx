@@ -28,20 +28,20 @@ test("renders hours only", () => {
 });
 
 test("renders minutes only", () => {
-  const minutes = randomInt(0, 23);
+  const minutes = randomInt(0, 9);
   const testTime = new SimpleTime(null, minutes);
 
   render(<TimeInput time={testTime} onChange={() => {}} />);
 
   expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual("");
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual(
-    minutes.toString()
+    minutes.toString().padStart(2, "0")
   );
 });
 
 test("renders hours and minutes", () => {
   const hours = randomInt(0, 23);
-  const minutes = randomInt(0, 23);
+  const minutes = randomInt(0, 9);
   const testTime = new SimpleTime(hours, minutes);
 
   render(<TimeInput time={testTime} onChange={() => {}} />);
@@ -50,7 +50,7 @@ test("renders hours and minutes", () => {
     hours.toString()
   );
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual(
-    minutes.toString()
+    minutes.toString().padStart(2, "0")
   );
 });
 
