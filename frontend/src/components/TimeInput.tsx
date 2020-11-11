@@ -23,7 +23,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({ time, onChange, "aria-labe
         max={23}
         step={1}
         required
-        value={hours !== null ? hours : ""}
+        value={hours !== null ? hours.toString() : ""}
         onChange={(event) => {
           const newHours = parseValue(event.target.value);
           onChange(new SimpleTime(newHours, minutes));
@@ -37,7 +37,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({ time, onChange, "aria-labe
         max={59}
         step={1}
         required
-        value={minutes !== null ? minutes : ""}
+        value={minutes !== null ? minutes.toString() : ""}
         onChange={(event) => {
           const newMinutes = parseValue(event.target.value);
           onChange(new SimpleTime(hours, newMinutes));
