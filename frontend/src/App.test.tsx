@@ -6,6 +6,8 @@ import { AuthProvider } from "./context/auth";
 import { MemoryRouter } from "react-router-dom";
 import { randomPassword, randomUser } from "./fixtures/random";
 import * as datastore from "./services/datastore";
+import { Provider } from "react-redux";
+import store from "./store";
 jest.mock("./services/datastore");
 
 const mockUser = randomUser();
@@ -15,11 +17,13 @@ const AppFixture: React.FC<{
   routerEntries: string[];
 }> = ({ routerEntries }) => {
   return (
-    <AuthProvider>
-      <MemoryRouter initialEntries={routerEntries}>
-        <App />
-      </MemoryRouter>
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <MemoryRouter initialEntries={routerEntries}>
+          <App />
+        </MemoryRouter>
+      </AuthProvider>
+    </Provider>
   );
 };
 
@@ -59,7 +63,7 @@ describe("unauthenticated user", () => {
     await act(async () => {
       userEvent.click(screen.getByTestId("login-form-submit"));
     });
-    expect(screen.getByRole("heading")).toHaveTextContent(/home page/i);
+    expect(screen.getByRole("heading")).toHaveTextContent(/my timesheets/i);
   });
 
   test("receives error when login fails", async () => {
@@ -87,13 +91,13 @@ describe("authenticated user", () => {
     jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(mockUser);
   });
 
-  test("views home page", async () => {
+  test("views hpme page", async () => {
     await act(async () => {
       render(<AppFixture routerEntries={["/"]} />);
     });
 
     expect(screen.queryByText(/404/)).toBeNull();
-    screen.getByText(/Home page/i);
+    screen.getByText(/my timesheets/i);
   });
 
   test("logs out", async () => {
@@ -102,7 +106,7 @@ describe("authenticated user", () => {
 
     render(<AppFixture routerEntries={["/"]} />);
 
-    expect(screen.getByRole("heading")).toHaveTextContent(/home page/i);
+    expect(screen.getByRole("heading")).toHaveTextContent(/my timesheets/i);
     userEvent.click(screen.getByText(mockUser.name));
     await act(async () => {
       userEvent.click(screen.getByTestId("logout-button"));

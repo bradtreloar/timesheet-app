@@ -7,23 +7,24 @@ import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import store from "./store";
 import { fetchTimesheets } from "./store/timesheets";
+import { User } from "./types";
 
-const initialiseStore = async () => {
-  store.dispatch(fetchTimesheets());
+const initialiseStore = async (user: User) => {
+  store.dispatch(fetchTimesheets(user));
 };
 
 const App: React.FC = () => {
   const [initialised, setInitialised] = React.useState(false);
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   React.useEffect(() => {
-    if (isAuthenticated && !initialised) {
+    if (user && !initialised) {
       (async () => {
-        await initialiseStore();
+        await initialiseStore(user);
         setInitialised(true);
       })();
     }
-  }, [isAuthenticated, initialised, setInitialised]);
+  }, [user, initialised, setInitialised]);
 
   return (
     <Switch>
