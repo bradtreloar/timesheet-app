@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import WeekSelect from "./WeekSelect";
-import { addWeek, longFormatDate } from "../helpers/date";
+import { longFormatDate } from "../helpers/date";
 
 test("renders week select label", () => {
   const testDate = new Date();
@@ -37,7 +37,6 @@ test("handles move one week forward", (done) => {
 
 test("handles move one week backward", (done) => {
   const testDate = new Date();
-  const label = longFormatDate(testDate);
 
   render(
     <WeekSelect
