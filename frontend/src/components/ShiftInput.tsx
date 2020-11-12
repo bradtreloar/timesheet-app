@@ -8,7 +8,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 interface ShiftInputProps {
   date: Date;
   shiftTimes: ShiftTimes | null;
-  onChange: (shiftTimes: ShiftTimes | null) => void;
+  onChange: (shiftTimes: ShiftTimes) => void;
   onToggle: () => void;
 }
 
