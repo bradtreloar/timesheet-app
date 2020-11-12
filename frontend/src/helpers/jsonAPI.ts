@@ -10,21 +10,20 @@ export const parseShift = (resource: ShiftResource): Shift => {
     id: id as string,
     created: created as string,
     changed: changed as string,
-    start,
-    end,
+    start: new Date(start),
+    end: new Date(end),
     breakDuration,
   };
 };
 
-export const parseTimesheet = (resource: TimesheetResource): Timesheet => {
+export const parseTimesheet = (userID: string, resource: TimesheetResource): Timesheet => {
   const {
     id,
-    relationships: { user },
     attributes: { created, changed },
   } = resource;
   return {
     id: id,
-    userID: user.data.id,
+    userID,
     changed: changed,
     created: created,
     shifts: [],
@@ -44,8 +43,8 @@ export const makeShiftResource = (
   const resource: ShiftResource = {
     type: "shifts",
     attributes: {
-      start,
-      end,
+      start: start.toISOString(),
+      end: end.toISOString(),
       break_duration: breakDuration,
     },
     relationships: {
