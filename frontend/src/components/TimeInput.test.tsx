@@ -1,10 +1,9 @@
 import React from "react";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TimeInput from "./TimeInput";
-import { randomInt, randomSimpleTime } from "../fixtures/random";
+import { randomInt } from "../fixtures/random";
 import { SimpleTime } from "../helpers/date";
-import { range } from "lodash";
 
 test("renders null value", () => {
   const testTime = null;
