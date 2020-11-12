@@ -1,13 +1,11 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ShiftInput, { TimeInput } from "./ShiftInput";
+import ShiftInput from "./ShiftInput";
 import {
-  randomInt,
-  randomShiftTimes,
-  randomSimpleTime,
+  randomShiftTimes
 } from "../fixtures/random";
-import { longFormatDate, SimpleTime } from "../helpers/date";
+import { longFormatDate } from "../helpers/date";
 import { ShiftTimes } from "../types";
 
 const EMPTY_SHIFT_TIMES = {
@@ -67,21 +65,22 @@ const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes) => {
   }
 };
 
-test("renders date label", () => {
+test("renders date label and toggler", () => {
   const testShiftTimes = randomShiftTimes();
-  const defaultShiftTimes = randomShiftTimes();
   const testDate = new Date();
   const label = longFormatDate(testDate);
+
   render(
     <ShiftInput
       date={testDate}
-      defaultShiftTimes={defaultShiftTimes}
       shiftTimes={testShiftTimes}
       onChange={() => {}}
+      onToggle={() => {}}
     />
   );
 
   screen.getByLabelText(new RegExp(label));
+  screen.getByLabelText(/worked/i);
 });
 
 test("renders null time inputs", () => {
@@ -90,9 +89,9 @@ test("renders null time inputs", () => {
   render(
     <ShiftInput
       date={testDate}
-      defaultShiftTimes={EMPTY_SHIFT_TIMES}
       shiftTimes={EMPTY_SHIFT_TIMES}
       onChange={() => {}}
+      onToggle={() => {}}
     />
   );
 
@@ -106,9 +105,9 @@ test("renders filled time inputs", () => {
   render(
     <ShiftInput
       date={testDate}
-      defaultShiftTimes={EMPTY_SHIFT_TIMES}
       shiftTimes={testShiftTimes}
       onChange={() => {}}
+      onToggle={() => {}}
     />
   );
 
@@ -123,13 +122,31 @@ test("handles time inputs", () => {
   render(
     <ShiftInput
       date={testDate}
-      defaultShiftTimes={EMPTY_SHIFT_TIMES}
       shiftTimes={EMPTY_SHIFT_TIMES}
       onChange={onChange}
+      onToggle={() => {}}
     />
   );
 
   const shiftInput = screen.getByLabelText(/shift/i);
   enterShiftTimes(shiftInput, testShiftTimes);
   expectTimesEqual(shiftInput, EMPTY_SHIFT_TIMES);
+});
+
+test("handles shift toggle", () => {
+  const testDate = new Date();
+  const onChange = jest.fn();
+  const onToggle = jest.fn();
+
+  render(
+    <ShiftInput
+      date={testDate}
+      shiftTimes={null}
+      onChange={onChange}
+      onToggle={onToggle}
+    />
+  );
+
+  userEvent.click(screen.getByLabelText(/worked/i));
+  expect(onToggle).toBeCalledTimes(1);
 });

@@ -2,34 +2,29 @@ import React from "react";
 import { ShiftTimes } from "../types";
 import { longFormatDate, SimpleTime } from "../helpers/date";
 import TimeInput from "./TimeInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 interface ShiftInputProps {
   date: Date;
   shiftTimes: ShiftTimes | null;
-  defaultShiftTimes: ShiftTimes | null;
   onChange: (shiftTimes: ShiftTimes | null) => void;
+  onToggle: () => void;
 }
 
 const ShiftInput: React.FC<ShiftInputProps> = ({
   date,
   shiftTimes,
-  defaultShiftTimes,
   onChange,
+  onToggle,
 }) => {
   const label = longFormatDate(date);
 
   return (
     <div aria-label="Shift" className="d-flex">
       <label>
-        <ShiftToggle
-          date={date}
-          shiftTimes={shiftTimes}
-          defaultShiftTimes={defaultShiftTimes}
-          onToggle={onChange}
-        />
-        <div>
-          {label}
-        </div>
+        <ShiftToggle isChecked={shiftTimes !== null} onToggle={onToggle} />
+        <div>{label}</div>
       </label>
       {shiftTimes && (
         <div>
@@ -61,47 +56,29 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
 };
 
 interface ShiftToggleProps {
-  date: Date;
-  shiftTimes: ShiftTimes | null;
-  defaultShiftTimes: ShiftTimes | null;
-  onToggle: (shift: ShiftTimes | null) => void;
+  isChecked: boolean;
+  onToggle: () => void;
 }
 
-const ShiftToggle: React.FC<ShiftToggleProps> = ({
-  date,
-  shiftTimes,
-  defaultShiftTimes,
-  onToggle,
-}) => {
-  if (shiftTimes === null) {
-    return (
-      <button
-        className="is-unchecked"
-        onClick={() => {
-          onToggle(
-            defaultShiftTimes || {
-              startTime: null,
-              endTime: null,
-              breakDuration: null,
-            }
-          );
-        }}
-      >
-        UNCHECKED
-      </button>
-    );
-  } else {
-    return (
-      <button
-        className="is-checked"
-        onClick={() => {
-          onToggle(null);
-        }}
-      >
-        CHECKED
-      </button>
-    );
-  }
+const ShiftToggle: React.FC<ShiftToggleProps> = ({ isChecked, onToggle }) => {
+  return isChecked ? (
+    <button
+      aria-label="Worked"
+      className="shift-toggler btn btn-light is-unchecked"
+      onClick={onToggle}
+    >
+      <span className="sr-only">Inactive</span>
+    </button>
+  ) : (
+    <button
+      aria-label="Worked"
+      className="shift-toggler btn btn-light is-checked"
+      onClick={onToggle}
+    >
+      <FontAwesomeIcon className="icon" icon={faCheck} />
+      <span className="sr-only">Active</span>
+    </button>
+  );
 };
 
 export default ShiftInput;
