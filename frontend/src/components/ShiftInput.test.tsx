@@ -7,63 +7,14 @@ import {
 } from "../fixtures/random";
 import { longFormatDate } from "../helpers/date";
 import { ShiftTimes } from "../types";
+import { expectTimesEqual } from "../fixtures/expect";
+import { enterShiftTimes } from "../fixtures/actions";
 
 const EMPTY_SHIFT_TIMES = {
   startTime: null,
   endTime: null,
   breakDuration: null,
 } as ShiftTimes;
-
-const timeInputs = (shiftTimes: ShiftTimes) => [
-  {
-    label: /start time/i,
-    value: shiftTimes.startTime,
-  },
-  {
-    label: /end time/i,
-    value: shiftTimes.endTime,
-  },
-  {
-    label: /break duration/i,
-    value: shiftTimes.breakDuration,
-  },
-];
-
-const expectTimesEqual = (shiftInput: HTMLElement, shiftTimes: ShiftTimes) => {
-  for (let { label, value } of timeInputs(shiftTimes)) {
-    const timeInput = screen.getByLabelText(label);
-    const expectedHours =
-      value && value.hours !== null ? value.hours.toString() : "";
-    const expectedMinutes =
-      value && value.minutes !== null ? value.minutes.toString().padStart(2, "0") : "";
-    expect(
-      within(timeInput).getByLabelText(/hours/i).getAttribute("value")
-    ).toEqual(expectedHours);
-    expect(
-      within(timeInput)
-        .getByLabelText(/minutes/i)
-        .getAttribute("value")
-    ).toEqual(expectedMinutes);
-  }
-};
-
-const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes) => {
-  for (let { label, value } of timeInputs(shiftTimes)) {
-    const timeInput = screen.getByLabelText(label);
-    if (value !== null) {
-      if (value.hours !== null) {
-        const hoursInput = within(timeInput).getByLabelText(/hours/i);
-        const hoursValue = value.hours.toString();
-        userEvent.type(hoursInput, hoursValue);
-      }
-      if (value.minutes !== null) {
-        const minutesInput = within(timeInput).getByLabelText(/hours/i);
-        const minutesValue = value.minutes.toString();
-        userEvent.type(minutesInput, minutesValue);
-      }
-    }
-  }
-};
 
 test("renders date label and toggler", () => {
   const testShiftTimes = randomShiftTimes();
