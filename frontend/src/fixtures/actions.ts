@@ -40,3 +40,21 @@ export const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes)
     }
   }
 };
+
+export const eraseShiftTimes = async (shiftInput: HTMLElement) => {
+  const inputLabels = [
+    /start time/i,
+    /end time/i,
+    /break duration/i,
+  ];
+
+  for (let label of inputLabels) {
+    const timeInput = within(shiftInput).getByLabelText(label);
+    const hoursInput = within(timeInput).getByLabelText(/hours/i);
+    userEvent.clear(hoursInput);
+    expect(hoursInput.getAttribute("value")).toBeNull();
+    const minutesInput = within(timeInput).getByLabelText(/minutes/i);
+    userEvent.clear(minutesInput);
+    expect(minutesInput.getAttribute("value")).toBeNull();
+  }
+};
