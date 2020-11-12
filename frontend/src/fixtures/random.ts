@@ -1,4 +1,4 @@
-import { Shift, Timesheet, User } from "../types";
+import { Shift, ShiftTimes, Timesheet, User } from "../types";
 import randomstring from "randomstring";
 import { addDays, addHours, SimpleTime } from "../helpers/date";
 
@@ -26,7 +26,7 @@ export const randomPassword = () => randomstring.generate();
 
 export const randomInt = (min: number, max: number) => {
   const range = max - min;
-  return Math.floor(Math.random() * range);
+  return Math.floor(Math.random() * range) + min;
 };
 
 export const randomMinutes = (min: number, max: number) => {
@@ -36,9 +36,32 @@ export const randomMinutes = (min: number, max: number) => {
 export const randomSimpleTime = (min: string, max: string) => {
   const [minHours, minMinutes] = SimpleTime.fromString(min).toArray();
   const [maxHours, maxMinutes] = SimpleTime.fromString(max).toArray();
-  const hours = randomInt(minHours, maxHours);
-  const minutes = randomInt(minMinutes, maxMinutes);
+  const hours = randomInt(minHours as number, maxHours as number);
+  const minutes = randomInt(minMinutes as number, maxMinutes as number);
   return new SimpleTime(hours, minutes);
+};
+
+export const randomShiftTimesArray = (): ShiftTimes[] => range(7).map(() => 
+  randomShiftTimes()
+);
+
+/**
+ * Generates random ShiftTimes
+ *
+ * @param date
+ */
+export const randomShiftTimes = (): ShiftTimes => {
+  const shiftDuration = Math.floor(Math.random() * 9) + 3;
+  const breakMinutes = Math.floor(Math.random() * 15) + 30;
+  const startHours = Math.floor(Math.random() * 12);
+  const endHours = startHours + shiftDuration;
+  const startMinutes = Math.floor(Math.random() * 60);
+  const endMinutes = Math.floor(Math.random() * 60);;
+  return {
+    startTime: new SimpleTime(startHours, startMinutes),
+    endTime: new SimpleTime(endHours, endMinutes),
+    breakDuration: new SimpleTime(0, breakMinutes),
+  };
 };
 
 /**
@@ -50,8 +73,8 @@ export const randomSimpleTime = (min: string, max: string) => {
 export const randomShiftDates = (date: Date) => {
   const shiftDuration = Math.floor(Math.random() * 12);
   const startHours = Math.floor(Math.random() * 12);
-  const start = addHours(date, startHours).toISOString();
-  const end = addHours(date, startHours + shiftDuration).toISOString();
+  const start = addHours(date, startHours);
+  const end = addHours(date, startHours + shiftDuration);
   return [start, end];
 };
 
