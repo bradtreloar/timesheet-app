@@ -1,4 +1,23 @@
 import { isInteger } from "lodash";
+import { FIRST_DAY_OF_WEEK } from "../settings";
+
+/**
+ * Add week to a Date.
+ *
+ * @param date
+ */
+export const addWeek = (date: Date) => {
+  return addDays(date, 7);
+};
+
+/**
+ * Subtract week from a Date.
+ *
+ * @param date
+ */
+export const subtractWeek = (date: Date) => {
+  return addDays(date, -7);
+};
 
 /**
  * Add days to a Date.
@@ -32,39 +51,100 @@ export const addHours = (date: Date, hours: number) => {
  */
 export const addMinutes = (date: Date, minutes: number) => {
   var newDate = new Date(date);
-  newDate.setHours(newDate.getHours() + minutes);
+  newDate.setMinutes(newDate.getMinutes() + minutes);
   return newDate;
 };
 
 /**
- * Converts date to string in format YYYY-MM-DD
+ * Gets the start of the week that the date belongs to.
+ *
+ * @param date   The date to count back from.
+ * @return date  The date of the start of the week.
+ */
+export const startOfWeek = (date: Date) => {
+  const day = date.getDay();
+  const newDate = addDays(date, FIRST_DAY_OF_WEEK - day);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+};
+
+/**
+ * Gets the end of the week that the date belongs to.
+ *
+ * @param date   The date to count forward from.
+ * @return date  The date of the end of the week.
+ */
+export const endOfWeek = (date: Date) => {
+  const day = date.getDay();
+  const newDate = addDays(date, FIRST_DAY_OF_WEEK - day + 7);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+};
+
+/**
+ * Gets the Australian English day name.
+ *
+ * @param date
+ */
+function getDayName(date: Date) {
+  return date.toLocaleDateString("en-AU", { weekday: "long" });
+}
+
+/**
+ * Gets the Australian English month name.
+ *
+ * @param date
+ */
+function getMonthName(date: Date) {
+  return date.toLocaleDateString("en-AU", { month: "long" });
+}
+
+/**
+ * Converts date to string in format DD-MM-YYYY
  *
  * @param date  The date to format
  *
  * @return string  The formatted date.
  */
-export const formatDate = (date: Date) => {
+export const formattedDate = (date: Date) => {
   const year = date.getFullYear().toString().padStart(4, "0");
   const month = date.getMonth().toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
+  return `${day}-${month}-${year}`;
+};
 
-  return `${year}-${month}-${day}`;
+/**
+ * Converts date to string in format DD-MM-YYYY
+ *
+ * @param date  The date to format
+ *
+ * @return string  The formatted date.
+ */
+export const longFormatDate = (date: Date) => {
+  const year = date.getFullYear().toString().padStart(4, "0");
+  const monthName = getMonthName(date);
+  const day = date.getDate().toString().padStart(2, "0");
+  const dayName = getDayName(date);
+
+  return `${dayName} ${day} ${monthName} ${year}`;
 };
 
 /**
  * A class for storing a time with only hours and minutes.
  */
 export class SimpleTime {
-  hours: number;
-  minutes: number;
+  hours: number | null;
+  minutes: number | null;
 
   /**
    * @param hours    The hours value for the time
    * @param minutes  The minutes value for the time
    */
-  constructor(hours: number, minutes: number) {
-    const hoursIsValid = isInteger(hours) && hours >= 0 && hours < 24;
-    const minutesIsValid = isInteger(minutes) && minutes >= 0 && minutes < 60;
+  constructor(hours: number | null, minutes: number | null) {
+    const hoursIsValid =
+      hours == null || (isInteger(hours) && hours >= 0 && hours < 24);
+    const minutesIsValid =
+      minutes == null || (isInteger(minutes) && minutes >= 0 && minutes < 60);
 
     if (!hoursIsValid) {
       throw new InvalidTimeException(`${hours} is not a valid value for hours`);
@@ -109,8 +189,10 @@ export class SimpleTime {
    * @return  The formatted time string.
    */
   toString() {
-    const hours = this.hours.toString().padStart(2, "0");
-    const minutes = this.hours.toString().padStart(2, "0");
+    const hours = this.hours ? this.hours.toString().padStart(2, "0") : "00";
+    const minutes = this.minutes
+      ? this.minutes.toString().padStart(2, "0")
+      : "00";
     return `${hours}:${minutes}`;
   }
 
@@ -121,6 +203,17 @@ export class SimpleTime {
    */
   toArray() {
     return [this.hours, this.minutes];
+  }
+
+  /**
+   * Create a date with this time and the given date.
+   *
+   * @param date
+   */
+  toDate(date: Date) {
+    const hours = this.hours || 0;
+    const minutes = this.minutes || 0;
+    return addMinutes(addHours(date, hours), minutes);
   }
 }
 
