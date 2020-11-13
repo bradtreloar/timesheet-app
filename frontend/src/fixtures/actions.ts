@@ -25,7 +25,7 @@ const timeInputs = (shiftTimes: ShiftTimes) => [
 
 export const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes) => {
   for (let { label, value } of timeInputs(shiftTimes)) {
-    const timeInput = screen.getByLabelText(label);
+    const timeInput = within(shiftInput).getByLabelText(label);
     if (value !== null) {
       if (value.hours !== null) {
         const hoursInput = within(timeInput).getByLabelText(/hours/i);
@@ -41,7 +41,7 @@ export const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes)
   }
 };
 
-export const eraseShiftTimes = async (shiftInput: HTMLElement) => {
+export const eraseShiftTimes = (shiftInput: HTMLElement) => {
   const inputLabels = [
     /start time/i,
     /end time/i,
@@ -52,9 +52,7 @@ export const eraseShiftTimes = async (shiftInput: HTMLElement) => {
     const timeInput = within(shiftInput).getByLabelText(label);
     const hoursInput = within(timeInput).getByLabelText(/hours/i);
     userEvent.clear(hoursInput);
-    expect(hoursInput.getAttribute("value")).toBeNull();
     const minutesInput = within(timeInput).getByLabelText(/minutes/i);
     userEvent.clear(minutesInput);
-    expect(minutesInput.getAttribute("value")).toBeNull();
   }
 };
