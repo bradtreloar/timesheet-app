@@ -4,6 +4,7 @@ import { longFormatDate, SimpleTime } from "../helpers/date";
 import TimeInput from "./TimeInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import "./ShiftInput.scss";
 
 interface ShiftInputProps {
   date: Date;
@@ -64,19 +65,19 @@ const ShiftToggle: React.FC<ShiftToggleProps> = ({ isChecked, onToggle }) => {
   return isChecked ? (
     <button
       aria-label="Worked"
-      className="shift-toggler btn btn-light is-unchecked"
-      onClick={onToggle}
-    >
-      <span className="sr-only">Inactive</span>
-    </button>
-  ) : (
-    <button
-      aria-label="Worked"
       className="shift-toggler btn btn-light is-checked"
       onClick={onToggle}
     >
       <FontAwesomeIcon className="icon" icon={faCheck} />
       <span className="sr-only">Active</span>
+    </button>
+  ) : (
+    <button
+      aria-label="Worked"
+      className="shift-toggler btn btn-light is-unchecked"
+      onClick={onToggle}
+    >
+      <span className="sr-only">Inactive</span>
     </button>
   );
 };
