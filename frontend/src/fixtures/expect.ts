@@ -21,7 +21,7 @@ export const expectTimesEqual = (
   shiftTimes: ShiftTimes
 ) => {
   for (let { label, value } of timeInputs(shiftTimes)) {
-    const timeInput = screen.getByLabelText(label);
+    const timeInput = within(shiftInput).getByLabelText(label);
     const expectedHours =
       value && value.hours !== null ? value.hours.toString() : "";
     const expectedMinutes =
