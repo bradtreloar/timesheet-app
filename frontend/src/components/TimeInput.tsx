@@ -40,11 +40,9 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   return (
     <div aria-label={ariaLabel}>
       <input
-        type="number"
         aria-label="Hours"
-        min={0}
-        max={23}
-        step={1}
+        type="text"
+        pattern="[0-9]{0,2}"
         required
         value={hours !== null ? hours.toString() : ""}
         onChange={(event) => {
@@ -54,11 +52,9 @@ export const TimeInput: React.FC<TimeInputProps> = ({
       />
       <span className="mx-1">:</span>
       <input
-        type="number"
         aria-label="Minutes"
-        min={0}
-        max={59}
-        step={1}
+        type="text"
+        pattern="[0-9]{0,2}"
         required
         value={formattedValue(minutes, hasFocus)}
         onChange={(event) => {
