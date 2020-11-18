@@ -5,6 +5,7 @@ import TimeInput from "./TimeInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "./ShiftInput.scss";
+import { getShiftDuration } from "../helpers/shift";
 
 interface ShiftInputProps {
   date: Date;
@@ -20,6 +21,10 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
   onToggle,
 }) => {
   const label = longFormatDate(date);
+  const shiftDuration = React.useMemo(() => {
+    const shiftDuration = shiftTimes ? getShiftDuration(shiftTimes) : null;
+    return shiftDuration !== null ? shiftDuration.toFixed(2) : "N/A";
+  }, [shiftTimes, getShiftDuration]);
 
   return (
     <div aria-label="Shift" className="d-flex">
@@ -28,29 +33,36 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
         <div>{label}</div>
       </label>
       {shiftTimes && (
-        <div>
-          <TimeInput
-            aria-label="Start time"
-            time={shiftTimes.startTime}
-            onChange={(startTime: SimpleTime | null) => {
-              onChange(Object.assign({}, shiftTimes, { startTime }));
-            }}
-          />
-          <TimeInput
-            aria-label="End time"
-            time={shiftTimes.endTime}
-            onChange={(endTime: SimpleTime | null) => {
-              onChange(Object.assign({}, shiftTimes, { endTime }));
-            }}
-          />
-          <TimeInput
-            aria-label="Break duration"
-            time={shiftTimes.breakDuration}
-            onChange={(breakDuration: SimpleTime | null) => {
-              onChange(Object.assign({}, shiftTimes, { breakDuration }));
-            }}
-          />
-        </div>
+        <>
+          <div>
+            <TimeInput
+              aria-label="Start time"
+              time={shiftTimes.startTime}
+              onChange={(startTime: SimpleTime | null) => {
+                onChange(Object.assign({}, shiftTimes, { startTime }));
+              }}
+            />
+            <TimeInput
+              aria-label="End time"
+              time={shiftTimes.endTime}
+              onChange={(endTime: SimpleTime | null) => {
+                onChange(Object.assign({}, shiftTimes, { endTime }));
+              }}
+            />
+            <TimeInput
+              aria-label="Break duration"
+              time={shiftTimes.breakDuration}
+              onChange={(breakDuration: SimpleTime | null) => {
+                onChange(Object.assign({}, shiftTimes, { breakDuration }));
+              }}
+            />
+          </div>
+          <div>
+            <span aria-label="shift duration" className="shift-duration">
+              {shiftDuration}
+            </span>
+          </div>
+        </>
       )}
     </div>
   );

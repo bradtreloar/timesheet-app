@@ -2,13 +2,12 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ShiftInput from "./ShiftInput";
-import {
-  randomShiftTimes
-} from "../fixtures/random";
-import { longFormatDate } from "../helpers/date";
+import { randomShiftTimes } from "../fixtures/random";
+import { longFormatDate, SimpleTime } from "../helpers/date";
 import { ShiftTimes } from "../types";
 import { expectTimesEqual } from "../fixtures/expect";
 import { enterShiftTimes } from "../fixtures/actions";
+import { getShiftDuration } from "../helpers/shift";
 
 const EMPTY_SHIFT_TIMES = {
   startTime: null,
@@ -46,7 +45,7 @@ test("renders null time inputs", () => {
     />
   );
 
-  expectTimesEqual(screen.getByLabelText(/shift/i), EMPTY_SHIFT_TIMES);
+  expectTimesEqual(screen.getByLabelText(/shift$/i), EMPTY_SHIFT_TIMES);
 });
 
 test("renders filled time inputs", () => {
@@ -62,7 +61,7 @@ test("renders filled time inputs", () => {
     />
   );
 
-  expectTimesEqual(screen.getByLabelText(/shift/i), testShiftTimes);
+  expectTimesEqual(screen.getByLabelText(/shift$/i), testShiftTimes);
 });
 
 test("handles time inputs", () => {
@@ -79,7 +78,7 @@ test("handles time inputs", () => {
     />
   );
 
-  const shiftInput = screen.getByLabelText(/shift/i);
+  const shiftInput = screen.getByLabelText(/shift$/i);
   enterShiftTimes(shiftInput, testShiftTimes);
   expectTimesEqual(shiftInput, EMPTY_SHIFT_TIMES);
 });
@@ -100,4 +99,40 @@ test("handles shift toggle", () => {
 
   userEvent.click(screen.getByLabelText(/worked/i));
   expect(onToggle).toBeCalledTimes(1);
+});
+
+test("validates shift duration", () => {
+  const testDate = new Date();
+  const testShiftTimes = randomShiftTimes();
+  const shiftDuration = getShiftDuration(testShiftTimes) as number;
+
+  render(
+    <ShiftInput
+      date={testDate}
+      shiftTimes={testShiftTimes}
+      onChange={() => {}}
+      onToggle={() => {}}
+    />
+  );
+
+  expect(screen.getByLabelText(/shift duration/i)).toHaveTextContent(
+    shiftDuration.toFixed(2)
+  );
+});
+
+test("handles invalid shift times", () => {
+  const testDate = new Date();
+  const testShiftTimes = randomShiftTimes();
+  testShiftTimes.endTime = null;
+
+  render(
+    <ShiftInput
+      date={testDate}
+      shiftTimes={testShiftTimes}
+      onChange={() => {}}
+      onToggle={() => {}}
+    />
+  );
+
+  expect(screen.getByLabelText(/shift duration/i)).toHaveTextContent("N/A");
 });
