@@ -33,7 +33,7 @@ export const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes)
         userEvent.type(hoursInput, hoursValue);
       }
       if (value.minutes !== null) {
-        const minutesInput = within(timeInput).getByLabelText(/hours/i);
+        const minutesInput = within(timeInput).getByLabelText(/minutes/i);
         const minutesValue = value.minutes.toString();
         userEvent.type(minutesInput, minutesValue);
       }
@@ -51,8 +51,8 @@ export const eraseShiftTimes = (shiftInput: HTMLElement) => {
   for (let label of inputLabels) {
     const timeInput = within(shiftInput).getByLabelText(label);
     const hoursInput = within(timeInput).getByLabelText(/hours/i);
-    userEvent.clear(hoursInput);
     const minutesInput = within(timeInput).getByLabelText(/minutes/i);
+    userEvent.clear(hoursInput);
     userEvent.clear(minutesInput);
   }
 };
