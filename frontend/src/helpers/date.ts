@@ -184,6 +184,14 @@ export class SimpleTime {
   }
 
   /**
+   * Creates a SimpleTime object from an arbitrary number of minutes.
+   */
+  static fromMinutes(totalMinutes: number) {
+    const totalHours = Math.floor(totalMinutes / 60);
+    return new SimpleTime(totalHours % 24, totalMinutes % 60);
+  }
+
+  /**
    * Returns the time as a string formatted as HH:MM.
    *
    * @return  The formatted time string.
@@ -214,6 +222,42 @@ export class SimpleTime {
     const hours = this.hours || 0;
     const minutes = this.minutes || 0;
     return addMinutes(addHours(date, hours), minutes);
+  }
+
+  /**
+   * Get this time in minutes.
+   */
+  toMinutes() {
+    const thisHours = this.hours || 0;
+    const thisMinutes = this.minutes || 0;
+    return thisHours * 60 + thisMinutes;
+  }
+
+  /**
+   * Get this time in hours.
+   */
+  toHours() {
+    const thisHours = this.hours || 0;
+    const thisMinutes = this.minutes || 0;
+    return thisHours + thisMinutes / 60;
+  }
+
+  /**
+   * Adds the given time to this time.
+   */
+  add(time: SimpleTime) {
+    const totalMinutes = this.toMinutes() + time.toMinutes();
+    return SimpleTime.fromMinutes(totalMinutes);
+  }
+
+  /**
+   * Subtract the given time from this time.
+   */
+  subtract(time: SimpleTime) {
+    let diffInMinutes = this.toMinutes() - time.toMinutes();
+    return SimpleTime.fromMinutes(
+      diffInMinutes >= 0 ? diffInMinutes : diffInMinutes + 24 * 60
+    );
   }
 }
 
