@@ -1,5 +1,5 @@
 import { screen, within } from "@testing-library/react";
-import { ShiftTimes } from "../types";
+import { Shift, ShiftTimes } from "../types";
 
 const timeInputs = (shiftTimes: ShiftTimes) => [
   {
@@ -37,4 +37,10 @@ export const expectTimesEqual = (
         .getAttribute("value")
     ).toEqual(expectedMinutes);
   }
+};
+
+export const expectValidShift = (shift: Shift) => {
+  expect(shift.start instanceof Date).toBe(true);
+  expect(shift.end instanceof Date).toBe(true);
+  expect(typeof shift.breakDuration).toBe("number");
 };

@@ -6,7 +6,7 @@ import { randomShiftTimesArray } from "../fixtures/random";
 import { SimpleTime } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
 import { enterShiftTimes, eraseShiftTimes } from "../fixtures/actions";
-import { expectTimesEqual } from "../fixtures/expect";
+import { expectTimesEqual, expectValidShift } from "../fixtures/expect";
 
 test("renders timesheet form", () => {
   const testShiftTimesArray = randomShiftTimesArray();
@@ -91,23 +91,40 @@ test("handles entering times", () => {
   }
 });
 
-test("handles form submission", (done) => {
-  const testshiftTimesArray = randomShiftTimesArray();
+describe("form submission", () => {
+  test("all shifts", (done) => {
+    const testshiftTimesArray = randomShiftTimesArray();
 
-  render(
-    <TimesheetForm
-      allDefaultShiftTimes={testshiftTimesArray}
-      onSubmit={(shifts: Shift[]) => {
-        expect(shifts.length).toEqual(testshiftTimesArray.length);
-        shifts.forEach((shift) => {
-          expect(shift.start instanceof Date).toBe(true);
-          expect(shift.end instanceof Date).toBe(true);
-          expect(typeof shift.breakDuration).toBe("number");
-        });
-        done();
-      }}
-    />
-  );
+    render(
+      <TimesheetForm
+        allDefaultShiftTimes={testshiftTimesArray}
+        onSubmit={(shifts: Shift[]) => {
+          expect(shifts.length).toEqual(testshiftTimesArray.length);
+          shifts.forEach((shift) => expectValidShift(shift));
+          done();
+        }}
+      />
+    );
 
-  userEvent.click(screen.getByText(/^submit$/i));
+    userEvent.click(screen.getByText(/^submit$/i));
+  });
+
+  test("some shifts", (done) => {
+    const testshiftTimesArray: (ShiftTimes | null)[] = randomShiftTimesArray();
+    testshiftTimesArray.pop();
+    testshiftTimesArray.push(null);
+
+    render(
+      <TimesheetForm
+        allDefaultShiftTimes={testshiftTimesArray}
+        onSubmit={(shifts: Shift[]) => {
+          expect(shifts.length).toEqual(testshiftTimesArray.length - 1);
+          shifts.forEach((shift) => expectValidShift(shift));
+          done();
+        }}
+      />
+    );
+
+    userEvent.click(screen.getByText(/^submit$/i));
+  });
 });
