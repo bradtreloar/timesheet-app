@@ -1,9 +1,10 @@
 import React from "react";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { startOfWeek, addDays, addWeek, subtractWeek } from "../helpers/date";
-import { ShiftTimes } from "../types";
+import { Shift, ShiftTimes } from "../types";
 import ShiftInput from "./ShiftInput";
 import WeekSelect from "./WeekSelect";
+import { getShiftDuration, getShiftFromTimes } from "../helpers/shift";
 
 type ShiftTimesPayload = {
   shiftTimes: ShiftTimes;
@@ -61,10 +62,12 @@ const shiftsReducer = (
 
 interface TimesheetFormProps {
   allDefaultShiftTimes: (ShiftTimes | null)[];
+  onSubmit: (shifts: Shift[]) => void;
 }
 
 const TimesheetForm: React.FC<TimesheetFormProps> = ({
   allDefaultShiftTimes,
+  onSubmit,
 }) => {
   const [weekStartDate, setWeekStartDate] = React.useState(
     initialWeekStartDate
@@ -73,6 +76,41 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     shiftsReducer,
     allDefaultShiftTimes
   );
+
+  const validateShifts = () => {
+    allShiftTimes.forEach((shiftTimes, index) => {
+      if (shiftTimes !== null) {
+        const shiftDuration = getShiftDuration(shiftTimes);
+        if (shiftDuration !== null) {
+          return false;
+        }
+      }
+    });
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    const hasValidShifts = validateShifts();
+    if (!hasValidShifts) {
+      return;
+    }
+    
+    const shifts: Shift[] = [];
+    allShiftTimes.forEach((shiftTimes, index) => {
+      // Skip disabled shift.
+      if (shiftTimes === null) {
+        return;
+      }
+      const date = addDays(weekStartDate, index);
+      const shift = getShiftFromTimes(date, shiftTimes);
+      if (shift !== null) {
+        shifts.push(shift);
+      }
+    });
+    
+    onSubmit(shifts);
+  };
 
   const shiftInputs = allShiftTimes.map((shiftTimes, index) => {
     const shiftDate = addDays(weekStartDate, index);
@@ -100,7 +138,12 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   });
 
   return (
-    <div>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleSubmit();
+      }}
+    >
       <WeekSelect
         weekStartDate={weekStartDate}
         onChangeWeek={(forward: boolean) => {
@@ -111,7 +154,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         }}
       />
       <div>{shiftInputs}</div>
-    </div>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
   );
 };
 

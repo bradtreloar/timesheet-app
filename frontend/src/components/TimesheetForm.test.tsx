@@ -10,7 +10,12 @@ import { expectTimesEqual } from "../fixtures/expect";
 
 test("renders timesheet form", () => {
   const testShiftTimesArray = randomShiftTimesArray();
-  render(<TimesheetForm allDefaultShiftTimes={testShiftTimesArray} />);
+  render(
+    <TimesheetForm
+      allDefaultShiftTimes={testShiftTimesArray}
+      onSubmit={() => {}}
+    />
+  );
 
   const shiftInputs = screen.getAllByLabelText(/^shift$/i);
   shiftInputs.forEach((shiftInput, index) => {
@@ -18,7 +23,9 @@ test("renders timesheet form", () => {
     const startTimeInput = within(shiftInput).getByLabelText(/start time/i);
     const expectedStartTime = testShiftTimes.startTime as SimpleTime;
     const expectedHours = (expectedStartTime.hours as number).toString();
-    const expectedMinutes = (expectedStartTime.minutes as number).toString().padStart(2, "0");
+    const expectedMinutes = (expectedStartTime.minutes as number)
+      .toString()
+      .padStart(2, "0");
     expect(within(startTimeInput).getByLabelText(/hours/i)).toHaveValue(
       expectedHours
     );
@@ -30,7 +37,12 @@ test("renders timesheet form", () => {
 
 test("handles toggling shift", () => {
   const testDefaultShiftTimesArray = randomShiftTimesArray();
-  render(<TimesheetForm allDefaultShiftTimes={testDefaultShiftTimesArray} />);
+  render(
+    <TimesheetForm
+      allDefaultShiftTimes={testDefaultShiftTimesArray}
+      onSubmit={() => {}}
+    />
+  );
 
   const shiftInput = screen.getAllByLabelText(/^shift$/i)[0];
   within(shiftInput).getByLabelText(/start time/i);
@@ -43,7 +55,12 @@ test("handles toggling shift", () => {
 test("handles erasing times", () => {
   const testDefaultShiftTimesArray = randomShiftTimesArray();
 
-  render(<TimesheetForm allDefaultShiftTimes={testDefaultShiftTimesArray} />);
+  render(
+    <TimesheetForm
+      allDefaultShiftTimes={testDefaultShiftTimesArray}
+      onSubmit={() => {}}
+    />
+  );
 
   for (let shiftInput of screen.getAllByLabelText(/^shift$/i)) {
     eraseShiftTimes(shiftInput);
@@ -55,7 +72,12 @@ test("handles entering times", () => {
   const testDefaultShiftTimesArray = randomShiftTimesArray();
   const testshiftTimesArray = randomShiftTimesArray();
 
-  render(<TimesheetForm allDefaultShiftTimes={testDefaultShiftTimesArray} />);
+  render(
+    <TimesheetForm
+      allDefaultShiftTimes={testDefaultShiftTimesArray}
+      onSubmit={() => {}}
+    />
+  );
 
   const shiftInputs = screen.getAllByLabelText(/^shift$/i);
 
@@ -67,4 +89,25 @@ test("handles entering times", () => {
     enterShiftTimes(shiftInput, testshiftTimes);
     expectTimesEqual(shiftInput, testshiftTimes);
   }
+});
+
+test("handles form submission", (done) => {
+  const testshiftTimesArray = randomShiftTimesArray();
+
+  render(
+    <TimesheetForm
+      allDefaultShiftTimes={testshiftTimesArray}
+      onSubmit={(shifts: Shift[]) => {
+        expect(shifts.length).toEqual(testshiftTimesArray.length);
+        shifts.forEach((shift) => {
+          expect(shift.start instanceof Date).toBe(true);
+          expect(shift.end instanceof Date).toBe(true);
+          expect(typeof shift.breakDuration).toBe("number");
+        });
+        done();
+      }}
+    />
+  );
+
+  userEvent.click(screen.getByText(/^submit$/i));
 });
