@@ -42,8 +42,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
       <input
         aria-label="Hours"
         type="text"
-        pattern="[0-9]{0,2}"
-        required
+        pattern="[0-2]{0,1}[0-9]{0,1}"
         value={hours !== null ? hours.toString() : ""}
         onChange={(event) => {
           const newHours = parseValue(event.target.value, hours);
@@ -54,8 +53,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
       <input
         aria-label="Minutes"
         type="text"
-        pattern="[0-9]{0,2}"
-        required
+        pattern="[0-5]{0,1}[0-9]{0,1}"
         value={formattedValue(minutes, hasFocus)}
         onChange={(event) => {
           const newMinutes = parseValue(event.target.value, minutes);
