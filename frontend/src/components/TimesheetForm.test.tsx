@@ -1,12 +1,14 @@
 import React from "react";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TimesheetForm, { EMPTY_SHIFT_TIMES } from "./TimesheetForm";
+import TimesheetForm from "./TimesheetForm";
 import { randomShiftTimesArray } from "../fixtures/random";
 import { SimpleTime } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
 import { enterShiftTimes, eraseShiftTimes } from "../fixtures/actions";
 import { expectTimesEqual, expectValidShift } from "../fixtures/expect";
+import { range } from "lodash";
+import { EMPTY_SHIFT_TIMES } from "./ShiftInput";
 
 test("renders timesheet form", () => {
   const testShiftTimesArray = randomShiftTimesArray();
@@ -92,7 +94,7 @@ test("handles entering times", () => {
 });
 
 describe("form submission", () => {
-  test("all shifts", (done) => {
+  test("with all shifts", (done) => {
     const testshiftTimesArray = randomShiftTimesArray();
 
     render(
@@ -109,7 +111,7 @@ describe("form submission", () => {
     userEvent.click(screen.getByText(/^submit$/i));
   });
 
-  test("some shifts", (done) => {
+  test("with only some shifts", (done) => {
     const testshiftTimesArray: (ShiftTimes | null)[] = randomShiftTimesArray();
     testshiftTimesArray.pop();
     testshiftTimesArray.push(null);
@@ -121,6 +123,39 @@ describe("form submission", () => {
           expect(shifts.length).toEqual(testshiftTimesArray.length - 1);
           shifts.forEach((shift) => expectValidShift(shift));
           done();
+        }}
+      />
+    );
+
+    userEvent.click(screen.getByText(/^submit$/i));
+  });
+
+  test("with incomplete shift", () => {
+    const testshiftTimesArray: ShiftTimes[] = randomShiftTimesArray();
+    testshiftTimesArray[0].breakDuration = new SimpleTime(null, null);
+
+    render(
+      <TimesheetForm
+        allDefaultShiftTimes={testshiftTimesArray}
+        onSubmit={() => {
+          throw new Error(`onSubmit should not be called with invalid shift time.`);
+        }}
+      />
+    );
+
+    expect(screen.queryByText(/enter time/i)).toBeNull();
+    userEvent.click(screen.getByText(/^submit$/i));
+    screen.getByText(/enter time/i);
+  });
+
+  test("with no shifts", () => {
+    const testshiftTimesArray: null[] = range(7).map(() => null);
+
+    render(
+      <TimesheetForm
+        allDefaultShiftTimes={testshiftTimesArray}
+        onSubmit={(shifts: Shift[]) => {
+          throw new Error(`onSubmit should not be called with no shifts.`);
         }}
       />
     );
