@@ -1,16 +1,23 @@
 import React from "react";
+import classnames from "classnames";
 import { SimpleTime } from "../helpers/date";
 
 interface TimeInputProps {
-  time: SimpleTime | null;
-  onChange: (time: SimpleTime | null) => void;
-  "aria-label"?: string;
+  time: SimpleTime;
+  error?: TimeInputError | false;
+  onChange: (time: SimpleTime, error?: string) => void;
+}
+
+export interface TimeInputError {
+  hours: boolean;
+  minutes: boolean;
+  message: string;
 }
 
 export const TimeInput: React.FC<TimeInputProps> = ({
   time,
+  error,
   onChange,
-  "aria-label": ariaLabel,
 }) => {
   const [hours, minutes] = time !== null ? time.toArray() : [null, null];
   const [hasFocus, setHasFocus] = React.useState(true);
@@ -38,34 +45,49 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   };
 
   return (
-    <div aria-label={ariaLabel}>
-      <input
-        aria-label="Hours"
-        type="text"
-        pattern="[0-2]{0,1}[0-9]{0,1}"
-        value={hours !== null ? hours.toString() : ""}
-        onChange={(event) => {
-          const newHours = parseValue(event.target.value, hours);
-          onChange(new SimpleTime(newHours, minutes));
-        }}
-      />
-      <span className="mx-1">:</span>
-      <input
-        aria-label="Minutes"
-        type="text"
-        pattern="[0-5]{0,1}[0-9]{0,1}"
-        value={formattedValue(minutes, hasFocus)}
-        onChange={(event) => {
-          const newMinutes = parseValue(event.target.value, minutes);
-          onChange(new SimpleTime(hours, newMinutes));
-        }}
-        onFocus={() => {
-          setHasFocus(false);
-        }}
-        onBlur={() => {
-          setHasFocus(true);
-        }}
-      />
+    <div>
+      <div>
+        <input
+          aria-label="Hours"
+          className={classnames(error && error.hours && "is-invalid")}
+          type="text"
+          pattern="[0-2]{0,1}[0-9]{0,1}"
+          value={hours !== null ? hours.toString() : ""}
+          onChange={(event) => {
+            const newHours = parseValue(event.target.value, hours);
+            try {
+              const newTime = new SimpleTime(newHours, minutes);
+              onChange(newTime);
+            } catch (error) {}
+          }}
+        />
+        <span className="mx-1">:</span>
+        <input
+          aria-label="Minutes"
+          className={classnames(error && error.minutes && "is-invalid")}
+          type="text"
+          pattern="[0-5]{0,1}[0-9]{0,1}"
+          value={formattedValue(minutes, hasFocus)}
+          onChange={(event) => {
+            const newMinutes = parseValue(event.target.value, minutes);
+            try {
+              const newTime = new SimpleTime(hours, newMinutes);
+              onChange(newTime);
+            } catch (error) {}
+          }}
+          onFocus={() => {
+            setHasFocus(false);
+          }}
+          onBlur={() => {
+            setHasFocus(true);
+          }}
+        />
+      </div>
+      {error && (
+        <div className="invalid-feedback">
+          {error.message}
+        </div>
+      )}
     </div>
   );
 };

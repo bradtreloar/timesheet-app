@@ -1,12 +1,13 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import randomstring from "randomstring";
 import TimeInput from "./TimeInput";
 import { randomInt } from "../fixtures/random";
 import { SimpleTime } from "../helpers/date";
 
 test("renders null value", () => {
-  const testTime = null;
+  const testTime = new SimpleTime(null, null);
 
   render(<TimeInput time={testTime} onChange={() => {}} />);
 
@@ -38,6 +39,22 @@ test("renders minutes only", () => {
   );
 });
 
+test("renders validation feedback", () => {
+  const hours = randomInt(0, 23);
+  const testTime = new SimpleTime(hours, null);
+  const testError = {
+    hours: false,
+    minutes: true,
+    message: randomstring.generate(12),
+  }
+
+  render(<TimeInput time={testTime}  error={testError} onChange={() => {}} />);
+
+  screen.getByText(testError.message);
+  expect(screen.getByLabelText(/hours/i).className).not.toMatch(/is-invalid/);
+  expect(screen.getByLabelText(/minutes/i).className).toMatch(/is-invalid/);
+});
+
 test("renders hours and minutes", () => {
   const hours = randomInt(0, 23);
   const minutes = randomInt(0, 9);
@@ -57,7 +74,7 @@ test("handles hours input", () => {
   const hours = randomInt(12, 21);
   const onChange = jest.fn();
 
-  render(<TimeInput time={null} onChange={onChange} />);
+  render(<TimeInput time={new SimpleTime(null, null)} onChange={onChange} />);
 
   const hoursInput = screen.getByLabelText(/hours/i);
   userEvent.type(hoursInput, hours.toString());
@@ -79,7 +96,7 @@ test("handles minutes input", () => {
   const minutes = randomInt(12, 21);
   const onChange = jest.fn();
 
-  render(<TimeInput time={null} onChange={onChange} />);
+  render(<TimeInput time={new SimpleTime(null, null)} onChange={onChange} />);
 
   userEvent.type(screen.getByLabelText(/minutes/i), minutes.toString());
 
