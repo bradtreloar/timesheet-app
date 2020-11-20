@@ -192,6 +192,13 @@ export class SimpleTime {
   }
 
   /**
+   * Checks if the time is null.
+   */
+  isNull() {
+    return this.hours === null && this.minutes === null;
+  }
+
+  /**
    * Returns the time as a string formatted as HH:MM.
    *
    * @return  The formatted time string.
