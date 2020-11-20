@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { within } from "@testing-library/react";
 import { Shift, ShiftTimes } from "../types";
 
 const timeInputs = (shiftTimes: ShiftTimes) => [
