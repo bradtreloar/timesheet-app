@@ -2,18 +2,12 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ShiftInput from "./ShiftInput";
-import { randomShiftTimes } from "../fixtures/random";
+import { randomShiftTimes, randomTimeInputError } from "../fixtures/random";
 import { longFormatDate, SimpleTime } from "../helpers/date";
-import { ShiftTimes } from "../types";
 import { expectTimesEqual } from "../fixtures/expect";
 import { enterShiftTimes } from "../fixtures/actions";
 import { getShiftDuration } from "../helpers/shift";
-
-const EMPTY_SHIFT_TIMES = {
-  startTime: null,
-  endTime: null,
-  breakDuration: null,
-} as ShiftTimes;
+import { EMPTY_SHIFT_TIMES } from "./ShiftInput";
 
 test("renders date label and toggler", () => {
   const testShiftTimes = randomShiftTimes();
@@ -62,6 +56,30 @@ test("renders filled time inputs", () => {
   );
 
   expectTimesEqual(screen.getByLabelText(/shift$/i), testShiftTimes);
+});
+
+test("renders error messages", () => {
+  const testDate = new Date();
+  const testShiftTimes = randomShiftTimes();
+  const testErrors = {
+    startTime: randomTimeInputError(),
+    endTime: randomTimeInputError(),
+    breakDuration: randomTimeInputError(),
+  }
+
+  render(
+    <ShiftInput
+      date={testDate}
+      errors={testErrors}
+      shiftTimes={testShiftTimes}
+      onChange={() => {}}
+      onToggle={() => {}}
+    />
+  );
+
+  screen.getByText(testErrors.startTime.message);
+  screen.getByText(testErrors.endTime.message);
+  screen.getByText(testErrors.breakDuration.message);
 });
 
 test("handles time inputs", () => {
@@ -123,7 +141,7 @@ test("validates shift duration", () => {
 test("handles invalid shift times", () => {
   const testDate = new Date();
   const testShiftTimes = randomShiftTimes();
-  testShiftTimes.endTime = null;
+  testShiftTimes.endTime = new SimpleTime(null, null);
 
   render(
     <ShiftInput
