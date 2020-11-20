@@ -25,7 +25,7 @@ export type Shift = {
 };
 
 export type ShiftTimes = {
-  startTime: SimpleTime | null;
-  endTime: SimpleTime | null;
-  breakDuration: SimpleTime | null;
+  startTime: SimpleTime;
+  endTime: SimpleTime;
+  breakDuration: SimpleTime;
 };
