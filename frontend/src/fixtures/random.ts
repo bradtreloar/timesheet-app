@@ -1,6 +1,7 @@
 import { Shift, ShiftTimes, Timesheet, User } from "../types";
 import randomstring from "randomstring";
 import { addDays, addHours, SimpleTime } from "../helpers/date";
+import { TimeInputError } from "../components/TimeInput";
 
 const randomID = () => randomstring.generate();
 
@@ -24,6 +25,8 @@ export const randomUser = (userIsAdmin?: boolean): User => {
 
 export const randomPassword = () => randomstring.generate();
 
+export const randomBoolean = () => Math.random() > 0.5;
+
 export const randomInt = (min: number, max: number) => {
   const range = max - min;
   return Math.floor(Math.random() * range) + min;
@@ -41,9 +44,8 @@ export const randomSimpleTime = (min: string, max: string) => {
   return new SimpleTime(hours, minutes);
 };
 
-export const randomShiftTimesArray = (): ShiftTimes[] => range(7).map(() => 
-  randomShiftTimes()
-);
+export const randomShiftTimesArray = (): ShiftTimes[] =>
+  range(7).map(() => randomShiftTimes());
 
 /**
  * Generates random ShiftTimes
@@ -56,7 +58,7 @@ export const randomShiftTimes = (): ShiftTimes => {
   const startHours = Math.floor(Math.random() * 12);
   const endHours = startHours + shiftDuration;
   const startMinutes = Math.floor(Math.random() * 60);
-  const endMinutes = Math.floor(Math.random() * 60);;
+  const endMinutes = Math.floor(Math.random() * 60);
   return {
     startTime: new SimpleTime(startHours, startMinutes),
     endTime: new SimpleTime(endHours, endMinutes),
@@ -102,3 +104,9 @@ export const randomTimesheet = (user: User): Timesheet => {
 
 export const randomTimesheets = (user: User, count: number) =>
   range(count).map((index) => randomTimesheet(user));
+
+export const randomTimeInputError = (): TimeInputError => ({
+  hours: randomBoolean(),
+  minutes: randomBoolean(),
+  message: randomstring.generate(),
+});
