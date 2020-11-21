@@ -8,6 +8,7 @@ import { expectTimesEqual } from "../fixtures/expect";
 import { enterShiftTimes } from "../fixtures/actions";
 import { getShiftDuration } from "../helpers/shift";
 import { EMPTY_SHIFT_TIMES } from "./ShiftInput";
+import { noop } from "lodash";
 
 test("renders date label and toggler", () => {
   const testShiftTimes = randomShiftTimes();
@@ -18,8 +19,8 @@ test("renders date label and toggler", () => {
     <ShiftInput
       date={testDate}
       value={testShiftTimes}
-      onChange={() => {}}
-      onToggle={() => {}}
+      onChange={noop}
+      onToggle={noop}
     />
   );
 
@@ -34,8 +35,8 @@ test("renders null time inputs", () => {
     <ShiftInput
       date={testDate}
       value={EMPTY_SHIFT_TIMES}
-      onChange={() => {}}
-      onToggle={() => {}}
+      onChange={noop}
+      onToggle={noop}
     />
   );
 
@@ -50,8 +51,8 @@ test("renders filled time inputs", () => {
     <ShiftInput
       date={testDate}
       value={testShiftTimes}
-      onChange={() => {}}
-      onToggle={() => {}}
+      onChange={noop}
+      onToggle={noop}
     />
   );
 
@@ -72,8 +73,8 @@ test("renders error messages", () => {
       date={testDate}
       errors={testErrors}
       value={testShiftTimes}
-      onChange={() => {}}
-      onToggle={() => {}}
+      onChange={noop}
+      onToggle={noop}
     />
   );
 
@@ -92,7 +93,7 @@ test("handles time inputs", () => {
       date={testDate}
       value={EMPTY_SHIFT_TIMES}
       onChange={onChange}
-      onToggle={() => {}}
+      onToggle={noop}
     />
   );
 
@@ -128,8 +129,8 @@ test("validates shift duration", () => {
     <ShiftInput
       date={testDate}
       value={testShiftTimes}
-      onChange={() => {}}
-      onToggle={() => {}}
+      onChange={noop}
+      onToggle={noop}
     />
   );
 
@@ -147,8 +148,8 @@ test("handles invalid shift times", () => {
     <ShiftInput
       date={testDate}
       value={testShiftTimes}
-      onChange={() => {}}
-      onToggle={() => {}}
+      onChange={noop}
+      onToggle={noop}
     />
   );
 
