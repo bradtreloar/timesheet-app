@@ -11,7 +11,7 @@ test("renders week select label", () => {
   render(
     <WeekSelect
       weekStartDate={testDate}
-      onChangeWeek={() => {}}
+      onChangeWeek={noop}
     />
   );
 
