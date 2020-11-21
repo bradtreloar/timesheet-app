@@ -8,12 +8,6 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import "./ShiftInput.scss";
 import { getShiftDuration } from "../helpers/shift";
 
-export const EMPTY_SHIFT_TIMES = {
-  startTime: new SimpleTime(null, null),
-  endTime: new SimpleTime(null, null),
-  breakDuration: new SimpleTime(null, null),
-} as ShiftTimes;
-
 export interface ShiftInputErrors {
   shiftDuration?: string;
   startTime?: TimeInputError;
@@ -22,6 +16,8 @@ export interface ShiftInputErrors {
 }
 
 interface ShiftInputProps {
+  id?: string;
+  name?: string;
   date: Date;
   value: ShiftTimes | null;
   errors?: ShiftInputErrors | false;
@@ -30,6 +26,8 @@ interface ShiftInputProps {
 }
 
 const ShiftInput: React.FC<ShiftInputProps> = ({
+  id,
+  name,
   date,
   value,
   errors,
@@ -43,7 +41,7 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
   }, [value]);
 
   return (
-    <div aria-label="Shift" className="d-flex">
+    <div id={id} aria-label="Shift" className="d-flex">
       <label>
         <ShiftToggle isChecked={value !== null} onToggle={onToggle} />
         <div>{label}</div>
@@ -74,9 +72,7 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
                 }}
               />
               {errors && errors.endTime && (
-                <div className="invalid-feedback">
-                  {errors.endTime.message}
-                </div>
+                <div className="invalid-feedback">{errors.endTime.message}</div>
               )}
             </div>
             <div aria-label="Break duration">

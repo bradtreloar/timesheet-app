@@ -7,8 +7,8 @@ import { longFormatDate, SimpleTime } from "../helpers/date";
 import { expectTimesEqual } from "../fixtures/expect";
 import { enterShiftTimes } from "../fixtures/actions";
 import { getShiftDuration } from "../helpers/shift";
-import { EMPTY_SHIFT_TIMES } from "./ShiftInput";
 import { noop } from "lodash";
+import { EMPTY_SHIFT_TIMES } from "./TimesheetForm";
 
 test("renders date label and toggler", () => {
   const testShiftTimes = randomShiftTimes();
