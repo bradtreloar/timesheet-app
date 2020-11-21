@@ -1,19 +1,26 @@
 import React from "react";
-import { endOfWeek, longFormatDate } from "../helpers/date";
+import {
+  addWeek,
+  endOfWeek,
+  longFormatDate,
+  subtractWeek,
+} from "../helpers/date";
 
 interface WeekSelectProps {
-  weekStartDate: Date;
-  onChangeWeek: (forward: boolean) => void;
+  value: Date;
+  onChange: (value: Date) => void;
 }
 
-const WeekSelect: React.FC<WeekSelectProps> = ({
-  weekStartDate,
-  onChangeWeek,
-}) => {
-  const weekEndDate = endOfWeek(weekStartDate);
+const WeekSelect: React.FC<WeekSelectProps> = ({ value, onChange }) => {
+  const weekStartDate = value;
+  const weekEndDate = endOfWeek(value);
   const label = `${longFormatDate(weekStartDate)} to ${longFormatDate(
     weekEndDate
   )}`;
+
+  function handleChange(forward: boolean) {
+    onChange(forward ? addWeek(value) : subtractWeek(value));
+  }
 
   return (
     <div className="d-flex">
@@ -21,7 +28,7 @@ const WeekSelect: React.FC<WeekSelectProps> = ({
         aria-label="previous week"
         className="btn btn-secondary"
         onClick={() => {
-          onChangeWeek(false);
+          handleChange(false);
         }}
       >
         Prev
@@ -30,7 +37,7 @@ const WeekSelect: React.FC<WeekSelectProps> = ({
         aria-label="next week"
         className="btn btn-secondary"
         onClick={() => {
-          onChangeWeek(true);
+          handleChange(true);
         }}
       >
         Next
