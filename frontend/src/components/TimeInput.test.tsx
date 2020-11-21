@@ -40,22 +40,6 @@ test("renders minutes only", () => {
   );
 });
 
-test("renders validation feedback", () => {
-  const hours = randomInt(0, 23);
-  const testTime = new SimpleTime(hours, null);
-  const testError = {
-    hours: false,
-    minutes: true,
-    message: randomstring.generate(12),
-  }
-
-  render(<TimeInput value={testTime}  error={testError} onChange={noop} />);
-
-  screen.getByText(testError.message);
-  expect(screen.getByLabelText(/hours/i).className).not.toMatch(/is-invalid/);
-  expect(screen.getByLabelText(/minutes/i).className).toMatch(/is-invalid/);
-});
-
 test("renders hours and minutes", () => {
   const hours = randomInt(0, 23);
   const minutes = randomInt(0, 9);
