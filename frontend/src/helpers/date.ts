@@ -86,9 +86,24 @@ export const endOfWeek = (date: Date) => {
  *
  * @param date
  */
-function getDayName(date: Date) {
-  return date.toLocaleDateString("en-AU", { weekday: "long" });
-}
+export const getDayName = (date: Date) =>
+  date.toLocaleDateString("en-AU", { weekday: "long" });
+
+/**
+ * Gets the Australian English day name.
+ *
+ * @param number the day of the week, where Sunday is 0.
+ */
+export const getWeekdayName = (number: number) =>
+  [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ][number];
 
 /**
  * Gets the Australian English month name.
