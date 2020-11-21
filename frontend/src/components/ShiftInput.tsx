@@ -22,58 +22,58 @@ export interface ShiftInputErrors {
 
 interface ShiftInputProps {
   date: Date;
-  shiftTimes: ShiftTimes | null;
+  value: ShiftTimes | null;
   errors?: ShiftInputErrors | false;
-  onChange: (shiftTimes: ShiftTimes) => void;
+  onChange: (value: ShiftTimes) => void;
   onToggle: () => void;
 }
 
 const ShiftInput: React.FC<ShiftInputProps> = ({
   date,
-  shiftTimes,
+  value,
   errors,
   onChange,
   onToggle,
 }) => {
   const label = longFormatDate(date);
   const shiftDuration = React.useMemo(() => {
-    const shiftDuration = shiftTimes ? getShiftDuration(shiftTimes) : null;
+    const shiftDuration = value ? getShiftDuration(value) : null;
     return shiftDuration !== null ? shiftDuration.toFixed(2) : "N/A";
-  }, [shiftTimes]);
+  }, [value]);
 
   return (
     <div aria-label="Shift" className="d-flex">
       <label>
-        <ShiftToggle isChecked={shiftTimes !== null} onToggle={onToggle} />
+        <ShiftToggle isChecked={value !== null} onToggle={onToggle} />
         <div>{label}</div>
       </label>
-      {shiftTimes && (
+      {value && (
         <>
           <div>
             <div aria-label="Start time">
               <TimeInput
-                time={shiftTimes.startTime}
+                value={value.startTime}
                 error={errors && errors.startTime}
                 onChange={(startTime: SimpleTime | null) => {
-                  onChange(Object.assign({}, shiftTimes, { startTime }));
+                  onChange(Object.assign({}, value, { startTime }));
                 }}
               />
             </div>
             <div aria-label="End time">
               <TimeInput
-                time={shiftTimes.endTime}
+                value={value.endTime}
                 error={errors && errors.endTime}
                 onChange={(endTime: SimpleTime | null) => {
-                  onChange(Object.assign({}, shiftTimes, { endTime }));
+                  onChange(Object.assign({}, value, { endTime }));
                 }}
               />
             </div>
             <div aria-label="Break duration">
               <TimeInput
-                time={shiftTimes.breakDuration}
+                value={value.breakDuration}
                 error={errors && errors.breakDuration}
                 onChange={(breakDuration: SimpleTime | null) => {
-                  onChange(Object.assign({}, shiftTimes, { breakDuration }));
+                  onChange(Object.assign({}, value, { breakDuration }));
                 }}
               />
             </div>

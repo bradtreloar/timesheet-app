@@ -17,7 +17,7 @@ test("renders date label and toggler", () => {
   render(
     <ShiftInput
       date={testDate}
-      shiftTimes={testShiftTimes}
+      value={testShiftTimes}
       onChange={() => {}}
       onToggle={() => {}}
     />
@@ -33,7 +33,7 @@ test("renders null time inputs", () => {
   render(
     <ShiftInput
       date={testDate}
-      shiftTimes={EMPTY_SHIFT_TIMES}
+      value={EMPTY_SHIFT_TIMES}
       onChange={() => {}}
       onToggle={() => {}}
     />
@@ -49,7 +49,7 @@ test("renders filled time inputs", () => {
   render(
     <ShiftInput
       date={testDate}
-      shiftTimes={testShiftTimes}
+      value={testShiftTimes}
       onChange={() => {}}
       onToggle={() => {}}
     />
@@ -71,7 +71,7 @@ test("renders error messages", () => {
     <ShiftInput
       date={testDate}
       errors={testErrors}
-      shiftTimes={testShiftTimes}
+      value={testShiftTimes}
       onChange={() => {}}
       onToggle={() => {}}
     />
@@ -90,7 +90,7 @@ test("handles time inputs", () => {
   render(
     <ShiftInput
       date={testDate}
-      shiftTimes={EMPTY_SHIFT_TIMES}
+      value={EMPTY_SHIFT_TIMES}
       onChange={onChange}
       onToggle={() => {}}
     />
@@ -109,7 +109,7 @@ test("handles shift toggle", () => {
   render(
     <ShiftInput
       date={testDate}
-      shiftTimes={null}
+      value={null}
       onChange={onChange}
       onToggle={onToggle}
     />
@@ -127,7 +127,7 @@ test("validates shift duration", () => {
   render(
     <ShiftInput
       date={testDate}
-      shiftTimes={testShiftTimes}
+      value={testShiftTimes}
       onChange={() => {}}
       onToggle={() => {}}
     />
@@ -146,7 +146,7 @@ test("handles invalid shift times", () => {
   render(
     <ShiftInput
       date={testDate}
-      shiftTimes={testShiftTimes}
+      value={testShiftTimes}
       onChange={() => {}}
       onToggle={() => {}}
     />
