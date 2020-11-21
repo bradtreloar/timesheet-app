@@ -7,7 +7,7 @@ import { SimpleTime } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
 import { enterShiftTimes, eraseShiftTimes } from "../fixtures/actions";
 import { expectTimesEqual, expectValidShift } from "../fixtures/expect";
-import { range } from "lodash";
+import { noop, range } from "lodash";
 import { EMPTY_SHIFT_TIMES } from "./ShiftInput";
 
 test("renders timesheet form", () => {
@@ -15,7 +15,7 @@ test("renders timesheet form", () => {
   render(
     <TimesheetForm
       allDefaultShiftTimes={testShiftTimesArray}
-      onSubmit={() => {}}
+      onSubmit={noop}
     />
   );
 
@@ -42,7 +42,7 @@ test("handles toggling shift", () => {
   render(
     <TimesheetForm
       allDefaultShiftTimes={testDefaultShiftTimesArray}
-      onSubmit={() => {}}
+      onSubmit={noop}
     />
   );
 
@@ -60,7 +60,7 @@ test("handles erasing times", () => {
   render(
     <TimesheetForm
       allDefaultShiftTimes={testDefaultShiftTimesArray}
-      onSubmit={() => {}}
+      onSubmit={noop}
     />
   );
 
@@ -77,7 +77,7 @@ test("handles entering times", () => {
   render(
     <TimesheetForm
       allDefaultShiftTimes={testDefaultShiftTimesArray}
-      onSubmit={() => {}}
+      onSubmit={noop}
     />
   );
 
