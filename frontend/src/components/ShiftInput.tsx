@@ -1,4 +1,5 @@
 import React from "react";
+import classnames from "classnames";
 import { ShiftTimes } from "../types";
 import { longFormatDate, SimpleTime } from "../helpers/date";
 import TimeInput, { TimeInputError } from "./TimeInput";
@@ -94,29 +95,22 @@ interface ShiftToggleProps {
   onToggle: () => void;
 }
 
-const ShiftToggle: React.FC<ShiftToggleProps> = ({ isChecked, onToggle }) => {
-  return isChecked ? (
-    <button
-      aria-label="Worked"
-      className="shift-toggler btn btn-light is-checked"
-      type="button"
-      onClick={(event) => {
-        event.preventDefault();
-        onToggle();
-      }}
-    >
-      <FontAwesomeIcon className="icon" icon={faCheck} />
-      <span className="sr-only">Active</span>
-    </button>
-  ) : (
-    <button
-      aria-label="Worked"
-      className="shift-toggler btn btn-light is-unchecked"
-      onClick={onToggle}
-    >
-      <span className="sr-only">Inactive</span>
-    </button>
-  );
-};
+const ShiftToggle: React.FC<ShiftToggleProps> = ({ isChecked, onToggle }) => (
+  <button
+    aria-label="Worked"
+    className={classnames(
+      "shift-toggler btn btn-light",
+      isChecked ? "is-checked" : "is-unchecked"
+    )}
+    type="button"
+    onClick={(event) => {
+      event.preventDefault();
+      onToggle();
+    }}
+  >
+    {isChecked && <FontAwesomeIcon className="icon" icon={faCheck} />}
+    <span className="sr-only">{isChecked ? `Active` : `Inactive`}</span>
+  </button>
+);
 
 export default ShiftInput;
