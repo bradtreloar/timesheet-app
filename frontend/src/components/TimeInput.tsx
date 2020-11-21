@@ -3,9 +3,9 @@ import classnames from "classnames";
 import { SimpleTime } from "../helpers/date";
 
 interface TimeInputProps {
-  time: SimpleTime;
+  value: SimpleTime;
   error?: TimeInputError | false;
-  onChange: (time: SimpleTime, error?: string) => void;
+  onChange: (value: SimpleTime, error?: string) => void;
 }
 
 export interface TimeInputError {
@@ -15,13 +15,15 @@ export interface TimeInputError {
 }
 
 export const TimeInput: React.FC<TimeInputProps> = ({
-  time,
+  value,
   error,
   onChange,
 }) => {
-  const [hours, minutes] = time !== null ? time.toArray() : [null, null];
+  const [hours, minutes] = value !== null ? value.toArray() : [null, null];
   const [padMinutes, setPadMinutes] = React.useState(true);
-  const hoursValue = useMemo(() => (hours ? hours.toString() : ""), [hours]);
+  const hoursValue = useMemo(() => (hours === null ? "" : hours.toString()), [
+    hours,
+  ]);
   const minutesValue = useMemo(
     () =>
       minutes === null
