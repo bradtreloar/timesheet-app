@@ -5,11 +5,12 @@ import randomstring from "randomstring";
 import TimeInput from "./TimeInput";
 import { randomInt } from "../fixtures/random";
 import { SimpleTime } from "../helpers/date";
+import { noop } from "lodash";
 
 test("renders null value", () => {
   const testTime = new SimpleTime(null, null);
 
-  render(<TimeInput time={testTime} onChange={() => {}} />);
+  render(<TimeInput value={testTime} onChange={noop} />);
 
   expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual("");
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual("");
@@ -19,7 +20,7 @@ test("renders hours only", () => {
   const hours = randomInt(0, 23);
   const testTime = new SimpleTime(hours, null);
 
-  render(<TimeInput time={testTime} onChange={() => {}} />);
+  render(<TimeInput value={testTime} onChange={noop} />);
 
   expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(
     hours.toString()
@@ -31,7 +32,7 @@ test("renders minutes only", () => {
   const minutes = randomInt(0, 9);
   const testTime = new SimpleTime(null, minutes);
 
-  render(<TimeInput time={testTime} onChange={() => {}} />);
+  render(<TimeInput value={testTime} onChange={noop} />);
 
   expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual("");
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual(
@@ -48,7 +49,7 @@ test("renders validation feedback", () => {
     message: randomstring.generate(12),
   }
 
-  render(<TimeInput time={testTime}  error={testError} onChange={() => {}} />);
+  render(<TimeInput value={testTime}  error={testError} onChange={noop} />);
 
   screen.getByText(testError.message);
   expect(screen.getByLabelText(/hours/i).className).not.toMatch(/is-invalid/);
@@ -60,7 +61,7 @@ test("renders hours and minutes", () => {
   const minutes = randomInt(0, 9);
   const testTime = new SimpleTime(hours, minutes);
 
-  render(<TimeInput time={testTime} onChange={() => {}} />);
+  render(<TimeInput value={testTime} onChange={noop} />);
 
   expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(
     hours.toString()
@@ -74,7 +75,7 @@ test("handles hours input", () => {
   const hours = randomInt(12, 21);
   const onChange = jest.fn();
 
-  render(<TimeInput time={new SimpleTime(null, null)} onChange={onChange} />);
+  render(<TimeInput value={new SimpleTime(null, null)} onChange={onChange} />);
 
   const hoursInput = screen.getByLabelText(/hours/i);
   userEvent.type(hoursInput, hours.toString());
@@ -96,7 +97,7 @@ test("handles minutes input", () => {
   const minutes = randomInt(12, 21);
   const onChange = jest.fn();
 
-  render(<TimeInput time={new SimpleTime(null, null)} onChange={onChange} />);
+  render(<TimeInput value={new SimpleTime(null, null)} onChange={onChange} />);
 
   userEvent.type(screen.getByLabelText(/minutes/i), minutes.toString());
 
@@ -118,7 +119,7 @@ test("handles hours input with existing value", () => {
   const time = new SimpleTime(1, null);
   const onChange = jest.fn();
 
-  render(<TimeInput time={time} onChange={onChange} />);
+  render(<TimeInput value={time} onChange={onChange} />);
 
   const hoursInput = screen.getByLabelText(/hours/i);
   expect(hoursInput.getAttribute("value")).toEqual("1");
@@ -142,7 +143,7 @@ test("ignores invalid input", () => {
   const time = new SimpleTime(hours, null);
   const onChange = jest.fn();
 
-  render(<TimeInput time={time} onChange={onChange} />);
+  render(<TimeInput value={time} onChange={onChange} />);
 
   const hoursInput = screen.getByLabelText(/hours/i);
   expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
@@ -157,7 +158,7 @@ test("handles erase existing hours value", () => {
   const time = new SimpleTime(hours, null);
   const onChange = jest.fn();
 
-  render(<TimeInput time={time} onChange={onChange} />);
+  render(<TimeInput value={time} onChange={onChange} />);
   const hoursInput = screen.getByLabelText(/hours/i);
   expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
 
