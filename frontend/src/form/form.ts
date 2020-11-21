@@ -30,7 +30,7 @@ export function useForm<T>(
     return newErrors;
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: any) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -40,7 +40,7 @@ export function useForm<T>(
     });
   };
 
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = (event: any) => {
     const target = event.target;
     const name = target.name;
     setTouchedValues({
