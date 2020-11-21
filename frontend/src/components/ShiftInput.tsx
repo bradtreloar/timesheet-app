@@ -59,6 +59,11 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
                   onChange(Object.assign({}, value, { startTime }));
                 }}
               />
+              {errors && errors.startTime && (
+                <div className="invalid-feedback">
+                  {errors.startTime.message}
+                </div>
+              )}
             </div>
             <div aria-label="End time">
               <TimeInput
@@ -68,6 +73,11 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
                   onChange(Object.assign({}, value, { endTime }));
                 }}
               />
+              {errors && errors.endTime && (
+                <div className="invalid-feedback">
+                  {errors.endTime.message}
+                </div>
+              )}
             </div>
             <div aria-label="Break duration">
               <TimeInput
@@ -77,6 +87,11 @@ const ShiftInput: React.FC<ShiftInputProps> = ({
                   onChange(Object.assign({}, value, { breakDuration }));
                 }}
               />
+              {errors && errors.breakDuration && (
+                <div className="invalid-feedback">
+                  {errors.breakDuration.message}
+                </div>
+              )}
             </div>
           </div>
           <div>
