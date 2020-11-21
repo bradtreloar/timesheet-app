@@ -1,7 +1,9 @@
-import { Shift, ShiftTimes, Timesheet, User } from "../types";
+import { Settings, Shift, ShiftTimes, Timesheet, User } from "../types";
 import randomstring from "randomstring";
 import { addDays, addHours, SimpleTime } from "../helpers/date";
 import { TimeInputError } from "../components/TimeInput";
+import faker from "faker";
+import { random as randomNumber } from "lodash";
 
 const randomID = () => randomstring.generate();
 
@@ -27,10 +29,7 @@ export const randomPassword = () => randomstring.generate();
 
 export const randomBoolean = () => Math.random() > 0.5;
 
-export const randomInt = (min: number, max: number) => {
-  const range = max - min;
-  return Math.floor(Math.random() * range) + min;
-};
+export const randomInt = (min: number, max: number) => randomNumber(min, max);
 
 export const randomMinutes = (min: number, max: number) => {
   return randomInt(min, max);
@@ -109,4 +108,9 @@ export const randomTimeInputError = (): TimeInputError => ({
   hours: randomBoolean(),
   minutes: randomBoolean(),
   message: randomstring.generate(),
+});
+
+export const randomSettings = (): Settings => ({
+  timesheetRecipients: faker.internet.email(),
+  startOfWeek: randomInt(0, 6),
 });
