@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import classnames from "classnames";
 import { SimpleTime } from "../helpers/date";
 
@@ -20,29 +20,21 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   onChange,
 }) => {
   const [hours, minutes] = time !== null ? time.toArray() : [null, null];
-  const [hasFocus, setHasFocus] = React.useState(true);
+  const [padMinutes, setPadMinutes] = React.useState(true);
+  const hoursValue = useMemo(() => (hours ? hours.toString() : ""), [hours]);
+  const minutesValue = useMemo(
+    () =>
+      minutes === null
+        ? ""
+        : padMinutes
+        ? minutes.toString().padStart(2, "0")
+        : minutes.toString(),
+    [minutes]
+  );
 
-  const parseValue = (value: string, defaultValue: number | null) => {
-    if (value === "") {
-      return null;
-    }
-    const integerValue = parseInt(value);
-    if (isNaN(integerValue)) {
-      return defaultValue;
-    }
-    if (integerValue < 0) {
-      return integerValue * -1;
-    }
-    return integerValue;
-  };
-
-  const formattedValue = (value: number | null, isPadded: boolean) => {
-    return value !== null
-      ? isPadded
-        ? value.toString().padStart(2, "0")
-        : value.toString()
-      : "";
-  };
+  function parseValue(value: string) {
+    return value === "" ? null : parseInt(value);
+  }
 
   return (
     <div>
@@ -52,11 +44,13 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           className={classnames(error && error.hours && "is-invalid")}
           type="text"
           pattern="[0-2]{0,1}[0-9]{0,1}"
-          value={hours !== null ? hours.toString() : ""}
+          value={hoursValue}
           onChange={(event) => {
-            const newHours = parseValue(event.target.value, hours);
             try {
-              const newTime = new SimpleTime(newHours, minutes);
+              const newTime = new SimpleTime(
+                parseValue(event.target.value),
+                minutes
+              );
               onChange(newTime);
             } catch (error) {}
           }}
@@ -67,27 +61,25 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           className={classnames(error && error.minutes && "is-invalid")}
           type="text"
           pattern="[0-5]{0,1}[0-9]{0,1}"
-          value={formattedValue(minutes, hasFocus)}
+          value={minutesValue}
           onChange={(event) => {
-            const newMinutes = parseValue(event.target.value, minutes);
             try {
-              const newTime = new SimpleTime(hours, newMinutes);
+              const newTime = new SimpleTime(
+                hours,
+                parseValue(event.target.value)
+              );
               onChange(newTime);
             } catch (error) {}
           }}
           onFocus={() => {
-            setHasFocus(false);
+            setPadMinutes(true);
           }}
           onBlur={() => {
-            setHasFocus(true);
+            setPadMinutes(false);
           }}
         />
       </div>
-      {error && (
-        <div className="invalid-feedback">
-          {error.message}
-        </div>
-      )}
+      {error && <div className="invalid-feedback">{error.message}</div>}
     </div>
   );
 };
