@@ -10,147 +10,189 @@ import { noop } from "lodash";
 test("renders null value", () => {
   const testTime = new SimpleTime(null, null);
 
-  render(<TimeInput value={testTime} onChange={noop} />);
+  render(
+    <TimeInput
+      value={{
+        hours: "",
+        minutes: "",
+      }}
+      onChange={noop}
+    />
+  );
 
   expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual("");
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual("");
 });
 
 test("renders hours only", () => {
-  const hours = randomInt(0, 23);
-  const testTime = new SimpleTime(hours, null);
+  const hours = randomInt(0, 23).toString();
 
-  render(<TimeInput value={testTime} onChange={noop} />);
-
-  expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(
-    hours.toString()
+  render(
+    <TimeInput
+      value={{
+        hours,
+        minutes: "",
+      }}
+      onChange={noop}
+    />
   );
+
+  expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(hours);
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual("");
 });
 
 test("renders minutes only", () => {
-  const minutes = randomInt(0, 9);
-  const testTime = new SimpleTime(null, minutes);
+  const minutes = randomInt(0, 9).toString();
 
-  render(<TimeInput value={testTime} onChange={noop} />);
+  render(
+    <TimeInput
+      value={{
+        hours: "",
+        minutes,
+      }}
+      onChange={noop}
+    />
+  );
 
   expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual("");
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual(
-    minutes.toString().padStart(2, "0")
+    minutes
   );
 });
 
 test("renders hours and minutes", () => {
-  const hours = randomInt(0, 23);
-  const minutes = randomInt(0, 9);
-  const testTime = new SimpleTime(hours, minutes);
+  const hours = randomInt(0, 23).toString();
+  const minutes = randomInt(0, 9).toString();
 
-  render(<TimeInput value={testTime} onChange={noop} />);
-
-  expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(
-    hours.toString()
+  render(
+    <TimeInput
+      value={{
+        hours,
+        minutes,
+      }}
+      onChange={noop}
+    />
   );
+
+  expect(screen.getByLabelText(/hours/i).getAttribute("value")).toEqual(hours);
   expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual(
-    minutes.toString().padStart(2, "0")
+    minutes
   );
 });
 
 test("handles hours input", () => {
-  const hours = randomInt(12, 21);
-  const onChange = jest.fn();
+  const hours = randomInt(12, 21).toString();
+  let charIndex = 0;
+  const onChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+    expect(event.target.value).toEqual(hours[charIndex]);
+    charIndex++;
+  };
 
-  render(<TimeInput value={new SimpleTime(null, null)} onChange={onChange} />);
+  render(
+    <TimeInput
+      value={{
+        hours: "",
+        minutes: "",
+      }}
+      onChange={onChange}
+    />
+  );
 
-  const hoursInput = screen.getByLabelText(/hours/i);
-  userEvent.type(hoursInput, hours.toString());
-
-  expect(onChange).toHaveBeenCalledTimes(2);
-  for (let char of hours.toString()) {
-    expect(onChange).toHaveBeenCalledWith({
-      hours: parseInt(char),
-      minutes: null,
-    });
-  }
-
-  // The input element's value should remain blank as we aren't updating
-  // its time prop.
-  expect(hoursInput.getAttribute("value")).toEqual("");
+  userEvent.type(screen.getByLabelText(/hours/i), hours);
 });
 
 test("handles minutes input", () => {
-  const minutes = randomInt(12, 21);
-  const onChange = jest.fn();
+  const minutes = randomInt(12, 21).toString();
+  let charIndex = 0;
+  const onChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+    expect(event.target.value).toEqual(minutes[charIndex]);
+    charIndex++;
+  };
 
-  render(<TimeInput value={new SimpleTime(null, null)} onChange={onChange} />);
+  render(
+    <TimeInput
+      value={{
+        hours: "",
+        minutes: "",
+      }}
+      onChange={onChange}
+    />
+  );
 
   userEvent.type(screen.getByLabelText(/minutes/i), minutes.toString());
-
-  expect(onChange).toHaveBeenCalledTimes(2);
-  for (let char of minutes.toString()) {
-    expect(onChange).toHaveBeenCalledWith({
-      hours: null,
-      minutes: parseInt(char),
-    });
-  }
-
-  // The input element's value should remain blank as we aren't updating
-  // its time prop.
-  expect(screen.getByLabelText(/minutes/i).getAttribute("value")).toEqual("");
 });
 
 test("handles hours input with existing value", () => {
-  const hours = randomInt(0, 2);
-  const time = new SimpleTime(1, null);
-  const onChange = jest.fn();
+  const hours = randomInt(0, 2).toString();
+  const onChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+    expect(event.target.value).toEqual("1" + hours);
+  };
 
-  render(<TimeInput value={time} onChange={onChange} />);
+  render(
+    <TimeInput
+      value={{
+        hours: "1",
+        minutes: "",
+      }}
+      onChange={onChange}
+    />
+  );
 
-  const hoursInput = screen.getByLabelText(/hours/i);
-  expect(hoursInput.getAttribute("value")).toEqual("1");
-
-  userEvent.type(hoursInput, hours.toString());
-
-  const expectedHours = hours + 10;
-  expect(onChange).toHaveBeenCalledTimes(1);
-  expect(onChange).toHaveBeenCalledWith({
-    hours: expectedHours,
-    minutes: null,
-  });
-
-  // The input element's value should remain unchanged as we aren't updating
-  // its time prop.
-  expect(hoursInput.getAttribute("value")).toEqual("1");
+  userEvent.type(screen.getByLabelText(/hours/i), hours);
 });
 
 test("ignores invalid input", () => {
-  const hours = randomInt(1, 23);
-  const time = new SimpleTime(hours, null);
+  const hours = randomInt(1, 23).toString();
   const onChange = jest.fn();
 
-  render(<TimeInput value={time} onChange={onChange} />);
+  render(
+    <TimeInput
+      value={{
+        hours,
+        minutes: "",
+      }}
+      onChange={onChange}
+    />
+  );
 
   const hoursInput = screen.getByLabelText(/hours/i);
-  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
-
   fireEvent.keyPress(hoursInput, "a");
   expect(onChange).toHaveBeenCalledTimes(0);
-  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
+  expect(hoursInput.getAttribute("value")).toEqual(hours);
 });
 
 test("handles erase existing hours value", () => {
-  const hours = randomInt(0, 23);
-  const time = new SimpleTime(hours, null);
-  const onChange = jest.fn();
+  const hours = randomInt(0, 23).toString();
+  const onChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+    expect(event.target.value).toEqual("");
+  };
 
-  render(<TimeInput value={time} onChange={onChange} />);
-  const hoursInput = screen.getByLabelText(/hours/i);
-  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
+  render(
+    <TimeInput
+      value={{
+        hours,
+        minutes: "",
+      }}
+      onChange={onChange}
+    />
+  );
+  userEvent.clear(screen.getByLabelText(/hours/i));
+});
 
-  userEvent.clear(hoursInput);
-  expect(onChange).toHaveBeenCalledTimes(1);
-  expect(onChange).toHaveBeenCalledWith({
-    hours: null,
-    minutes: null,
-  });
-  expect(hoursInput.getAttribute("value")).toEqual(hours.toString());
+test("handles erase existing minutes value", () => {
+  const minutes = randomInt(0, 59).toString().padStart(2, "0");
+  const onChange = function (event: React.ChangeEvent<HTMLInputElement>) {
+    expect(event.target.value).toEqual("");
+  };
+
+  render(
+    <TimeInput
+      value={{
+        hours: "",
+        minutes,
+      }}
+      onChange={onChange}
+    />
+  );
+  userEvent.clear(screen.getByLabelText(/hours/i));
 });
