@@ -1,7 +1,6 @@
 import { Settings, Shift, ShiftTimes, Timesheet, User } from "../types";
 import randomstring from "randomstring";
 import { addDays, addHours, SimpleTime } from "../helpers/date";
-import { TimeInputError } from "../components/TimeInput";
 import faker from "faker";
 import { random as randomNumber } from "lodash";
 
@@ -59,9 +58,19 @@ export const randomShiftTimes = (): ShiftTimes => {
   const startMinutes = Math.floor(Math.random() * 60);
   const endMinutes = Math.floor(Math.random() * 60);
   return {
-    startTime: new SimpleTime(startHours, startMinutes),
-    endTime: new SimpleTime(endHours, endMinutes),
-    breakDuration: new SimpleTime(0, breakMinutes),
+    isActive: true,
+    startTime: {
+      hours: startHours.toString(),
+      minutes: startMinutes.toString(),
+    },
+    endTime: {
+      hours: endHours.toString(),
+      minutes: endMinutes.toString(),
+    },
+    breakDuration: {
+      hours: "0",
+      minutes: breakMinutes.toString(),
+    },
   };
 };
 
@@ -103,12 +112,6 @@ export const randomTimesheet = (user: User): Timesheet => {
 
 export const randomTimesheets = (user: User, count: number) =>
   range(count).map((index) => randomTimesheet(user));
-
-export const randomTimeInputError = (): TimeInputError => ({
-  hours: randomBoolean(),
-  minutes: randomBoolean(),
-  message: randomstring.generate(),
-});
 
 export const randomSettings = (): Settings => ({
   timesheetRecipients: faker.internet.email(),
