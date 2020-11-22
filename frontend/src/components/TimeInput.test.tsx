@@ -1,15 +1,11 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import randomstring from "randomstring";
 import TimeInput from "./TimeInput";
 import { randomInt } from "../fixtures/random";
-import { SimpleTime } from "../helpers/date";
 import { noop } from "lodash";
 
 test("renders null value", () => {
-  const testTime = new SimpleTime(null, null);
-
   render(
     <TimeInput
       value={{
