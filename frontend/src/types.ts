@@ -17,8 +17,8 @@ export type Shift = {
   id?: string;
   created?: string;
   changed?: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   breakDuration: number;
 };
 

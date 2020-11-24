@@ -10,8 +10,8 @@ export const parseShift = (resource: ShiftResource): Shift => {
     id: id as string,
     created: created as string,
     changed: changed as string,
-    start: new Date(start),
-    end: new Date(end),
+    start: new Date(start).toISOString(),
+    end: new Date(end).toISOString(),
     breakDuration,
   };
 };
@@ -43,8 +43,8 @@ export const makeShiftResource = (
   const resource: ShiftResource = {
     type: "shifts",
     attributes: {
-      start: start.toISOString(),
-      end: end.toISOString(),
+      start,
+      end,
       break_duration: breakDuration,
     },
     relationships: {

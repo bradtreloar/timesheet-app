@@ -91,8 +91,8 @@ export const randomShiftDates = (date: Date) => {
 export const randomShift = (weekStartDate: Date, dateOffset: number): Shift => {
   const [start, end] = randomShiftDates(addDays(weekStartDate, dateOffset));
   return {
-    start,
-    end,
+    start: start.toISOString(),
+    end: end.toISOString(),
     breakDuration: randomMinutes(30, 60),
   };
 };
