@@ -2,7 +2,18 @@ import { Shift, ShiftTimes } from "../types";
 import { Time } from "./date";
 
 export const getShiftDuration = (shiftTimes: ShiftTimes) => {
-  const { startTime, endTime, breakDuration } = shiftTimes;
+  const startTime = new Time(
+    shiftTimes.startTime.hours,
+    shiftTimes.startTime.minutes
+  );
+  const endTime = new Time(
+    shiftTimes.endTime.hours,
+    shiftTimes.endTime.minutes
+  );
+  const breakDuration = new Time(
+    shiftTimes.breakDuration.hours,
+    shiftTimes.breakDuration.minutes
+  );
 
   if (startTime.isNull() || endTime.isNull() || breakDuration.isNull()) {
     return null;
@@ -14,8 +25,7 @@ export const getShiftDuration = (shiftTimes: ShiftTimes) => {
     return 0;
   }
 
-  const shiftDuration = Time.fromMinutes(shiftMinutes);
-  return shiftDuration.toHours();
+  return Time.fromMinutes(shiftMinutes).toHours();
 };
 
 export const getShiftFromTimes = (
@@ -27,20 +37,15 @@ export const getShiftFromTimes = (
   }
 
   const { startTime, endTime, breakDuration } = shiftTimes;
-  if (!(startTime && endTime && breakDuration)) {
-    throw new Error(`Invalid shift times.`);
-  }
+  const shiftDuration = getShiftDuration(shiftTimes);
 
-  const shiftDuration =
-    endTime.toMinutes() - startTime.toMinutes() - breakDuration.toMinutes();
-
-  if (shiftDuration <= 0) {
+  if (shiftDuration === null || shiftDuration <= 0) {
     throw new Error(`Invalid shift times.`);
   }
 
   return {
-    start: startTime.toDate(date),
-    end: endTime.toDate(date),
-    breakDuration: breakDuration.toMinutes(),
+    start: Time.fromObject(startTime).toDate(date).toISOString(),
+    end: Time.fromObject(endTime).toDate(date).toISOString(),
+    breakDuration: Time.fromObject(breakDuration).toMinutes(),
   };
 };
