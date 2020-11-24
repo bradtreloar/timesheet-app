@@ -1,21 +1,21 @@
-import { isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { useState } from "react";
 
-type FormValue = any;
+export type FormValue = any;
 
-type FormValues<T> = T;
+export type FormValues<T> = T;
 
-type FormTouchedValues<T> = {
+export type FormTouchedValues<T> = {
   [P in keyof T]?: boolean;
 };
 
-type FormErrors<T> = {
+export type FormErrors<T> = {
   [P in keyof T]?: string;
 };
 
 export function useForm<T>(
   initialValues: FormValues<T>,
-  onSubmit: (values: FormValues<T>, errors: FormErrors<T>) => void,
+  onSubmit: (values: FormValues<T>) => void,
   validate: (values: FormValues<T>) => FormErrors<T>
 ) {
   const [values, setValues] = useState<FormValues<T>>(initialValues);
@@ -53,17 +53,12 @@ export function useForm<T>(
     setTouchedValues(Object.assign({}, touchedValues, someTouchedValues));
   };
 
-  const getError = (name: string) => errors[name as keyof T];
-
-  const hasErrors = () => !isEqual(errors, {});
+  const getError = (name: string) => errors && errors[name as keyof T];
 
   const doValidate = () => {
-    const newErrors = validate(values);
-    setErrors({
-      ...errors,
-      ...newErrors,
-    });
-    return newErrors;
+    const errors = validate(values);
+    setErrors(errors);
+    return errors;
   };
 
   const handleChange = (event: any) => {
@@ -80,14 +75,12 @@ export function useForm<T>(
     doValidate();
   };
 
-  const handleRemoveFormControl = (name: string) => {
-    setTouchedValue(name, false);
-  };
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newErrors = doValidate();
-    onSubmit(values, newErrors);
+    const errors = doValidate();
+    if (isEmpty(errors)) {
+      onSubmit(values);
+    }
   };
 
   return {
@@ -101,10 +94,8 @@ export function useForm<T>(
     setTouchedValue,
     setSomeTouchedValues,
     getError,
-    hasErrors,
     handleBlur,
     handleChange,
-    handleRemoveFormControl,
     handleSubmit,
   };
 }
