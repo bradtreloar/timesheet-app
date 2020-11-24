@@ -1,5 +1,3 @@
-import { SimpleTime } from "./helpers/date";
-
 export type User = {
   isAdmin: boolean;
   id: string;
@@ -38,4 +36,9 @@ export type ShiftTimes = {
     hours: string;
     minutes: string;
   };
+};
+
+export type Settings = {
+  timesheetRecipients: string;
+  startOfWeek: number;
 };
