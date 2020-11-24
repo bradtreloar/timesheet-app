@@ -1,65 +1,73 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TimesheetForm from "./TimesheetForm";
+import TimesheetForm, { shiftInputNames } from "./TimesheetForm";
 import { randomShiftTimesArray } from "../fixtures/random";
-import { SimpleTime } from "../helpers/date";
-import { Shift, ShiftTimes } from "../types";
 import { enterShiftTimes, eraseShiftTimes } from "../fixtures/actions";
 import { expectTimesEqual, expectValidShift } from "../fixtures/expect";
 import { noop, range } from "lodash";
-import { EMPTY_SHIFT_TIMES } from "./ShiftInput";
+import { Shift, ShiftTimes } from "../types";
+
+export const EMPTY_SHIFT_TIMES = {
+  startTime: { hours: "", minutes: "" },
+  endTime: { hours: "", minutes: "" },
+  breakDuration: { hours: "", minutes: "" },
+} as ShiftTimes;
+
+const testWeekStartDate = new Date();
 
 test("renders timesheet form", () => {
-  const testShiftTimesArray = randomShiftTimesArray();
+  const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      allDefaultShiftTimes={testShiftTimesArray}
+      defaultWeekStartDate={testWeekStartDate}
+      defaultShifts={testShifts}
       onSubmit={noop}
     />
   );
 
   const shiftInputs = screen.getAllByLabelText(/^shift$/i);
   shiftInputs.forEach((shiftInput, index) => {
-    const testShiftTimes = testShiftTimesArray[index];
+    const testShiftTimes = testShifts[index];
     const startTimeInput = within(shiftInput).getByLabelText(/start time/i);
-    const expectedStartTime = testShiftTimes.startTime as SimpleTime;
-    const expectedHours = (expectedStartTime.hours as number).toString();
-    const expectedMinutes = (expectedStartTime.minutes as number)
-      .toString()
-      .padStart(2, "0");
     expect(within(startTimeInput).getByLabelText(/hours/i)).toHaveValue(
-      expectedHours
+      testShiftTimes.startTime.hours
     );
     expect(within(startTimeInput).getByLabelText(/minutes/i)).toHaveValue(
-      expectedMinutes
+      testShiftTimes.startTime.minutes
     );
   });
 });
 
 test("handles toggling shift", () => {
-  const testDefaultShiftTimesArray = randomShiftTimesArray();
+  const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      allDefaultShiftTimes={testDefaultShiftTimesArray}
+      defaultWeekStartDate={testWeekStartDate}
+      defaultShifts={testShifts}
       onSubmit={noop}
     />
   );
 
   const shiftInput = screen.getAllByLabelText(/^shift$/i)[0];
   within(shiftInput).getByLabelText(/start time/i);
-  userEvent.click(within(shiftInput).getByLabelText(/worked/i));
+  userEvent.click(within(shiftInput).getByTestId("shift-toggle"));
   expect(within(shiftInput).queryByLabelText(/start time/i)).toBeNull();
-  userEvent.click(within(shiftInput).getByLabelText(/worked/i));
+  userEvent.click(within(shiftInput).getByTestId("shift-toggle"));
   within(shiftInput).getByLabelText(/start time/i);
+  expect(
+    within(within(shiftInput).getByLabelText(/start time/i))
+      .getByLabelText(/hours/i)
+      .getAttribute("value")
+  ).toEqual("");
 });
 
 test("handles erasing times", () => {
-  const testDefaultShiftTimesArray = randomShiftTimesArray();
-
+  const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      allDefaultShiftTimes={testDefaultShiftTimesArray}
+      defaultWeekStartDate={testWeekStartDate}
+      defaultShifts={testShifts}
       onSubmit={noop}
     />
   );
@@ -71,21 +79,19 @@ test("handles erasing times", () => {
 });
 
 test("handles entering times", () => {
-  const testDefaultShiftTimesArray = randomShiftTimesArray();
-  const testshiftTimesArray = randomShiftTimesArray();
-
+  const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      allDefaultShiftTimes={testDefaultShiftTimesArray}
+      defaultWeekStartDate={testWeekStartDate}
+      defaultShifts={testShifts}
       onSubmit={noop}
     />
   );
 
   const shiftInputs = screen.getAllByLabelText(/^shift$/i);
-
   for (let index in shiftInputs) {
     const shiftInput = shiftInputs[index];
-    const testshiftTimes = testshiftTimesArray[index];
+    const testshiftTimes = testShifts[index];
     eraseShiftTimes(shiftInput);
     expectTimesEqual(shiftInput, EMPTY_SHIFT_TIMES);
     enterShiftTimes(shiftInput, testshiftTimes);
@@ -95,71 +101,73 @@ test("handles entering times", () => {
 
 describe("form submission", () => {
   test("with all shifts", (done) => {
-    const testshiftTimesArray = randomShiftTimesArray();
-
+    const testShifts = randomShiftTimesArray();
     render(
       <TimesheetForm
-        allDefaultShiftTimes={testshiftTimesArray}
+        defaultWeekStartDate={testWeekStartDate}
+        defaultShifts={testShifts}
         onSubmit={(shifts: Shift[]) => {
-          expect(shifts.length).toEqual(testshiftTimesArray.length);
+          expect(shifts.length).toEqual(testShifts.length);
           shifts.forEach((shift) => expectValidShift(shift));
           done();
         }}
       />
     );
-
     userEvent.click(screen.getByText(/^submit$/i));
   });
 
   test("with only some shifts", (done) => {
-    const testshiftTimesArray: (ShiftTimes | null)[] = randomShiftTimesArray();
-    testshiftTimesArray.pop();
-    testshiftTimesArray.push(null);
-
+    const testShifts: (ShiftTimes | null)[] = randomShiftTimesArray();
+    testShifts.pop();
+    testShifts.push(null);
     render(
       <TimesheetForm
-        allDefaultShiftTimes={testshiftTimesArray}
+        defaultWeekStartDate={testWeekStartDate}
+        defaultShifts={testShifts}
         onSubmit={(shifts: Shift[]) => {
-          expect(shifts.length).toEqual(testshiftTimesArray.length - 1);
+          expect(shifts.length).toEqual(testShifts.length - 1);
           shifts.forEach((shift) => expectValidShift(shift));
           done();
         }}
       />
     );
-
     userEvent.click(screen.getByText(/^submit$/i));
-  });
-
-  test("with incomplete shift", () => {
-    const testshiftTimesArray: ShiftTimes[] = randomShiftTimesArray();
-    testshiftTimesArray[0].breakDuration = new SimpleTime(null, null);
-
-    render(
-      <TimesheetForm
-        allDefaultShiftTimes={testshiftTimesArray}
-        onSubmit={() => {
-          throw new Error(`onSubmit should not be called with invalid shift time.`);
-        }}
-      />
-    );
-
-    expect(screen.queryByText(/enter time/i)).toBeNull();
-    userEvent.click(screen.getByText(/^submit$/i));
-    screen.getByText(/enter time/i);
   });
 
   test("with no shifts", () => {
-    const testshiftTimesArray: null[] = range(7).map(() => null);
-
+    const testShifts: null[] = range(7).map(() => null);
     render(
       <TimesheetForm
-        allDefaultShiftTimes={testshiftTimesArray}
+        defaultWeekStartDate={testWeekStartDate}
+        defaultShifts={testShifts}
         onSubmit={(shifts: Shift[]) => {
           throw new Error(`onSubmit should not be called with no shifts.`);
         }}
       />
     );
-
     userEvent.click(screen.getByText(/^submit$/i));
+    screen.getByText(/at least one shift is required/i);
+  });
+
+  test("with incomplete shift", () => {
+    const testShifts: ShiftTimes[] = randomShiftTimesArray();
+    testShifts[0].breakDuration = {
+      hours: "",
+      minutes: "",
+    };
+    render(
+      <TimesheetForm
+        defaultWeekStartDate={testWeekStartDate}
+        defaultShifts={testShifts}
+        onSubmit={() => {
+          throw new Error(
+            `onSubmit should not be called with invalid shift time.`
+          );
+        }}
+      />
+    );
+    expect(screen.queryByText(/enter time/i)).toBeNull();
+    userEvent.click(screen.getByText(/^submit$/i));
+    expect(screen.getAllByText(/required/i)).toHaveLength(2);
   });
 });

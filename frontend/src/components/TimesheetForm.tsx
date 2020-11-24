@@ -1,294 +1,290 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { AnyAction, PayloadAction } from "@reduxjs/toolkit";
-import classnames from "classnames";
+import React, { useCallback, useMemo } from "react";
 import {
   startOfWeek,
   addDays,
-  addWeek,
-  subtractWeek,
+  longFormatDate,
   SimpleTime,
 } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
-import ShiftInput, { EMPTY_SHIFT_TIMES, ShiftInputErrors } from "./ShiftInput";
 import WeekSelect from "./WeekSelect";
-import { getShiftFromTimes } from "../helpers/shift";
-import { forOwn, isEqual } from "lodash";
+import { isEmpty, isEqual, range } from "lodash";
+import { FormErrors, useForm } from "../form/form";
+import TimeInput from "./TimeInput";
 
-type ShiftTimesPayload = {
-  shiftTimes: ShiftTimes;
-  index: number;
+export const shiftTimesNames = [
+  "startTime",
+  "endTime",
+  "breakDuration",
+] as const;
+
+export const shiftTimesInputNames = shiftTimesNames.reduce((names, name) => {
+  names.push(`${name}.hours`);
+  names.push(`${name}.minutes`);
+  return names;
+}, [] as string[]);
+
+export const shiftInputNames = ["isActive", ...shiftTimesInputNames] as const;
+
+/**
+ * Prepares the values for the form's initial state.
+ *
+ * @param defaultWeekStartDate
+ *   The start date of the default week to be selected.
+ * @param defaultShifts
+ *   The start time, end time, and break duration for each shift, or null for
+ *   each shift that is disabled by default.
+ * @returns
+ *   An object containing the default value for each form input.
+ */
+const buildInitialValues = (
+  defaultWeekStartDate: Date,
+  defaultShifts: (ShiftTimes | null)[]
+) => ({
+  weekStartDate: defaultWeekStartDate,
+  ...range(7).reduce((values, index) => {
+    const dv = defaultShifts[index];
+    const name = `shift.${index}`;
+    if (dv !== null) {
+      values[`${name}.isActive`] = true;
+      values[`${name}.startTime.hours`] = dv.startTime.hours;
+      values[`${name}.startTime.minutes`] = dv.startTime.minutes;
+      values[`${name}.endTime.hours`] = dv.endTime.hours;
+      values[`${name}.endTime.minutes`] = dv.endTime.minutes;
+      values[`${name}.breakDuration.hours`] = dv.breakDuration.hours;
+      values[`${name}.breakDuration.minutes`] = dv.breakDuration.minutes;
+    } else {
+      values[`${name}.isActive`] = false;
+      values[`${name}.startTime.hours`] = "";
+      values[`${name}.startTime.minutes`] = "";
+      values[`${name}.endTime.hours`] = "";
+      values[`${name}.endTime.minutes`] = "";
+      values[`${name}.breakDuration.hours`] = "";
+      values[`${name}.breakDuration.minutes`] = "";
+    }
+    return values;
+  }, {} as any),
+});
+
+/**
+ * Prepares the value to be passed to the form's onSubmit callback.
+ *
+ * @param values
+ *   An object containing the value for each form input.
+ * @returns
+ *   A array of Shift objects.
+ */
+const processValues = (values: any) => {
+  const weekStartDate = values.weekStartDate;
+  const shifts: Shift[] = [];
+  range(7).forEach((index) => {
+    if (values[`shift.${index}.isActive`]) {
+      const shiftDate = addDays(weekStartDate, index);
+      const shift = {
+        start: new SimpleTime(
+          values[`shift.${index}.startTime.hours`],
+          values[`shift.${index}.startTime.minutes`]
+        ).toDate(shiftDate),
+        end: new SimpleTime(
+          values[`shift.${index}.endTime.hours`],
+          values[`shift.${index}.endTime.minutes`]
+        ).toDate(shiftDate),
+        breakDuration: new SimpleTime(
+          values[`shift.${index}.breakDuration.hours`],
+          values[`shift.${index}.breakDuration.minutes`]
+        ).toMinutes(),
+      };
+      shifts.push(shift);
+    }
+  });
+
+  return shifts;
 };
 
-type ErrorPayload = {
-  name: string;
-  message: string | object;
+/**
+ * Validates the form inputs.
+ *
+ * @param values
+ *   An object containing the value for each form input.
+ * @returns
+ *   An object containing the error for any form inputs that contain invalid
+ *   values. Returns null if no errors are found.
+ */
+const validate = (values: any) => {
+  const errors = {} as FormErrors<any>;
+  let hasActiveShifts = false;
+
+  range(7).forEach((index) => {
+    // Don't validate a shift's values while it is disabled.
+    if (values[`shift.${index}.isActive`] === false) {
+      return;
+    }
+    hasActiveShifts = true;
+
+    shiftTimesNames.forEach((name) => {
+      const prefix = `shift.${index}.${name}`;
+      const hours = values[`${prefix}.hours`];
+      const minutes = values[`${prefix}.minutes`];
+
+      if (hours === "") {
+        errors[`${prefix}.hours`] = `Hours required`;
+      } else {
+        const hoursInt = parseInt(hours);
+        if (isNaN(hoursInt) || hoursInt < 0 || hoursInt >= 24) {
+          errors[`${prefix}.hours`] = `Hours must be a number between 0 and 23`;
+        }
+      }
+
+      if (minutes === "") {
+        errors[`${prefix}.minutes`] = `Minutes required`;
+      } else {
+        const minutesInt = parseInt(minutes);
+        if (isNaN(minutesInt) || minutesInt < 0 || minutesInt >= 60) {
+          errors[
+            `${prefix}.hours`
+          ] = `Minutes must be a number between 0 and 59`;
+        }
+      }
+    });
+  });
+
+  if (!hasActiveShifts) {
+    errors[`form`] = `At least one shift is required.`;
+  }
+
+  return errors;
 };
 
 interface TimesheetFormProps {
-  allDefaultShiftTimes: (ShiftTimes | null)[];
-  onSubmit: (shifts: Shift[]) => void;
+  defaultWeekStartDate: Date;
+  defaultShifts: (ShiftTimes | null)[];
+  onSubmit: (values: any) => void;
 }
-
-interface TimesheetFormState {
-  values: {
-    allShiftTimes: (ShiftTimes | null)[];
-  };
-  errors: {
-    name: string;
-    message: string | object;
-  }[];
-}
-
-const clearShiftTimes = (index: number): PayloadAction<number> => ({
-  type: "values/shiftTimes/clear",
-  payload: index,
-});
-
-const setShiftTimes = (
-  shiftTimes: ShiftTimes,
-  index: number
-): PayloadAction<ShiftTimesPayload> => ({
-  type: "values/shiftTimes/set",
-  payload: { index, shiftTimes },
-});
-
-const setError = (
-  name: string,
-  message: string | object
-): PayloadAction<ErrorPayload> => ({
-  type: "errors/set",
-  payload: { name, message },
-});
-
-const clearError = (name: string) => ({
-  type: "errors/clear",
-  payload: name,
-});
-
-const clearAllErrors = () => ({
-  type: "errors/clearAll",
-});
-
-export const reducer = (state: TimesheetFormState, action: AnyAction) => {
-  if (action.type === "values/shiftTimes/clear") {
-    const clearIndex = action.payload as number;
-    const allShiftTimes = state.values.allShiftTimes.map((shiftTimes, index) =>
-      index === clearIndex ? null : shiftTimes
-    );
-    return Object.assign({}, state, { values: { allShiftTimes } });
-  }
-
-  if (action.type === "values/shiftTimes/set") {
-    const {
-      index: shiftIndex,
-      shiftTimes: newShiftTimes,
-    } = action.payload as ShiftTimesPayload;
-    const allShiftTimes = state.values.allShiftTimes.map((shiftTimes, index) =>
-      index === shiftIndex ? newShiftTimes : shiftTimes
-    );
-    return Object.assign({}, state, { values: { allShiftTimes } });
-  }
-
-  if (action.type === "errors/set") {
-    const { name, message } = action.payload as ErrorPayload;
-    const errors = state.errors;
-    const newError = { name, message };
-    let updatedErrors = null;
-    if (errors.find((error) => error.name === name)) {
-      updatedErrors = errors.map((error) =>
-        error.name === name ? newError : error
-      );
-    } else {
-      updatedErrors = [...errors, newError];
-    }
-    return Object.assign({}, state, {
-      errors: updatedErrors,
-    });
-  }
-
-  if (action.type === "errors/clear") {
-    const name = action.payload as string;
-    return Object.assign({}, state, {
-      errors: state.errors.filter((error) => error.name !== name),
-    });
-  }
-
-  if (action.type === "errors/clearAll") {
-    return Object.assign({}, state, {
-      errors: [],
-    });
-  }
-
-  return state;
-};
-
-const initialWeekStartDate = startOfWeek(new Date());
 
 const TimesheetForm: React.FC<TimesheetFormProps> = ({
-  allDefaultShiftTimes,
+  defaultWeekStartDate,
+  defaultShifts,
   onSubmit,
 }) => {
-  const [weekStartDate, setWeekStartDate] = React.useState(
-    initialWeekStartDate
-  );
-  const [state, dispatch] = React.useReducer(reducer, {
-    values: { allShiftTimes: allDefaultShiftTimes },
-    errors: [],
-  });
-  const { values, errors } = state;
-  const [validated, setValidated] = useState(false);
-  const [showErrors, setShowErrors] = useState(false);
-  const hasShifts = useMemo(
-    () =>
-      values.allShiftTimes.reduce(
-        (hasShifts, shiftTimes) => hasShifts || shiftTimes !== null,
-        false
-      ),
-    [values.allShiftTimes]
+  const initialValues = useCallback(
+    () => buildInitialValues(defaultWeekStartDate, defaultShifts),
+    [defaultWeekStartDate, defaultShifts]
   );
 
-  useEffect(() => {
-    dispatch(clearAllErrors());
+  const {
+    values,
+    setSomeValues,
+    setSomeTouchedValues,
+    errors,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+  } = useForm(
+    initialValues,
+    (values) => {
+      onSubmit(processValues(values));
+    },
+    validate
+  );
 
-    if (!hasShifts) {
-      dispatch(setError(`form`, `You must enter at least one shift.`));
-      return;
-    }
-
-    values.allShiftTimes.forEach((shiftTimes, index) => {
-      if (shiftTimes === null) {
-        return;
-      }
-
-      const validateTime = (time: SimpleTime) => {
-        if (time.isNull()) {
-          return {
-            hours: true,
-            minutes: true,
-            message: `Enter time`,
-          };
-        }
-
-        if (time.hours === null) {
-          return {
-            hours: true,
-            minutes: false,
-            message: `Enter hours`,
-          };
-        }
-
-        if (time.minutes === null) {
-          return {
-            hours: false,
-            minutes: true,
-            message: `Enter minutes`,
-          };
-        }
-      };
-
-      const errors = {} as ShiftInputErrors;
-      forOwn(shiftTimes, (time, key) => {
-        const error = validateTime(time);
-        if (error) {
-          errors[key as keyof ShiftTimes] = error;
-        }
-      });
-
-      const key = `shiftInputs.${index}`;
-      if (isEqual(errors, {})) {
-        dispatch(clearError(key));
-      } else {
-        dispatch(setError(key, errors));
-      }
-    });
-
-    setValidated(true);
-  }, [hasShifts, values.allShiftTimes]);
-
-  const handleSubmit = () => {
-    if (!validated || errors.length > 0) {
-      setShowErrors(true);
-      return;
-    }
-
-    const shifts: Shift[] = [];
-    values.allShiftTimes.forEach((shiftTimes, index) => {
-      if (shiftTimes !== null) {
-        const date = addDays(weekStartDate, index);
-        const shift = getShiftFromTimes(date, shiftTimes);
-        shifts.push(shift);
-      }
-    });
-
-    onSubmit(shifts);
+  // Clear the time values for the shift and flag the time inputs as untouched.
+  const clearShiftValues = (shiftName: string) => {
+    const newValues = shiftTimesInputNames.reduce((values, inputName) => {
+      values[`${shiftName}.${inputName}`] = "";
+      return values;
+    }, {} as { [key: string]: "" | false });
+    newValues[`${shiftName}.isActive`] = false;
+    const newTouchedValues = shiftTimesInputNames.reduce(
+      (touchedValues, inputName) => {
+        touchedValues[`${shiftName}.${inputName}`] = false;
+        return touchedValues;
+      },
+      {} as { [key: string]: false }
+    );
+    setSomeValues(newValues);
+    setSomeTouchedValues(newTouchedValues);
   };
 
-  const shiftInputs = values.allShiftTimes.map((shiftTimes, index) => {
-    const shiftDate = addDays(weekStartDate, index);
-    const key = `shiftInputs.${index}`;
-    const shiftErrors = showErrors && errors.find(({ name }) => name === key);
-    if (shiftErrors && typeof shiftErrors !== "object") {
-      throw new Error(
-        `shiftErrors must be a valid ShiftInputErrors object. ${typeof shiftErrors} given.`
-      );
-    }
+  const timeInput = (name: string, label: string) => {
+    const hoursError = errors[`${name}.hours`];
+    const minutesError = errors[`${name}.minutes`];
 
     return (
-      <ShiftInput
-        key={index}
-        date={shiftDate}
-        shiftTimes={shiftTimes}
-        errors={shiftErrors && (shiftErrors.message as object)}
-        onChange={(shiftTimes) => {
-          dispatch(setShiftTimes(shiftTimes, index));
-        }}
-        onToggle={() => {
-          if (shiftTimes === null) {
-            dispatch(setShiftTimes(EMPTY_SHIFT_TIMES, index));
-          } else {
-            dispatch(clearShiftTimes(index));
-          }
-        }}
-      />
+      <div aria-label={label}>
+        <span className="sr-only">{label}</span>
+        <TimeInput
+          name={name}
+          value={{
+            hours: values[`${name}.hours`],
+            minutes: values[`${name}.minutes`],
+          }}
+          onBlur={handleBlur}
+          onChange={handleChange}
+        />
+        {(hoursError || minutesError) && (
+          <div className="invalid-feedback">
+            {hoursError && <div>{hoursError}</div>}
+            {minutesError && <div>{minutesError}</div>}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const shiftInputs = range(7).map((index) => {
+    const name = `shift.${index}`;
+    const shiftDate = addDays(values.weekStartDate, index);
+    const label = longFormatDate(shiftDate);
+    const isActive = values[`${name}.isActive`] as boolean;
+
+    return (
+      <div key={index} aria-label="Shift">
+        <label>
+          <input
+            data-testid="shift-toggle"
+            name={`${name}.isActive`}
+            type="checkbox"
+            checked={isActive}
+            onChange={(event) => {
+              if (!event.target.checked) {
+                clearShiftValues(name);
+              } else {
+                handleChange(event);
+              }
+            }}
+          />
+          <span>{label}</span>
+        </label>
+        {isActive && (
+          <>
+            <div>
+              {timeInput(`${name}.startTime`, "Start time")}
+              {timeInput(`${name}.endTime`, "End time")}
+              {timeInput(`${name}.breakDuration`, "Break Duration")}
+            </div>
+          </>
+        )}
+      </div>
     );
   });
 
-  const formErrors = showErrors
-    ? errors
-        .filter(({ name }) => name === "form")
-        .map((error, index) => <p key={index}>{error.message}</p>)
-    : [];
-
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (hasShifts) {
-          handleSubmit();
-        }
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <WeekSelect
-        weekStartDate={weekStartDate}
-        onChangeWeek={(forward: boolean) => {
-          const newWeekStartDate = forward
-            ? addWeek(weekStartDate)
-            : subtractWeek(weekStartDate);
-          setWeekStartDate(newWeekStartDate);
+        value={values.weekStartDate}
+        onChange={(value: Date) => {
+          handleChange({
+            target: {
+              type: "weekSelect",
+              name: "weekStartDate",
+              value,
+            },
+          });
         }}
       />
-      {formErrors.length > 0 && (
-        <div className="alert alert-danger">{formErrors}</div>
-      )}
+      {errors.form && <div className="alert alert-danger">{errors.form}</div>}
       <div>{shiftInputs}</div>
       <div>
-        <button
-          className={classnames("btn btn-primary", !hasShifts && "disabled")}
-          type="submit"
-          disabled={!hasShifts}
-        >
-          Submit
-        </button>
+        <button type="submit">Submit</button>
       </div>
     </form>
   );
