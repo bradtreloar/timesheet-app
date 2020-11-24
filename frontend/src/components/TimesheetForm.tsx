@@ -1,13 +1,12 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import {
-  startOfWeek,
   addDays,
   longFormatDate,
   Time,
 } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
 import WeekSelect from "./WeekSelect";
-import { isEmpty, isEqual, range } from "lodash";
+import { range } from "lodash";
 import { FormErrors, useForm } from "../form/form";
 import TimeInput from "./TimeInput";
 

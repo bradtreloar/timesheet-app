@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TimesheetForm, { shiftInputNames } from "./TimesheetForm";
+import TimesheetForm from "./TimesheetForm";
 import { randomShiftTimesArray } from "../fixtures/random";
 import { enterShiftTimes, eraseShiftTimes } from "../fixtures/actions";
 import { expectTimesEqual, expectValidShift } from "../fixtures/expect";

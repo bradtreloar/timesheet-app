@@ -1,4 +1,3 @@
-import { isInteger } from "lodash";
 import { FIRST_DAY_OF_WEEK } from "../settings";
 
 /**
