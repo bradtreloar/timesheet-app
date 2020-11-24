@@ -221,6 +221,19 @@ export class Time {
   }
 
   /**
+   * Creates a Time object from a plain object.
+   *
+   * @param value  The object input value, with hours and minutes properties.
+   *
+   * @return  The Time object.
+   */
+  static fromObject(value: { hours: string; minutes: string }) {
+    const hours = parseInt(value.hours);
+    const minutes = parseInt(value.minutes);
+    return new Time(hours, minutes);
+  }
+
+  /**
    * Creates a Time object from an arbitrary number of minutes.
    */
   static fromMinutes(totalMinutes: number) {
