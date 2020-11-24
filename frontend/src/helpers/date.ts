@@ -147,7 +147,7 @@ export const longFormatDate = (date: Date) => {
 /**
  * A class for storing a time with only hours and minutes.
  */
-export class SimpleTime {
+export class Time {
   hours: number | null;
   minutes: number | null;
 
@@ -156,8 +156,8 @@ export class SimpleTime {
    * @param minutes  The minutes value for the time
    */
   constructor(hours: number | string | null, minutes: number | string | null) {
-    this.hours = SimpleTime.parseValue(hours);
-    this.minutes = SimpleTime.parseValue(minutes);
+    this.hours = Time.parseValue(hours);
+    this.minutes = Time.parseValue(minutes);
     this.validate();
   }
 
@@ -199,11 +199,11 @@ export class SimpleTime {
   }
 
   /**
-   * Creates a SimpleTime object from a string..
+   * Creates a Time object from a string..
    *
    * @param value  The string input value, in format HH:MM
    *
-   * @return  The SimpleTime object.
+   * @return  The Time object.
    */
   static fromString(value: string) {
     const throwException = () => {
@@ -218,15 +218,15 @@ export class SimpleTime {
     const hours = parseInt(components[0]);
     const minutes = parseInt(components[1]);
 
-    return new SimpleTime(hours, minutes);
+    return new Time(hours, minutes);
   }
 
   /**
-   * Creates a SimpleTime object from an arbitrary number of minutes.
+   * Creates a Time object from an arbitrary number of minutes.
    */
   static fromMinutes(totalMinutes: number) {
     const totalHours = Math.floor(totalMinutes / 60);
-    return new SimpleTime(totalHours % 24, totalMinutes % 60);
+    return new Time(totalHours % 24, totalMinutes % 60);
   }
 
   /**
@@ -290,17 +290,17 @@ export class SimpleTime {
   /**
    * Adds the given time to this time.
    */
-  add(time: SimpleTime) {
+  add(time: Time) {
     const totalMinutes = this.toMinutes() + time.toMinutes();
-    return SimpleTime.fromMinutes(totalMinutes);
+    return Time.fromMinutes(totalMinutes);
   }
 
   /**
    * Subtract the given time from this time.
    */
-  subtract(time: SimpleTime) {
+  subtract(time: Time) {
     let diffInMinutes = this.toMinutes() - time.toMinutes();
-    return SimpleTime.fromMinutes(
+    return Time.fromMinutes(
       diffInMinutes >= 0 ? diffInMinutes : diffInMinutes + 24 * 60
     );
   }

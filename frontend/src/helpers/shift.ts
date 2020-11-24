@@ -1,5 +1,5 @@
 import { Shift, ShiftTimes } from "../types";
-import { SimpleTime } from "./date";
+import { Time } from "./date";
 
 export const getShiftDuration = (shiftTimes: ShiftTimes) => {
   const { startTime, endTime, breakDuration } = shiftTimes;
@@ -14,7 +14,7 @@ export const getShiftDuration = (shiftTimes: ShiftTimes) => {
     return 0;
   }
 
-  const shiftDuration = SimpleTime.fromMinutes(shiftMinutes);
+  const shiftDuration = Time.fromMinutes(shiftMinutes);
   return shiftDuration.toHours();
 };
 

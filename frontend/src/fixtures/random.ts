@@ -1,6 +1,6 @@
 import { Settings, Shift, ShiftTimes, Timesheet, User } from "../types";
 import randomstring from "randomstring";
-import { addDays, addHours, SimpleTime } from "../helpers/date";
+import { addDays, addHours, Time } from "../helpers/date";
 import faker from "faker";
 import { random as randomNumber } from "lodash";
 
@@ -34,12 +34,12 @@ export const randomMinutes = (min: number, max: number) => {
   return randomInt(min, max);
 };
 
-export const randomSimpleTime = (min: string, max: string) => {
-  const [minHours, minMinutes] = SimpleTime.fromString(min).toArray();
-  const [maxHours, maxMinutes] = SimpleTime.fromString(max).toArray();
+export const randomTime = (min: string, max: string) => {
+  const [minHours, minMinutes] = Time.fromString(min).toArray();
+  const [maxHours, maxMinutes] = Time.fromString(max).toArray();
   const hours = randomInt(minHours as number, maxHours as number);
   const minutes = randomInt(minMinutes as number, maxMinutes as number);
-  return new SimpleTime(hours, minutes);
+  return new Time(hours, minutes);
 };
 
 export const randomShiftTimesArray = (): ShiftTimes[] =>

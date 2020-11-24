@@ -3,7 +3,7 @@ import {
   startOfWeek,
   addDays,
   longFormatDate,
-  SimpleTime,
+  Time,
 } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
 import WeekSelect from "./WeekSelect";
@@ -80,15 +80,15 @@ const processValues = (values: any) => {
     if (values[`shift.${index}.isActive`]) {
       const shiftDate = addDays(weekStartDate, index);
       const shift = {
-        start: new SimpleTime(
+        start: new Time(
           values[`shift.${index}.startTime.hours`],
           values[`shift.${index}.startTime.minutes`]
         ).toDate(shiftDate),
-        end: new SimpleTime(
+        end: new Time(
           values[`shift.${index}.endTime.hours`],
           values[`shift.${index}.endTime.minutes`]
         ).toDate(shiftDate),
-        breakDuration: new SimpleTime(
+        breakDuration: new Time(
           values[`shift.${index}.breakDuration.hours`],
           values[`shift.${index}.breakDuration.minutes`]
         ).toMinutes(),
