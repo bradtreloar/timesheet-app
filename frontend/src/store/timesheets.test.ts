@@ -1,6 +1,5 @@
 import store from ".";
 import {
-  fetchTimesheet,
   fetchTimesheets,
   addTimesheet,
   removeTimesheet,
@@ -33,42 +32,11 @@ afterEach(() => {
   expect(emptyTimesheets.timesheets).toStrictEqual([]);
 });
 
-test("fetch timesheet", async () => {
-  const mockUser = randomUser();
-  const mockTimesheet = randomTimesheet(mockUser);
-  jest.spyOn(datastore, "fetchTimesheet").mockResolvedValue(mockTimesheet);
-  const action = await store.dispatch(
-    fetchTimesheet(mockTimesheet.id as string)
-  );
-  expect(action.payload).toBe(mockTimesheet);
-  expect(action.type).toBe("timesheets/fetch/fulfilled");
-  const { status, timesheets } = selectTimesheets(store.getState());
-  expect(status).toBe("fulfilled");
-  expect(timesheets).toStrictEqual([mockTimesheet]);
-});
-
-test("fetch timesheet twice without side effects", async () => {
-  const mockUser = randomUser();
-  const mockTimesheet = randomTimesheet(mockUser);
-  jest.spyOn(datastore, "fetchTimesheet").mockResolvedValue(mockTimesheet);
-  for (let i = 0; i < 2; i++) {
-    const action = await store.dispatch(
-      fetchTimesheet(mockTimesheet.id as string)
-    );
-    expect(action.payload).toBe(mockTimesheet);
-    expect(action.type).toBe("timesheets/fetch/fulfilled");
-    const { status, timesheets } = selectTimesheets(store.getState());
-    expect(status).toBe("fulfilled");
-    expect(timesheets).toHaveLength(1);
-    expect(timesheets).toStrictEqual([mockTimesheet]);
-  }
-});
-
 test("fetch timesheets", async () => {
   const mockUser = randomUser();
   const mockTimesheets = randomTimesheets(mockUser, randomInt(5, 10));
   jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(mockTimesheets);
-  const action = await store.dispatch(fetchTimesheets());
+  const action = await store.dispatch(fetchTimesheets(mockUser));
   expect(action.payload).toBe(mockTimesheets);
   expect(action.type).toBe("timesheets/fetchAll/fulfilled");
   const { status, timesheets } = selectTimesheets(store.getState());
@@ -77,8 +45,9 @@ test("fetch timesheets", async () => {
 });
 
 test("handle failure to fetch timesheets", async () => {
+  const mockUser = randomUser();
   jest.spyOn(datastore, "fetchTimesheets").mockRejectedValue(undefined);
-  const action = await store.dispatch(fetchTimesheets());
+  const action = await store.dispatch(fetchTimesheets(mockUser));
   expect(action.payload).toBeUndefined();
   expect(action.type).toBe("timesheets/fetchAll/rejected");
   const { status, timesheets } = selectTimesheets(store.getState());
@@ -109,7 +78,7 @@ test("handle failure to add timesheet", async () => {
   const { userID } = mockTimesheet;
   const mockNewTimesheet = { userID };
   jest.spyOn(datastore, "createTimesheet").mockRejectedValue(undefined);
-  fetchTimesheets();
+  fetchTimesheets(mockUser);
   const action = await store.dispatch(addTimesheet(mockNewTimesheet));
   expect(action.payload).toBeUndefined();
   expect(action.type).toBe("timesheets/add/rejected");
@@ -122,7 +91,7 @@ test("delete timesheet", async () => {
   const mockUser = randomUser();
   const mockTimesheets = randomTimesheets(mockUser, randomInt(5, 10));
   jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(mockTimesheets);
-  await store.dispatch(fetchTimesheets());
+  await store.dispatch(fetchTimesheets(mockUser));
   const deletedTimesheet = mockTimesheets[0];
   jest.spyOn(datastore, "deleteTimesheet").mockResolvedValue(deletedTimesheet);
   const action = await store.dispatch(removeTimesheet(deletedTimesheet));
@@ -138,7 +107,7 @@ test("fail to delete timesheet", async () => {
   const mockTimesheets = randomTimesheets(mockUser, randomInt(5, 10));
   jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(mockTimesheets);
   jest.spyOn(datastore, "deleteTimesheet").mockRejectedValue(undefined);
-  await store.dispatch(fetchTimesheets());
+  await store.dispatch(fetchTimesheets(mockUser));
   const deletedTimesheet = mockTimesheets[0];
   const action = await store.dispatch(removeTimesheet(deletedTimesheet));
   expect(action.payload).toBeUndefined();

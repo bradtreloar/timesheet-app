@@ -1,4 +1,4 @@
-import { Timesheet } from "../types";
+import { Timesheet, User } from "../types";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as datastore from "../services/datastore";
 import { RootState } from ".";
@@ -9,15 +9,8 @@ export interface TimesheetsState {
   error?: string;
 }
 
-const fetchTimesheet = createAsyncThunk(
-  "timesheets/fetch",
-  async (id: string) => {
-    return await datastore.fetchTimesheet(id);
-  }
-);
-
-const fetchTimesheets = createAsyncThunk("timesheets/fetchAll", async () => {
-  return await datastore.fetchTimesheets();
+const fetchTimesheets = createAsyncThunk("timesheets/fetchAll", async (user: User) => {
+  return await datastore.fetchTimesheets(user);
 });
 
 const addTimesheet = createAsyncThunk(
@@ -57,29 +50,6 @@ const timesheetsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchTimesheet.pending, (state) => {
-        state.status = "pending";
-      })
-      .addCase(fetchTimesheet.fulfilled, (state, action) => {
-        state.status = "fulfilled";
-        // Update or add the exam result.
-        const existingTimesheet = state.timesheets.find(
-          ({ id }) => action.payload.id
-        );
-        if (existingTimesheet !== undefined) {
-          state.timesheets = state.timesheets.map((timesheet) =>
-            timesheet.id === action.payload.id ? action.payload : timesheet
-          );
-        } else {
-          state.timesheets.push(action.payload);
-        }
-      })
-      .addCase(fetchTimesheet.rejected, (state, action) => {
-        state.status = "rejected";
-        state.error = action.error.message;
-      });
-
     builder
       .addCase(fetchTimesheets.pending, (state) => {
         state.status = "pending";
@@ -126,7 +96,7 @@ const timesheetsSlice = createSlice({
 
 const selectTimesheets = (state: RootState) => state.timesheets;
 
-export { fetchTimesheet, fetchTimesheets, addTimesheet, removeTimesheet };
+export { fetchTimesheets, addTimesheet, removeTimesheet };
 export const {
   clear: clearTimesheets,
   set: setTimesheets,
