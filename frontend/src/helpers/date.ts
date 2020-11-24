@@ -155,24 +155,47 @@ export class SimpleTime {
    * @param hours    The hours value for the time
    * @param minutes  The minutes value for the time
    */
-  constructor(hours: number | null, minutes: number | null) {
-    const hoursIsValid =
-      hours == null || (isInteger(hours) && hours >= 0 && hours < 24);
-    const minutesIsValid =
-      minutes == null || (isInteger(minutes) && minutes >= 0 && minutes < 60);
+  constructor(hours: number | string | null, minutes: number | string | null) {
+    this.hours = SimpleTime.parseValue(hours);
+    this.minutes = SimpleTime.parseValue(minutes);
+    this.validate();
+  }
 
-    if (!hoursIsValid) {
-      throw new InvalidTimeException(`${hours} is not a valid value for hours`);
+  static parseValue(value: string | number | null) {
+    if (typeof value === "string") {
+      return value === "" ? null : parseInt(value);
+    }
+    return value;
+  }
+
+  static validateValue(value: number | null) {
+    if (value === null) {
+      return true;
     }
 
-    if (!minutesIsValid) {
-      throw new InvalidTimeException(
-        `${minutes} is not a valid value for minutes`
-      );
+    return value >= 0;
+  }
+
+  validate() {
+    if (this.hours !== null) {
+      if (isNaN(this.hours)) {
+        throw new InvalidTimeException(`hours contains an invalid value`);
+      }
+
+      if (this.hours < 0 || this.hours >= 24) {
+        throw new InvalidTimeException(`hours must be between 0 and 23`);
+      }
     }
 
-    this.hours = hours;
-    this.minutes = minutes;
+    if (this.minutes !== null) {
+      if (isNaN(this.minutes)) {
+        throw new InvalidTimeException(`minutes contains an invalid value`);
+      }
+
+      if (this.minutes < 0 || this.minutes >= 60) {
+        throw new InvalidTimeException(`minutes must be between 0 and 59`);
+      }
+    }
   }
 
   /**
