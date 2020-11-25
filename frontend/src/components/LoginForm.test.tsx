@@ -34,8 +34,7 @@ test("Empty form submission fails", () => {
   );
 
   userEvent.click(screen.getByText(/Log in/i));
-  screen.getByText(/Email address is required/i);
-  screen.getByText(/Password is required/i);
+  expect(screen.getAllByText(/required/i)).toHaveLength(2);
 });
 
 test("Invalid email address detected", () => {
@@ -55,19 +54,11 @@ test("Invalid email address detected", () => {
   userEvent.type(screen.getByLabelText(/Email Address/), mockEmail);
   userEvent.type(screen.getByLabelText(/Password/), mockPassword);
   userEvent.click(screen.getByText(/Log in/));
-  screen.getByText(/Email address is not valid/i);
+  screen.getByText(/must be a valid email address/i);
 });
 
 test("Form handles pending authentication", () => {
   render(<LoginForm onSubmit={async (email, password) => {}} pending />);
 
   userEvent.click(screen.getByText(/Logging in/));
-});
-
-test("Form displays authentication error", () => {
-  render(
-    <LoginForm onSubmit={async (email, password) => {}} error="Login failed." />
-  );
-
-  userEvent.click(screen.getByText(/Login failed/));
 });

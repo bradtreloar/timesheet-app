@@ -1,96 +1,84 @@
 import React from "react";
 import * as EmailValidator from "email-validator";
-import "./LoginForm.scss";
+import { useForm } from "../form/form";
+import { Button, Form } from "react-bootstrap";
 
 interface LoginFormProps {
-  onSubmit: (email: string, password: string) => Promise<void>;
+  onSubmit: (email: string, password: string) => void;
   pending?: boolean;
-  error?: string | null;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending, error }) => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [emailError, setEmailError] = React.useState<string | null>(null);
-  const [passwordError, setPasswordError] = React.useState<string | null>(null);
+const validate = (values: any) => {
+  const errors = {} as { [key: string]: string };
+  const { email, password } = values;
 
-  const validate = () => {
-    let isValid = true;
-    if (email === "") {
-      setEmailError("Email address is required.");
-      isValid = false;
-    } else if (EmailValidator.validate(email) === false) {
-      setEmailError("Email address is not valid.");
-      isValid = false;
-    } else {
-      setEmailError(null);
-    }
+  if (email === "") {
+    errors.email = `Required`;
+  } else if (EmailValidator.validate(email) === false) {
+    errors.email = `Must be a valid email address`;
+  }
 
-    if (password === "") {
-      setPasswordError("Password is required.");
-      isValid = false;
-    } else {
-      setPasswordError(null);
-    }
+  if (password === "") {
+    errors.password = `Required`;
+  }
 
-    return isValid;
-  };
+  return errors;
+};
+
+const initialValues = {
+  email: "",
+  password: "",
+};
+
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
+  const { values, errors, handleChange, handleBlur, handleSubmit } = useForm(
+    initialValues,
+    ({ email, password }) => {
+      onSubmit(email, password);
+    },
+    validate
+  );
 
   return (
-    <form
-      className="login-form"
-      onSubmit={(event) => {
-        if (!pending) {
-          event.preventDefault();
-          const isValid = validate();
-          if (isValid) {
-            onSubmit(email, password);
-          }
-        }
-      }}
-    >
-      {error && <div className="alert alert-danger">{error}</div>}
-      <div className="form-group">
-        <label htmlFor="email">Email Address</label>
-        <input
-          id="email"
-          className="form-control"
+    <Form className="form-narrow" onSubmit={handleSubmit}>
+      {errors.form && <div className="alert alert-danger">{errors.form}</div>}
+      <Form.Group controlId="email">
+        <Form.Label>Email Address</Form.Label>
+        <Form.Control
           type="email"
           name="email"
-          value={email}
-          onChange={(event) => {
-            setEmail(event.target.value);
-          }}
-          required
-          disabled={pending}
+          value={values.email}
+          onChange={handleChange}
         />
-        {emailError && <div className="invalid-feedback">{emailError}</div>}
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          className="form-control"
+        {errors.email && (
+          <Form.Control.Feedback className="invalid-feedback">
+            {errors.email}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group controlId="password">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
           type="password"
           name="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          disabled={pending}
+          value={values.password}
+          onChange={handleChange}
         />
-        {passwordError && (
-          <div className="invalid-feedback">{passwordError}</div>
+        {errors.password && (
+          <Form.Control.Feedback className="invalid-feedback">
+            {errors.password}
+          </Form.Control.Feedback>
         )}
-      </div>
-      <button
-        className="btn btn-primary"
-        data-testid="login-form-submit"
+      </Form.Group>
+      <Button
+        variant="primary"
         type="submit"
+        data-testid="login-form-submit"
         disabled={pending}
       >
         {pending ? `Logging in` : `Log in`}
-      </button>
-    </form>
+      </Button>
+    </Form>
   );
 };
 
