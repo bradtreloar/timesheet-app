@@ -10,13 +10,14 @@ export type FormTouchedValues<T> = {
 };
 
 export type FormErrors<T> = {
-  [P in keyof T]?: string;
+  [key: string]: string;
 };
 
 export function useForm<T>(
   initialValues: FormValues<T>,
   onSubmit: (values: FormValues<T>) => void,
-  validate: (values: FormValues<T>) => FormErrors<T>
+  validate: (values: FormValues<T>) => FormErrors<T>,
+  process?: (values: FormValues<T>) => any
 ) {
   const [values, setValues] = useState<FormValues<T>>(initialValues);
   const [touchedValues, setTouchedValues] = useState<FormTouchedValues<T>>({});
@@ -79,7 +80,11 @@ export function useForm<T>(
     event.preventDefault();
     const errors = doValidate();
     if (isEmpty(errors)) {
-      onSubmit(values);
+      if (process !== undefined) {
+        onSubmit(process(values));
+      } else {
+        onSubmit(values);
+      }
     }
   };
 

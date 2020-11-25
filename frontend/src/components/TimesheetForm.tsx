@@ -72,7 +72,7 @@ const buildInitialValues = (
  * @returns
  *   A array of Shift objects.
  */
-const processValues = (values: any) => {
+const process = (values: any) => {
   const weekStartDate = values.weekStartDate;
   const shifts: Shift[] = [];
   range(7).forEach((index) => {
@@ -179,10 +179,9 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     handleSubmit,
   } = useForm(
     initialValues,
-    (values) => {
-      onSubmit(processValues(values));
-    },
-    validate
+    onSubmit,
+    validate,
+    process
   );
 
   // Clear the time values for the shift and flag the time inputs as untouched.
