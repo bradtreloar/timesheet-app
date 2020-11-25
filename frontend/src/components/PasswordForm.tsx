@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import passwordStrength from "owasp-password-strength-test";
 import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
-import { Button } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 
 interface PasswordFormValues {
   password: string;
@@ -61,7 +61,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({
 
   return (
     <Form className="form-narrow" onSubmit={handleSubmit}>
-      {errors.form && <div className="alert alert-danger">{errors.form}</div>}
+      {errors.form && <Alert variant="danger">{errors.form}</Alert>}
       <Form.Group controlId="password">
         <Form.Label>New Password</Form.Label>
         <Form.Control
@@ -71,17 +71,17 @@ const PasswordForm: React.FC<PasswordFormProps> = ({
           onBlur={handleBlur}
           onChange={handleChange}
         />
+        {errors.password && (
+          <Form.Control.Feedback>{errors.password}</Form.Control.Feedback>
+        )}
         {requiredTestErrors.length > 0 && (
-          <div>
+          <Form.Control.Feedback>
             <ul>
               {requiredTestErrors.map((error, index) => (
                 <li key={index}>{error}</li>
               ))}
             </ul>
-          </div>
-        )}
-        {errors.password && (
-          <Form.Control.Feedback>{errors.password}</Form.Control.Feedback>
+          </Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group controlId="password2">
