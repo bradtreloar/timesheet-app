@@ -3,15 +3,11 @@ import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import PasswordForm from "./PasswordForm";
-import { randomPassword, randomUser } from "../fixtures/random";
+import { randomPassword } from "../fixtures/random";
 import { noop } from "lodash";
 
 test("Form renders", () => {
-  render(
-    <PasswordForm
-      onSubmit={noop}
-    />
-  );
+  render(<PasswordForm onSubmit={noop} />);
 });
 
 test("Form submission succeeds", (done) => {
@@ -45,7 +41,6 @@ test("Empty form submission fails", () => {
 });
 
 test("Reject invalid form input", () => {
-  const mockUser = randomUser();
   const mockPassword = randomPassword();
 
   render(
