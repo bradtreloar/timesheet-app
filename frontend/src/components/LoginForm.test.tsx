@@ -58,7 +58,14 @@ test("Invalid email address detected", () => {
 });
 
 test("Form handles pending authentication", () => {
-  render(<LoginForm onSubmit={async (email, password) => {}} pending />);
+  render(
+    <LoginForm
+      pending
+      onSubmit={(email, password) => {
+        throw new Error("onSubmit should not be called.");
+      }}
+    />
+  );
 
   userEvent.click(screen.getByText(/Logging in/));
 });
