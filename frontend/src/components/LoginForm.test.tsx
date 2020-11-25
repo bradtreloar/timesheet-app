@@ -27,7 +27,7 @@ test("Form submission succeeds", (done) => {
 test("Empty form submission fails", () => {
   render(
     <LoginForm
-      onSubmit={(email, password) => {
+      onSubmit={() => {
         throw new Error("onSubmit should not be called.");
       }}
     />
@@ -45,7 +45,7 @@ test("Invalid email address detected", () => {
 
   render(
     <LoginForm
-      onSubmit={(email, password) => {
+      onSubmit={() => {
         throw new Error("onSubmit should not be called.");
       }}
     />
@@ -61,7 +61,7 @@ test("Form handles pending authentication", () => {
   render(
     <LoginForm
       pending
-      onSubmit={(email, password) => {
+      onSubmit={() => {
         throw new Error("onSubmit should not be called.");
       }}
     />

@@ -30,7 +30,7 @@ test("Form submission succeeds", (done) => {
 test("Empty form submission fails", () => {
   render(
     <PasswordForm
-      onSubmit={(password) => {
+      onSubmit={() => {
         throw new Error("onSubmit should not be called.");
       }}
     />
@@ -45,7 +45,7 @@ test("Reject invalid form input", () => {
 
   render(
     <PasswordForm
-      onSubmit={(password) => {
+      onSubmit={() => {
         throw new Error("onSubmit should not be called.");
       }}
     />
@@ -57,7 +57,14 @@ test("Reject invalid form input", () => {
 });
 
 test("Form handles pending authentication", () => {
-  render(<PasswordForm onSubmit={noop} pending />);
+  render(
+    <PasswordForm
+      onSubmit={() => {
+        throw new Error("onSubmit should not be called.");
+      }}
+      pending
+    />
+  );
 
   userEvent.click(screen.getByText(/saving/i));
 });
