@@ -4,11 +4,6 @@ import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
 import { Button } from "react-bootstrap";
 
-interface PasswordFormProps {
-  onSubmit: (password: string) => void;
-  pending?: boolean;
-}
-
 interface PasswordFormValues {
   password: string;
   password2: string;
@@ -42,6 +37,11 @@ const validate = (values: PasswordFormValues) => {
 
   return errors;
 };
+
+interface PasswordFormProps {
+  onSubmit: (password: string) => void;
+  pending?: boolean;
+}
 
 const PasswordForm: React.FC<PasswordFormProps> = ({
   onSubmit,
