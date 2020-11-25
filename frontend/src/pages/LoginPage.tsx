@@ -35,7 +35,7 @@ const LoginPage = () => {
     <DefaultLayout>
       <PageTitle>Log in</PageTitle>
       <div className="container">
-        {error && <div className="invalid-feedback">{error}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
         <LoginForm
           onSubmit={handleSubmitLogin}
           pending={loginPending}
