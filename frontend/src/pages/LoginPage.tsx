@@ -33,8 +33,8 @@ const LoginPage = () => {
   return (
     <DefaultLayout>
       <PageTitle>Log in</PageTitle>
-      {error && <div className="invalid-feedback">{error}</div>}
       <div className="container">
+        {error && <div className="invalid-feedback">{error}</div>}
         <LoginForm
           onSubmit={handleSubmitLogin}
           pending={loginPending}
