@@ -48,6 +48,7 @@ describe("unauthenticated user", () => {
     });
 
     expect(screen.getByRole("heading")).toHaveTextContent(/Log in/i);
+    screen.getByText(/forgot your password\? click here to reset it/i);
   });
 
   test("logs in", async () => {

@@ -1,8 +1,9 @@
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import PageTitle from "../components/PageTitle";
 import { useAuth } from "../context/auth";
+import { randomUser } from "../fixtures/random";
 import DefaultLayout from "../layouts/DefaultLayout";
 
 const LoginPage = () => {
@@ -39,6 +40,11 @@ const LoginPage = () => {
           onSubmit={handleSubmitLogin}
           pending={loginPending}
         ></LoginForm>
+        <div>
+          <Link to="reset-password">
+            Forgot your password? Click here to reset it.
+          </Link>
+        </div>
       </div>
     </DefaultLayout>
   );
