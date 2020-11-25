@@ -19,12 +19,14 @@ test("Form submission succeeds", (done) => {
     />
   );
 
-  userEvent.type(screen.getByLabelText(/Email Address/), mockEmail);
-  userEvent.type(screen.getByLabelText(/Password/), mockPassword);
-  userEvent.click(screen.getByText(/Log in/));
+  userEvent.type(screen.getByLabelText(/email Address/i), mockEmail);
+  userEvent.type(screen.getByLabelText(/password/i), mockPassword);
+  userEvent.click(screen.getByText(/log in/i));
 });
 
-test("Empty form submission fails", () => {
+test("Incomplete form submission fails", () => {
+  const testUser = randomUser();
+
   render(
     <LoginForm
       onSubmit={() => {
@@ -33,8 +35,11 @@ test("Empty form submission fails", () => {
     />
   );
 
-  userEvent.click(screen.getByText(/Log in/i));
+  userEvent.click(screen.getByText(/log in/i));
   expect(screen.getAllByText(/required/i)).toHaveLength(2);
+  userEvent.type(screen.getByLabelText(/email Address/i), testUser.email);
+  userEvent.click(screen.getByText(/log in/i));
+  expect(screen.getAllByText(/required/i)).toHaveLength(1);
 });
 
 test("Invalid email address detected", () => {
@@ -51,10 +56,10 @@ test("Invalid email address detected", () => {
     />
   );
 
-  userEvent.type(screen.getByLabelText(/Email Address/), mockEmail);
-  userEvent.type(screen.getByLabelText(/Password/), mockPassword);
-  userEvent.click(screen.getByText(/Log in/));
+  userEvent.type(screen.getByLabelText(/email address/i), mockEmail);
+  userEvent.type(screen.getByLabelText(/password/i), mockPassword);
   screen.getByText(/must be a valid email address/i);
+  userEvent.click(screen.getByText(/log in/i));
 });
 
 test("Form handles pending authentication", () => {
