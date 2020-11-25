@@ -2,15 +2,23 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
-import PasswordResetForm from "./PasswordResetForm";
+import PasswordForm from "./PasswordForm";
 import { randomPassword, randomUser } from "../fixtures/random";
 import { noop } from "lodash";
+
+test("Form renders", () => {
+  render(
+    <PasswordForm
+      onSubmit={noop}
+    />
+  );
+});
 
 test("Form submission succeeds", (done) => {
   const mockPassword = randomPassword();
 
   render(
-    <PasswordResetForm
+    <PasswordForm
       onSubmit={async (password) => {
         expect(password).toBe(mockPassword);
         done();
@@ -25,7 +33,7 @@ test("Form submission succeeds", (done) => {
 
 test("Empty form submission fails", () => {
   render(
-    <PasswordResetForm
+    <PasswordForm
       onSubmit={(password) => {
         throw new Error("onSubmit should not be called.");
       }}
@@ -41,7 +49,7 @@ test("Reject invalid form input", () => {
   const mockPassword = randomPassword();
 
   render(
-    <PasswordResetForm
+    <PasswordForm
       onSubmit={(password) => {
         throw new Error("onSubmit should not be called.");
       }}
@@ -54,7 +62,7 @@ test("Reject invalid form input", () => {
 });
 
 test("Form handles pending authentication", () => {
-  render(<PasswordResetForm onSubmit={noop} pending />);
+  render(<PasswordForm onSubmit={noop} pending />);
 
   userEvent.click(screen.getByText(/saving/i));
 });

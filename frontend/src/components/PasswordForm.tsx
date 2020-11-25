@@ -3,24 +3,23 @@ import passwordStrength from "owasp-password-strength-test";
 import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
 import { Button } from "react-bootstrap";
-// import "./PasswordResetForm.scss";
 
-interface PasswordResetFormProps {
+interface PasswordFormProps {
   onSubmit: (password: string) => void;
   pending?: boolean;
 }
 
-interface PasswordResetFormValues {
+interface PasswordFormValues {
   password: string;
   password2: string;
 }
 
-const initialValues: PasswordResetFormValues = {
+const initialValues: PasswordFormValues = {
   password: "",
   password2: "",
 };
 
-const validate = (values: PasswordResetFormValues) => {
+const validate = (values: PasswordFormValues) => {
   const errors = {} as { [key: string]: any };
   const { password, password2 } = values;
 
@@ -44,7 +43,7 @@ const validate = (values: PasswordResetFormValues) => {
   return errors;
 };
 
-const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
+const PasswordForm: React.FC<PasswordFormProps> = ({
   onSubmit,
   pending,
 }) => {
@@ -108,4 +107,4 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
   );
 };
 
-export default PasswordResetForm;
+export default PasswordForm;
