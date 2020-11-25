@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import passwordStrength from "owasp-password-strength-test";
 import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
@@ -30,7 +30,7 @@ const validate = (values: PasswordFormValues) => {
   if (password2 === "") {
     errors.password2 = `Required`;
   } else {
-    if (password !== "" && password !== password) {
+    if (password !== "" && password2 !== password) {
       errors.password2 = `Passwords must match`;
     }
   }
@@ -68,6 +68,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({
           type="password"
           name="password"
           value={values.password}
+          onBlur={handleBlur}
           onChange={handleChange}
         />
         {requiredTestErrors.length > 0 && (
@@ -89,6 +90,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({
           type="password"
           name="password2"
           value={values.password2}
+          onBlur={handleBlur}
           onChange={handleChange}
         />
         {errors.password2 && (

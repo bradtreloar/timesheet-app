@@ -48,6 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
           type="email"
           name="email"
           value={values.email}
+          onBlur={handleBlur}
           onChange={handleChange}
         />
         {errors.email && (
@@ -62,6 +63,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
           type="password"
           name="password"
           value={values.password}
+          onBlur={handleBlur}
           onChange={handleChange}
         />
         {errors.password && (
