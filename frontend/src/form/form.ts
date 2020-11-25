@@ -1,5 +1,5 @@
 import { isEmpty } from "lodash";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export type FormValue = any;
 
@@ -22,6 +22,7 @@ export function useForm<T>(
   const [values, setValues] = useState<FormValues<T>>(initialValues);
   const [touchedValues, setTouchedValues] = useState<FormTouchedValues<T>>({});
   const [errors, setErrors] = useState<FormErrors<T>>({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const getValue = (name: string) => values[name as keyof T];
 
@@ -54,19 +55,20 @@ export function useForm<T>(
     setTouchedValues(Object.assign({}, touchedValues, someTouchedValues));
   };
 
-  const getError = (name: string) => errors && errors[name as keyof T];
+  const getError = (name: string) => errors && errors[name as keyof FormErrors<T>];
 
-  const doValidate = () => {
+  const doValidate = useCallback(() => {
     const errors = validate(values);
     setErrors(errors);
     return errors;
-  };
+  }, [values, validate]);
 
   const handleChange = (event: any) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
     setValue(name, value);
+    doValidate();
   };
 
   const handleBlur = (event: any) => {
@@ -78,6 +80,7 @@ export function useForm<T>(
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitAttempted(true);
     const errors = doValidate();
     if (isEmpty(errors)) {
       if (process !== undefined) {
@@ -92,6 +95,7 @@ export function useForm<T>(
     values,
     touchedValues,
     errors,
+    submitAttempted,
     getValue,
     setValue,
     setSomeValues,
