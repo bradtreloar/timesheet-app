@@ -34,7 +34,7 @@ export const expectTimesEqual = (
 };
 
 export const expectValidShift = (shift: Shift) => {
-  expect(shift.start instanceof Date).toBe(true);
-  expect(shift.end instanceof Date).toBe(true);
+  expect(typeof shift.start).toBe("string");
+  expect(typeof shift.end).toBe("string");
   expect(typeof shift.breakDuration).toBe("number");
 };
