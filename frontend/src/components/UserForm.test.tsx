@@ -9,74 +9,100 @@ import { User } from "../types";
 
 const testUser = randomUser();
 const { name: testName, email: testEmail } = randomUser();
+const testDefaultValues = {
+  name: testName,
+  email: testEmail,
+};
 
 test("Form renders", () => {
-  render(<UserForm user={testUser} onSubmit={noop} />);
+  render(<UserForm defaultValues={testDefaultValues} onSubmit={noop} />);
 });
 
-test("Form submission succeeds", (done) => {
-  render(
-    <UserForm
-      user={testUser}
-      onSubmit={(user) => {
-        expect(user.email).toEqual(testEmail);
-        expect(user.name).toEqual(testName);
-        done();
-      }}
-    />
-  );
+describe("New User", () => {
+  test("Form submission succeeds", (done) => {
+    render(
+      <UserForm
+        onSubmit={(name, email) => {
+          expect(name).toEqual(testName);
+          expect(email).toEqual(testEmail);
+          done();
+        }}
+      />
+    );
 
-  userEvent.clear(screen.getByLabelText(/your name/i));
-  userEvent.type(screen.getByLabelText(/your name/i), testName);
-  userEvent.clear(screen.getByLabelText(/your email address/i));
-  userEvent.type(screen.getByLabelText(/your email address/i), testEmail);
-  userEvent.click(screen.getByText(/save/i));
+    userEvent.clear(screen.getByLabelText(/name/i));
+    userEvent.type(screen.getByLabelText(/name/i), testName);
+    userEvent.clear(screen.getByLabelText(/email address/i));
+    userEvent.type(screen.getByLabelText(/email address/i), testEmail);
+    userEvent.click(screen.getByText(/create/i));
+  });
 });
 
-test("Empty form submission fails", () => {
-  render(
-    <UserForm
-      user={testUser}
-      onSubmit={() => {
-        throw new Error("onSubmit should not be called.");
-      }}
-    />
-  );
+describe("Existing User", () => {
+  test("Form submission succeeds", (done) => {
+    render(
+      <UserForm
+        defaultValues={testDefaultValues}
+        onSubmit={(name, email) => {
+          expect(name).toEqual(testName);
+          expect(email).toEqual(testEmail);
+          done();
+        }}
+      />
+    );
 
-  userEvent.clear(screen.getByLabelText(/your email address/i));
-  userEvent.clear(screen.getByLabelText(/your name/i));
-  userEvent.click(screen.getByText(/save/i));
-  expect(screen.getAllByText(/required/i)).toHaveLength(2);
-});
+    userEvent.clear(screen.getByLabelText(/name/i));
+    userEvent.type(screen.getByLabelText(/name/i), testName);
+    userEvent.clear(screen.getByLabelText(/email address/i));
+    userEvent.type(screen.getByLabelText(/email address/i), testEmail);
+    userEvent.click(screen.getByText(/save/i));
+  });
 
-test("Reject invalid form input", () => {
-  const invalidEmail = testEmail.replace("@", "_");
+  test("Empty form submission fails", () => {
+    render(
+      <UserForm
+        defaultValues={testDefaultValues}
+        onSubmit={() => {
+          throw new Error("onSubmit should not be called.");
+        }}
+      />
+    );
 
-  render(
-    <UserForm
-      user={testUser}
-      onSubmit={() => {
-        throw new Error("onSubmit should not be called.");
-      }}
-    />
-  );
+    userEvent.clear(screen.getByLabelText(/email address/i));
+    userEvent.clear(screen.getByLabelText(/name/i));
+    userEvent.click(screen.getByText(/save/i));
+    expect(screen.getAllByText(/required/i)).toHaveLength(2);
+  });
 
-  userEvent.clear(screen.getByLabelText(/your email address/i));
-  userEvent.type(screen.getByLabelText(/your email address/i), invalidEmail);
-  userEvent.click(screen.getByText(/save/i));
-  screen.getByText(/must be a valid email address/i);
-});
+  test("Reject invalid form input", () => {
+    const invalidEmail = testEmail.replace("@", "_");
 
-test("Form handles pending authentication", () => {
-  render(
-    <UserForm
-      user={testUser}
-      onSubmit={() => {
-        throw new Error("onSubmit should not be called.");
-      }}
-      pending
-    />
-  );
+    render(
+      <UserForm
+        defaultValues={testDefaultValues}
+        onSubmit={() => {
+          throw new Error("onSubmit should not be called.");
+        }}
+      />
+    );
 
-  userEvent.click(screen.getByText(/saving/i));
+    userEvent.clear(screen.getByLabelText(/email address/i));
+    userEvent.type(screen.getByLabelText(/email address/i), invalidEmail);
+    userEvent.click(screen.getByText(/save/i));
+    screen.getByText(/must be a valid email address/i);
+  });
+
+  test("Form handles pending authentication", () => {
+    render(
+      <UserForm
+        defaultValues={testDefaultValues}
+        onSubmit={() => {
+          throw new Error("onSubmit should not be called.");
+        }}
+        pending
+      />
+    );
+
+    userEvent.click(screen.getByText(/saving/i));
+  });
 });

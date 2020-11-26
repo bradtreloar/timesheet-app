@@ -27,28 +27,20 @@ const validate = (values: UserFormValues) => {
   return errors;
 };
 
-const process = (values: any, user: User): User =>
-  Object.assign({}, user, {
-    name: values.name,
-    email: values.email,
-  });
-
 interface UserFormProps {
-  user: User;
-  onSubmit: (user: User) => void;
+  defaultValues?: {
+    name: string;
+    email: string;
+  };
+  onSubmit: (name: string, email: string) => void;
   pending?: boolean;
 }
 
 const UserForm: React.FC<UserFormProps> = ({
-  user,
+  defaultValues,
   onSubmit,
   pending,
 }) => {
-  const initialValues = {
-    name: user.name,
-    email: user.email,
-  };
-
   const {
     values,
     errors,
@@ -57,16 +49,17 @@ const UserForm: React.FC<UserFormProps> = ({
     handleChange,
     handleBlur,
   } = useForm(
-    initialValues,
-    (values) => onSubmit(process(values, user)),
+    defaultValues ? defaultValues : { name: "", email: "" },
+    (values) => onSubmit(values.name, values.email),
     validate
   );
+  const isNewUser = defaultValues === undefined;
 
   return (
     <Form className="form-narrow" onSubmit={handleSubmit}>
       {errors.form && <Alert variant="danger">{errors.form}</Alert>}
       <Form.Group controlId="name">
-        <Form.Label>Your name</Form.Label>
+        <Form.Label>Name</Form.Label>
         <Form.Control
           type="text"
           name="name"
@@ -80,7 +73,7 @@ const UserForm: React.FC<UserFormProps> = ({
         )}
       </Form.Group>
       <Form.Group controlId="email">
-        <Form.Label>Your email address</Form.Label>
+        <Form.Label>Email address</Form.Label>
         <Form.Control
           type="email"
           name="email"
@@ -94,7 +87,10 @@ const UserForm: React.FC<UserFormProps> = ({
         )}
       </Form.Group>
       <Button variant="primary" type="submit" disabled={pending}>
-        {pending ? `Saving` : `Save password`}
+        {isNewUser 
+          ? (pending ? `Saving` : `Create user`)
+          : (pending ? `Saving` : `Save`)
+        }
       </Button>
     </Form>
   );
