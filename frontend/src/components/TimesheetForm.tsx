@@ -1,9 +1,5 @@
 import React, { useCallback } from "react";
-import {
-  addDays,
-  longFormatDate,
-  Time,
-} from "../helpers/date";
+import { addDays, longFormatDate, Time } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
 import WeekSelect from "./WeekSelect";
 import { range } from "lodash";
@@ -72,7 +68,7 @@ const buildInitialValues = (
  * @returns
  *   A array of Shift objects.
  */
-const process = (values: any) => {
+const process = (values: any): Shift[] => {
   const weekStartDate = values.weekStartDate;
   const shifts: Shift[] = [];
   range(7).forEach((index) => {
@@ -82,11 +78,11 @@ const process = (values: any) => {
         start: new Time(
           values[`shift.${index}.startTime.hours`],
           values[`shift.${index}.startTime.minutes`]
-        ).toDate(shiftDate),
+        ).toDate(shiftDate).toISOString(),
         end: new Time(
           values[`shift.${index}.endTime.hours`],
           values[`shift.${index}.endTime.minutes`]
-        ).toDate(shiftDate),
+        ).toDate(shiftDate).toISOString(),
         breakDuration: new Time(
           values[`shift.${index}.breakDuration.hours`],
           values[`shift.${index}.breakDuration.minutes`]
@@ -156,7 +152,7 @@ const validate = (values: any) => {
 interface TimesheetFormProps {
   defaultWeekStartDate: Date;
   defaultShifts: (ShiftTimes | null)[];
-  onSubmit: (values: any) => void;
+  onSubmit: (shifts: Shift[]) => void;
 }
 
 const TimesheetForm: React.FC<TimesheetFormProps> = ({
@@ -179,9 +175,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     handleSubmit,
   } = useForm(
     initialValues,
-    onSubmit,
-    validate,
-    process
+    (values) => {
+      onSubmit(process(values));
+    },
+    validate
   );
 
   // Clear the time values for the shift and flag the time inputs as untouched.
