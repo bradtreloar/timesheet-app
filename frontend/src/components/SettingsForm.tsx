@@ -16,8 +16,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
 }) => {
   const {
     values,
-    touchedValues,
     errors,
+    visibleErrors,
+    handleBlur,
     handleChange,
     handleSubmit,
   } = useForm<Settings>(defaultValues, onSubmit, (values) => {
@@ -33,15 +34,16 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           pattern="^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4}(,[ ]*)?)+$"
           name="timesheetRecipients"
           value={values.timesheetRecipients}
+          isInvalid={visibleErrors.timesheetRecipients}
           placeholder="e.g. timesheet@example.com, admin@example.com"
-          // onBlur={handleBlur}
+          onBlur={handleBlur}
           onChange={handleChange}
           required
         />
         <Form.Text className="text-muted">
           Enter a comma-separated list of email addresses to receive timesheets.
         </Form.Text>
-        {touchedValues.timesheetRecipients && errors.timesheetRecipients && (
+        {visibleErrors.timesheetRecipients && (
           <Form.Control.Feedback type="invalid">
             {errors.timesheetRecipients}
           </Form.Control.Feedback>
@@ -56,7 +58,8 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           name="startOfWeek"
           value={values.startOfWeek}
           data-value={values.startOfWeek}
-          // onBlur={handleBlur}
+          isInvalid={visibleErrors.startOfWeek}
+          onBlur={handleBlur}
           onChange={handleChange}
         >
           {range(7).map((index) => {

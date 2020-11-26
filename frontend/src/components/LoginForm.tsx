@@ -1,7 +1,8 @@
 import React from "react";
 import * as EmailValidator from "email-validator";
 import { useForm } from "../form/form";
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
+import { isEmpty } from "lodash";
 
 interface LoginFormProps {
   onSubmit: (email: string, password: string) => void;
@@ -31,7 +32,14 @@ const initialValues = {
 };
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
-  const { values, errors, handleChange, handleBlur, handleSubmit } = useForm(
+  const {
+    values,
+    errors,
+    visibleErrors,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+  } = useForm(
     initialValues,
     ({ email, password }) => {
       onSubmit(email, password);
@@ -41,18 +49,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
 
   return (
     <Form className="form-narrow" onSubmit={handleSubmit}>
-      {errors.form && <div className="alert alert-danger">{errors.form}</div>}
+      {errors.form && <Alert variant="danger">{errors.form}</Alert>}
       <Form.Group controlId="email">
         <Form.Label>Email Address</Form.Label>
         <Form.Control
           type="email"
           name="email"
+          isInvalid={visibleErrors.email}
           value={values.email}
           onBlur={handleBlur}
           onChange={handleChange}
         />
-        {errors.email && (
-          <Form.Control.Feedback className="invalid-feedback">
+        {visibleErrors.email && (
+          <Form.Control.Feedback type="invalid">
             {errors.email}
           </Form.Control.Feedback>
         )}
@@ -62,12 +71,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
         <Form.Control
           type="password"
           name="password"
+          isInvalid={visibleErrors.password}
           value={values.password}
           onBlur={handleBlur}
           onChange={handleChange}
         />
-        {errors.password && (
-          <Form.Control.Feedback className="invalid-feedback">
+        {visibleErrors.password && (
+          <Form.Control.Feedback type="invalid">
             {errors.password}
           </Form.Control.Feedback>
         )}
@@ -76,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
         variant="primary"
         type="submit"
         data-testid="login-form-submit"
-        disabled={pending}
+        disabled={pending || !isEmpty(errors)}
       >
         {pending ? `Logging in` : `Log in`}
       </Button>

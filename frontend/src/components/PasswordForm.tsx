@@ -43,11 +43,15 @@ interface PasswordFormProps {
   pending?: boolean;
 }
 
-const PasswordForm: React.FC<PasswordFormProps> = ({
-  onSubmit,
-  pending,
-}) => {
-  const { values, errors, handleSubmit, handleChange, handleBlur } = useForm(
+const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending }) => {
+  const {
+    values,
+    errors,
+    visibleErrors,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+  } = useForm(
     initialValues,
     (values) => {
       onSubmit(values.password);
@@ -67,11 +71,12 @@ const PasswordForm: React.FC<PasswordFormProps> = ({
         <Form.Control
           type="password"
           name="password"
+          isInvalid={visibleErrors.password || requiredTestErrors.length > 0}
           value={values.password}
           onBlur={handleBlur}
           onChange={handleChange}
         />
-        {errors.password && (
+        {(visibleErrors.password || requiredTestErrors.length > 0) && (
           <Form.Control.Feedback>{errors.password}</Form.Control.Feedback>
         )}
         {requiredTestErrors.length > 0 && (
@@ -89,11 +94,12 @@ const PasswordForm: React.FC<PasswordFormProps> = ({
         <Form.Control
           type="password"
           name="password2"
+          isInvalid={visibleErrors.password2}
           value={values.password2}
           onBlur={handleBlur}
           onChange={handleChange}
         />
-        {errors.password2 && (
+        {visibleErrors.password2 && (
           <Form.Control.Feedback>{errors.password2}</Form.Control.Feedback>
         )}
       </Form.Group>

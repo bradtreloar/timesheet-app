@@ -1,5 +1,5 @@
-import { isEmpty } from "lodash";
-import { useCallback, useState } from "react";
+import { forOwn, isEmpty } from "lodash";
+import { useCallback, useMemo, useState } from "react";
 
 export type FormValue = any;
 
@@ -13,6 +13,10 @@ export type FormErrors<T> = {
   [key: string]: string;
 };
 
+export type FormVisibleErrors<T> = {
+  [P in keyof T]?: boolean;
+};
+
 export function useForm<T>(
   initialValues: FormValues<T>,
   onSubmit: (values: FormValues<T>) => void,
@@ -24,7 +28,20 @@ export function useForm<T>(
   const [errors, setErrors] = useState<FormErrors<T>>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  const getValue = (name: string) => values[name as keyof T];
+  const visibleErrors = useMemo(() => {
+    const visibleErrors = {} as FormVisibleErrors<T>;
+
+    forOwn(errors, (error, name) => {
+      if (
+        submitAttempted ||
+        touchedValues[name as keyof FormTouchedValues<T>] === true
+      ) {
+        visibleErrors[name as keyof FormVisibleErrors<T>] = true;
+      }
+    });
+
+    return visibleErrors;
+  }, [errors, touchedValues, submitAttempted]);
 
   const setValue = (name: string, value: any) => {
     setValues(
@@ -38,11 +55,6 @@ export function useForm<T>(
     setValues(Object.assign({}, values, someValues));
   };
 
-  const getTouchedValue = (name: string): boolean => {
-    const isTouched = touchedValues[name as keyof T];
-    return isTouched ? true : false;
-  };
-
   const setTouchedValue = (name: string, isTouched: boolean) => {
     setTouchedValues(
       Object.assign({}, touchedValues, {
@@ -54,8 +66,6 @@ export function useForm<T>(
   const setSomeTouchedValues = (someTouchedValues: any) => {
     setTouchedValues(Object.assign({}, touchedValues, someTouchedValues));
   };
-
-  const getError = (name: string) => errors && errors[name as keyof FormErrors<T>];
 
   const doValidate = useCallback(() => {
     const errors = validate(values);
@@ -95,14 +105,12 @@ export function useForm<T>(
     values,
     touchedValues,
     errors,
+    visibleErrors,
     submitAttempted,
-    getValue,
     setValue,
     setSomeValues,
-    getTouchedValue,
     setTouchedValue,
     setSomeTouchedValues,
-    getError,
     handleBlur,
     handleChange,
     handleSubmit,
