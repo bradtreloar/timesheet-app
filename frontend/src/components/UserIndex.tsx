@@ -33,12 +33,12 @@ const UserIndex: React.FC<UserIndexProps> = ({ users }) => {
     if (sortOrder.column === column) {
       setSortOrder({
         column,
-        ascending: true,
+        ascending: !sortOrder.ascending,
       });
     } else {
       setSortOrder({
         column,
-        ascending: !sortOrder.ascending,
+        ascending: true,
       });
     }
   };
