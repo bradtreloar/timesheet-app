@@ -66,7 +66,6 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ onSubmit, pending
       <Button
         variant="primary"
         type="submit"
-        data-testid="password-reset-form-submit"
         disabled={pending}
       >
         {pending ? `Sending email` : `Send email`}

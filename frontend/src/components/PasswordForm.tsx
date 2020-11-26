@@ -106,7 +106,6 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending }) => {
       <Button
         variant="primary"
         type="submit"
-        data-testid="password-reset-form-submit"
         disabled={pending}
       >
         {pending ? `Saving` : `Save password`}
