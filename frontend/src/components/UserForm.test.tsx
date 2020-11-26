@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
-import UserSettingsForm from "./UserSettingsForm";
+import UserForm from "./UserForm";
 import { randomPassword, randomUser } from "../fixtures/random";
 import { noop } from "lodash";
 import { User } from "../types";
@@ -11,12 +11,12 @@ const testUser = randomUser();
 const { name: testName, email: testEmail } = randomUser();
 
 test("Form renders", () => {
-  render(<UserSettingsForm user={testUser} onSubmit={noop} />);
+  render(<UserForm user={testUser} onSubmit={noop} />);
 });
 
 test("Form submission succeeds", (done) => {
   render(
-    <UserSettingsForm
+    <UserForm
       user={testUser}
       onSubmit={(user) => {
         expect(user.email).toEqual(testEmail);
@@ -35,7 +35,7 @@ test("Form submission succeeds", (done) => {
 
 test("Empty form submission fails", () => {
   render(
-    <UserSettingsForm
+    <UserForm
       user={testUser}
       onSubmit={() => {
         throw new Error("onSubmit should not be called.");
@@ -53,7 +53,7 @@ test("Reject invalid form input", () => {
   const invalidEmail = testEmail.replace("@", "_");
 
   render(
-    <UserSettingsForm
+    <UserForm
       user={testUser}
       onSubmit={() => {
         throw new Error("onSubmit should not be called.");
@@ -69,7 +69,7 @@ test("Reject invalid form input", () => {
 
 test("Form handles pending authentication", () => {
   render(
-    <UserSettingsForm
+    <UserForm
       user={testUser}
       onSubmit={() => {
         throw new Error("onSubmit should not be called.");

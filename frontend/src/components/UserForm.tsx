@@ -5,12 +5,12 @@ import { useForm } from "../form/form";
 import { Alert, Button } from "react-bootstrap";
 import { User } from "../types";
 
-interface UserSettingsFormValues {
+interface UserFormValues {
   name: string;
   email: string;
 }
 
-const validate = (values: UserSettingsFormValues) => {
+const validate = (values: UserFormValues) => {
   const errors = {} as { [key: string]: any };
   const { name, email } = values;
 
@@ -33,13 +33,13 @@ const process = (values: any, user: User): User =>
     email: values.email,
   });
 
-interface UserSettingsFormProps {
+interface UserFormProps {
   user: User;
   onSubmit: (user: User) => void;
   pending?: boolean;
 }
 
-const UserSettingsForm: React.FC<UserSettingsFormProps> = ({
+const UserForm: React.FC<UserFormProps> = ({
   user,
   onSubmit,
   pending,
@@ -100,4 +100,4 @@ const UserSettingsForm: React.FC<UserSettingsFormProps> = ({
   );
 };
 
-export default UserSettingsForm;
+export default UserForm;
