@@ -15,7 +15,7 @@ test("Form submission succeeds", (done) => {
 
   render(
     <PasswordForm
-      onSubmit={async (password) => {
+      onSubmit={(password) => {
         expect(password).toBe(mockPassword);
         done();
       }}
