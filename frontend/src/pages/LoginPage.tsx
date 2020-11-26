@@ -3,7 +3,6 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import PageTitle from "../components/PageTitle";
 import { useAuth } from "../context/auth";
-import { randomUser } from "../fixtures/random";
 import DefaultLayout from "../layouts/DefaultLayout";
 
 const LoginPage = () => {
