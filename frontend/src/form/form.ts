@@ -20,8 +20,7 @@ export type FormVisibleErrors<T> = {
 export function useForm<T>(
   initialValues: FormValues<T>,
   onSubmit: (values: FormValues<T>) => void,
-  validate: (values: FormValues<T>) => FormErrors<T>,
-  process?: (values: FormValues<T>) => any
+  validate: (values: FormValues<T>) => FormErrors<T>
 ) {
   const [values, setValues] = useState<FormValues<T>>(initialValues);
   const [touchedValues, setTouchedValues] = useState<FormTouchedValues<T>>({});
@@ -93,11 +92,7 @@ export function useForm<T>(
     setSubmitAttempted(true);
     const errors = doValidate();
     if (isEmpty(errors)) {
-      if (process !== undefined) {
-        onSubmit(process(values));
-      } else {
-        onSubmit(values);
-      }
+      onSubmit(values);
     }
   };
 
