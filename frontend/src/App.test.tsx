@@ -64,7 +64,7 @@ describe("unauthenticated user", () => {
     await act(async () => {
       userEvent.click(screen.getByTestId("login-form-submit"));
     });
-    expect(screen.getByRole("heading")).toHaveTextContent(/my timesheets/i);
+    expect(screen.getByRole("heading")).toHaveTextContent(/home page/i);
   });
 
   test("receives error when login fails", async () => {
@@ -92,13 +92,13 @@ describe("authenticated user", () => {
     jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(mockUser);
   });
 
-  test("views hpme page", async () => {
+  test("views home page", async () => {
     await act(async () => {
       render(<AppFixture routerEntries={["/"]} />);
     });
 
     expect(screen.queryByText(/404/)).toBeNull();
-    screen.getByText(/my timesheets/i);
+    screen.getByText(/home page/i);
   });
 
   test("logs out", async () => {
@@ -107,7 +107,7 @@ describe("authenticated user", () => {
 
     render(<AppFixture routerEntries={["/"]} />);
 
-    expect(screen.getByRole("heading")).toHaveTextContent(/my timesheets/i);
+    expect(screen.getByRole("heading")).toHaveTextContent(/home page/i);
     userEvent.click(screen.getByText(mockUser.name));
     await act(async () => {
       userEvent.click(screen.getByTestId("logout-button"));
