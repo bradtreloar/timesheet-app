@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import * as EmailValidator from "email-validator";
 import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
@@ -14,7 +14,7 @@ const initialValues: PasswordResetFormValues = {
 
 const validate = (values: any) => {
   const errors = {} as { [key: string]: string };
-  const { email, password } = values;
+  const { email } = values;
 
   if (email === "") {
     errors.email = `Required`;

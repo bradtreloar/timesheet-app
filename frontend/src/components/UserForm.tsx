@@ -1,9 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import * as EmailValidator from "email-validator";
 import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
 import { Alert, Button } from "react-bootstrap";
-import { User } from "../types";
 
 interface UserFormValues {
   name: string;
