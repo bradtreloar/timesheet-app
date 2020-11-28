@@ -15,11 +15,7 @@ export const randomUser = (userIsAdmin?: boolean): User => {
       length: 12,
       charset: "alphabetic",
     }),
-    email: `${randomstring.generate({
-      length: 12,
-      charset: "alphabetic",
-      capitalization: "lowercase",
-    })}@example.com`,
+    email: faker.internet.email(),
     isAdmin: userIsAdmin === true,
   };
 };
