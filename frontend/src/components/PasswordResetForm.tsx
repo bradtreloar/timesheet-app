@@ -1,4 +1,5 @@
 import React from "react";
+import classnames from "classnames";
 import * as EmailValidator from "email-validator";
 import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
@@ -26,13 +27,13 @@ const validate = (values: any) => {
 };
 
 interface PasswordResetFormProps {
-  onSubmit: (password: string) => void;
-  pending?: boolean;
+  onSubmit: (values: PasswordResetFormValues) => void;
+  className?: string;
 }
 
 const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
   onSubmit,
-  pending,
+  className,
 }) => {
   const {
     values,
@@ -41,16 +42,13 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
     handleSubmit,
     handleChange,
     handleBlur,
-  } = useForm(
-    initialValues,
-    (values) => {
-      onSubmit(values.email);
-    },
-    validate
-  );
+  } = useForm(initialValues, onSubmit, validate);
 
   return (
-    <Form className="form-narrow" onSubmit={handleSubmit}>
+    <Form
+      className={classnames("form-narrow", className)}
+      onSubmit={handleSubmit}
+    >
       {errors.form && <Alert variant="danger">{errors.form}</Alert>}
       <Form.Group controlId="email">
         <Form.Label>Your email address</Form.Label>
@@ -66,8 +64,8 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
           <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button variant="primary" type="submit" disabled={pending}>
-        {pending ? `Sending email` : `Send email`}
+      <Button variant="primary" type="submit">
+        Send email
       </Button>
     </Form>
   );

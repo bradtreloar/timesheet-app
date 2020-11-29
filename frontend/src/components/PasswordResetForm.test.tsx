@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import PasswordResetForm from "./PasswordResetForm";
 import { randomUser } from "../fixtures/random";
 import { noop } from "lodash";
+import { act } from "react-dom/test-utils";
 
 const testEmail = randomUser().email;
 
@@ -15,7 +16,7 @@ test("Form renders", () => {
 test("Form submission succeeds", (done) => {
   render(
     <PasswordResetForm
-      onSubmit={(email) => {
+      onSubmit={({ email }) => {
         expect(email).toBe(testEmail);
         done();
       }}
@@ -26,7 +27,7 @@ test("Form submission succeeds", (done) => {
   userEvent.click(screen.getByText(/send email/i));
 });
 
-test("Empty form submission fails", () => {
+test("Empty form submission fails", async () => {
   render(
     <PasswordResetForm
       onSubmit={() => {
@@ -53,17 +54,4 @@ test("Reject invalid form input", () => {
   userEvent.type(screen.getByLabelText(/your email address/i), invalidEmail);
   userEvent.click(screen.getByText(/send email/i));
   screen.getByText(/must be a valid email address/i);
-});
-
-test("Form handles pending authentication", () => {
-  render(
-    <PasswordResetForm
-      onSubmit={() => {
-        throw new Error("onSubmit should not be called.");
-      }}
-      pending
-    />
-  );
-
-  userEvent.click(screen.getByText(/sending email/i));
 });
