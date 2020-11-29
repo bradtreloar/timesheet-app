@@ -1,7 +1,7 @@
 import React from "react";
 import { Settings } from "../types";
 import { Button, Form } from "react-bootstrap";
-import { isInteger, range } from "lodash";
+import { range } from "lodash";
 import { getWeekdayName } from "../helpers/date";
 import { useForm } from "../form/form";
 
