@@ -3,7 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TimesheetForm from "./TimesheetForm";
 import { randomShiftTimesArray } from "../fixtures/random";
-import { enterShiftTimes, eraseShiftTimes } from "../fixtures/actions";
+import { enterShiftTimes, eraseShiftTimes } from "../fixtures/userInput";
 import { expectTimesEqual, expectValidShift } from "../fixtures/expect";
 import { noop, range } from "lodash";
 import { ShiftTimes } from "../types";
