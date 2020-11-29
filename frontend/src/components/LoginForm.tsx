@@ -1,12 +1,18 @@
 import React from "react";
+import classnames from "classnames";
 import * as EmailValidator from "email-validator";
 import { useForm } from "../form/form";
 import { Alert, Button, Form } from "react-bootstrap";
 import { isEmpty } from "lodash";
 
+type LoginFormValues = {
+  email: string;
+  password: string;
+}
+
 interface LoginFormProps {
-  onSubmit: (email: string, password: string) => void;
-  pending?: boolean;
+  onSubmit: (values: LoginFormValues) => void;
+  className?: string;
 }
 
 const validate = (values: any) => {
@@ -26,12 +32,12 @@ const validate = (values: any) => {
   return errors;
 };
 
-const initialValues = {
+const initialValues: LoginFormValues = {
   email: "",
   password: "",
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, className }) => {
   const {
     values,
     errors,
@@ -39,16 +45,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
     handleChange,
     handleBlur,
     handleSubmit,
-  } = useForm(
-    initialValues,
-    ({ email, password }) => {
-      onSubmit(email, password);
-    },
-    validate
-  );
+  } = useForm(initialValues, onSubmit, validate);
 
   return (
-    <Form className="form-narrow" onSubmit={handleSubmit}>
+    <Form
+      className={classnames("form-narrow", className)}
+      onSubmit={handleSubmit}
+    >
       {errors.form && <Alert variant="danger">{errors.form}</Alert>}
       <Form.Group controlId="email">
         <Form.Label>Email Address</Form.Label>
@@ -86,9 +89,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, pending }) => {
         variant="primary"
         type="submit"
         data-testid="login-form-submit"
-        disabled={pending || !isEmpty(errors)}
+        disabled={!isEmpty(errors)}
       >
-        {pending ? `Logging in` : `Log in`}
+        Log in
       </Button>
     </Form>
   );

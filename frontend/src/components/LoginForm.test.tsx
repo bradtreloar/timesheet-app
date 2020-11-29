@@ -11,7 +11,7 @@ test("Form submission succeeds", (done) => {
 
   render(
     <LoginForm
-      onSubmit={async (email, password) => {
+      onSubmit={async ({ email, password }) => {
         expect(email).toBe(mockEmail);
         expect(password).toBe(mockPassword);
         done();
@@ -60,17 +60,4 @@ test("Invalid email address detected", () => {
   userEvent.type(screen.getByLabelText(/password/i), mockPassword);
   screen.getByText(/must be a valid email address/i);
   userEvent.click(screen.getByText(/log in/i));
-});
-
-test("Form handles pending authentication", () => {
-  render(
-    <LoginForm
-      pending
-      onSubmit={() => {
-        throw new Error("onSubmit should not be called.");
-      }}
-    />
-  );
-
-  userEvent.click(screen.getByText(/Logging in/));
 });
