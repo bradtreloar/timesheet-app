@@ -49,7 +49,7 @@ test("handles LoginForm submission", async () => {
   expect(datastore.login).toHaveBeenCalled();
 });
 
-test("receives error when login fails", async () => {
+test("displays error when login fails", async () => {
   jest.spyOn(datastore, "login").mockRejectedValue("login failed");
 
   await act(async () => {
