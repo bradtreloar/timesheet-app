@@ -7,7 +7,7 @@ import { client } from "../services/datastore";
 import { randomPassword, randomUser } from "../fixtures/random";
 import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
 import MockAdapter from "axios-mock-adapter";
-import { makeUserData } from "../helpers/jsonAPI";
+import { makeUserData } from "../services/adaptors";
 
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);

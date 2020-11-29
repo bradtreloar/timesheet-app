@@ -6,7 +6,7 @@ import PageTitle from "../components/PageTitle";
 import TimesheetForm from "../components/TimesheetForm";
 import { useAuth } from "../context/auth";
 import useFormController from "../hooks/useFormController";
-import { addDays } from "../helpers/date";
+import { addDays } from "../services/date";
 import DefaultLayout from "../layouts/DefaultLayout";
 import store from "../store";
 import { selectSettings } from "../store/settings";

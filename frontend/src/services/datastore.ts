@@ -10,7 +10,7 @@ import {
   parseSetting,
   makeSettingResource,
   parseUser,
-} from "../helpers/jsonAPI";
+} from "./adaptors";
 
 export const client = axios.create({
   baseURL: `${HOST}`,

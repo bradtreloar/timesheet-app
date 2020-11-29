@@ -2,7 +2,7 @@ import React from "react";
 import { Settings } from "../types";
 import { Button, Form } from "react-bootstrap";
 import { range } from "lodash";
-import { getWeekdayName } from "../helpers/date";
+import { getWeekdayName } from "../services/date";
 import useForm from "../hooks/useForm";
 
 interface SettingsFormProps {

@@ -1,5 +1,5 @@
 import React from "react";
-import { formattedDate } from "../helpers/date";
+import { formattedDate } from "../services/date";
 import { Timesheet } from "../types";
 
 interface TimesheetListProps {

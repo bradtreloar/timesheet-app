@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import TimesheetList from "./TimesheetList";
 import { randomTimesheets, randomUser } from "../fixtures/random";
-import { formattedDate } from "../helpers/date";
+import { formattedDate } from "../services/date";
 
 test("renders timesheet list", () => {
   const testUser = randomUser();

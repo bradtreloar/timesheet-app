@@ -7,7 +7,7 @@ import {
   User,
 } from "../types";
 import randomstring from "randomstring";
-import { addDays, addHours, Time } from "../helpers/date";
+import { addDays, addHours, Time } from "../services/date";
 import faker from "faker";
 import { random as randomNumber } from "lodash";
 
@@ -82,12 +82,11 @@ export const randomShiftTimes = (): ShiftTimes => {
  * @param date
  */
 export const randomShiftDates = (date: Date) => {
+  date.setHours(0, 0, 0, 0);
   const shiftDuration = Math.floor(Math.random() * 12);
   const startHours = Math.floor(Math.random() * 12);
   const start = addHours(date, startHours);
   const end = addHours(date, startHours + shiftDuration);
-  start.setHours(start.getHours(), 0, 0, 0);
-  end.setHours(end.getHours(), 0, 0, 0);
   return [start, end];
 };
 

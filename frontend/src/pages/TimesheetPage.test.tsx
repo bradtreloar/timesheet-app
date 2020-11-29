@@ -14,7 +14,7 @@ import { Provider } from "react-redux";
 import store from "../store";
 import { setSettings } from "../store/settings";
 import { Shift } from "../types";
-import { getTimesFromShift } from "../helpers/shift";
+import { getTimesFromShift } from "../services/adaptors";
 
 jest.mock("../services/datastore");
 const testUser = randomUser();

@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import WeekSelect from "./WeekSelect";
-import { addWeek, longFormatDate, subtractWeek } from "../helpers/date";
+import { addWeek, longFormatDate, subtractWeek } from "../services/date";
 import { noop } from "lodash";
 
 test("renders week select label", () => {

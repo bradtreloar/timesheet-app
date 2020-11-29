@@ -4,7 +4,7 @@ import {
   addWeek,
   longFormatDate,
   subtractWeek,
-} from "../helpers/date";
+} from "../services/date";
 
 interface WeekSelectProps {
   value: Date;
