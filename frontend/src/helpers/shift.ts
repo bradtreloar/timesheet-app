@@ -49,3 +49,26 @@ export const getShiftFromTimes = (
     breakDuration: Time.fromObject(breakDuration).toMinutes(),
   };
 };
+
+export const getTimesFromShift = (shift: Shift): ShiftTimes => {
+  const start = new Date(shift.start);
+  const end = new Date(shift.end);
+  const breakHours = Math.floor(shift.breakDuration / 60);
+  const breakMinutes = shift.breakDuration % 60;
+
+  return {
+    isActive: true,
+    startTime: {
+      hours: start.getHours().toString(),
+      minutes: start.getMinutes().toString(),
+    },
+    endTime: {
+      hours: end.getHours().toString(),
+      minutes: end.getMinutes().toString(),
+    },
+    breakDuration: {
+      hours: breakHours.toString(),
+      minutes: breakMinutes.toString(),
+    },
+  };
+};
