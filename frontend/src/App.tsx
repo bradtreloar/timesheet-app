@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
+import GuestRoute from "./components/GuestRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./context/auth";
 import HomePage from "./pages/HomePage";
@@ -31,9 +32,9 @@ const App: React.FC = () => {
       <ProtectedRoute exact path="/">
         <HomePage />
       </ProtectedRoute>
-      <Route exact path="/login">
+      <GuestRoute exact path="/login">
         <LoginPage />
-      </Route>
+      </GuestRoute>
       <Route>
         <NotFoundPage />
       </Route>
