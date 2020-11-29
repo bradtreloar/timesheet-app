@@ -13,9 +13,7 @@ const LoginPage = () => {
   const { formError, formSubmitted, handleSubmit } = useFormController<{
     email: string;
     password: string;
-  }>(async ({ email, password }) => {
-    await login(email, password);
-  });
+  }>(({ email, password }) => login(email, password));
 
   return (
     <DefaultLayout>

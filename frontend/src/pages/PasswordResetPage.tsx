@@ -11,7 +11,7 @@ const PasswordResetPage = () => {
 
   const { formError, formSubmitted, handleSubmit } = useFormController<{
     email: string;
-  }>(async ({ email }) => await resetPassword(email));
+  }>(({ email }) => resetPassword(email));
 
   return (
     <DefaultLayout>

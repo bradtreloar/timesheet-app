@@ -11,7 +11,7 @@ const PasswordPage = () => {
 
   const { formError, formSubmitted, handleSubmit } = useFormController<{
     password: string;
-  }>(async ({ password }) => await setPassword(password));
+  }>(({ password }) => setPassword(password));
 
   return (
     <DefaultLayout>
