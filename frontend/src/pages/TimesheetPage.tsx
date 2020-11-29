@@ -17,7 +17,7 @@ const TimesheetPage = () => {
   const { user } = useAuth();
   const { settings } = useSelector(selectSettings);
   const { error } = useSelector(selectTimesheets);
-  const { formError, formSubmitted, handleSubmit } = useFormController<{
+  const { formError, formPending, handleSubmit } = useFormController<{
     shifts: Shift[];
   }>(async ({ shifts }) => {
     if (user?.id) {
@@ -61,7 +61,7 @@ const TimesheetPage = () => {
         {formError && <div className="alert alert-danger">{formError}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
         <TimesheetForm
-          className={classnames(formSubmitted && "was-submitted")}
+          className={classnames(formPending && "is-pending")}
           defaultShifts={user.defaultShifts}
           defaultWeekStartDate={defaultWeekStartDate}
           onSubmit={handleSubmit}

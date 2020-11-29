@@ -9,7 +9,7 @@ import PasswordForm from "../components/PasswordForm";
 const PasswordPage = () => {
   const { setPassword } = useAuth();
 
-  const { formError, formSubmitted, handleSubmit } = useFormController<{
+  const { formError, formPending, handleSubmit } = useFormController<{
     password: string;
   }>(({ password }) => setPassword(password));
 
@@ -19,7 +19,7 @@ const PasswordPage = () => {
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         <PasswordForm
-          className={classnames(formSubmitted && "was-submitted")}
+          className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
         />
       </div>

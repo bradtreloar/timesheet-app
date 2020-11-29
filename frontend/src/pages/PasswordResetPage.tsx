@@ -9,7 +9,7 @@ import PasswordResetForm from "../components/PasswordResetForm";
 const PasswordResetPage = () => {
   const { resetPassword } = useAuth();
 
-  const { formError, formSubmitted, handleSubmit } = useFormController<{
+  const { formError, formPending, handleSubmit } = useFormController<{
     email: string;
   }>(({ email }) => resetPassword(email));
 
@@ -19,7 +19,7 @@ const PasswordResetPage = () => {
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         <PasswordResetForm
-          className={classnames(formSubmitted && "was-submitted")}
+          className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
         />
       </div>

@@ -10,7 +10,7 @@ import useFormController from "../hooks/useFormController";
 const LoginPage = () => {
   const { login } = useAuth();
 
-  const { formError, formSubmitted, handleSubmit } = useFormController<{
+  const { formError, formPending, handleSubmit } = useFormController<{
     email: string;
     password: string;
   }>(({ email, password }) => login(email, password));
@@ -21,7 +21,7 @@ const LoginPage = () => {
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         <LoginForm
-          className={classnames(formSubmitted && "was-submitted")}
+          className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
         />
         <div>
