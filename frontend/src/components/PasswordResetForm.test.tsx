@@ -5,7 +5,6 @@ import userEvent from "@testing-library/user-event";
 import PasswordResetForm from "./PasswordResetForm";
 import { randomUser } from "../fixtures/random";
 import { noop } from "lodash";
-import { act } from "react-dom/test-utils";
 
 const testEmail = randomUser().email;
 

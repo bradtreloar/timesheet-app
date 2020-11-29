@@ -1,7 +1,5 @@
 import React from "react";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
-import LoginForm from "../components/LoginForm";
 import PageTitle from "../components/PageTitle";
 import { useAuth } from "../context/auth";
 import DefaultLayout from "../layouts/DefaultLayout";

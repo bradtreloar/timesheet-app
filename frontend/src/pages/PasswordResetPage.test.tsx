@@ -1,16 +1,15 @@
 import React from "react";
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider } from "../context/auth";
 import { MemoryRouter } from "react-router-dom";
-import { randomPassword, randomUser } from "../fixtures/random";
+import { randomUser } from "../fixtures/random";
 import PasswordResetPage from "./PasswordResetPage";
 import * as datastore from "../services/datastore";
 
 jest.mock("../services/datastore");
 jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
 const testUser = randomUser();
-const testPassword = randomPassword();
 
 const Fixture: React.FC = () => {
   return (
@@ -46,7 +45,9 @@ test("handles PasswordResetForm submission", async () => {
 });
 
 test("displays error when login fails", async () => {
-  jest.spyOn(datastore, "resetPassword").mockRejectedValue(new Error("unable to reset password"));
+  jest
+    .spyOn(datastore, "resetPassword")
+    .mockRejectedValue(new Error("unable to reset password"));
 
   await act(async () => {
     render(<Fixture />);
