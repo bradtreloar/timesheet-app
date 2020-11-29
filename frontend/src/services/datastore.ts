@@ -43,6 +43,12 @@ export const logout = async () => {
   await client.post("/api/logout");
 };
 
+export const resetPassword = async (email: string) => {
+  await client.post("/api/reset-password", {
+    email,
+  });
+};
+
 export const fetchCurrentUser = async (): Promise<User | null> => {
   const response: AxiosResponse<UserData> = await client.get(`/api/user`);
   if (response.status === 204) {

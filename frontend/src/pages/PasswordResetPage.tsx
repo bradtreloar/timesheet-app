@@ -6,29 +6,24 @@ import PageTitle from "../components/PageTitle";
 import { useAuth } from "../context/auth";
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useFormController } from "../form/formController";
+import PasswordResetForm from "../components/PasswordResetForm";
 
 const PasswordResetPage = () => {
-  const { login, error } = useAuth();
+  const { resetPassword } = useAuth();
 
-  const { formSubmitted, handleSubmit } = useFormController<{
+  const { formError, formSubmitted, handleSubmit } = useFormController<{
     email: string;
-    password: string;
-  }>(async ({ email, password }) => await login(email, password));
+  }>(async ({ email }) => await resetPassword(email));
 
   return (
     <DefaultLayout>
-      <PageTitle>Log in</PageTitle>
+      <PageTitle>Reset Password</PageTitle>
       <div className="container">
-        {error && <div className="alert alert-danger">{error}</div>}
-        <LoginForm
+        {formError && <div className="alert alert-danger">{formError}</div>}
+        <PasswordResetForm
           className={classnames(formSubmitted && "was-submitted")}
           onSubmit={handleSubmit}
-        ></LoginForm>
-        <div>
-          <Link to="reset-password">
-            Forgot your password? Click here to reset it.
-          </Link>
-        </div>
+        ></PasswordResetForm>
       </div>
     </DefaultLayout>
   );

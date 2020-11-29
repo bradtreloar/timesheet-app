@@ -10,7 +10,8 @@ interface AuthContextState {
   isAdmin: boolean;
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
@@ -88,6 +89,17 @@ const AuthProvider: React.FC = ({ children }) => {
   };
 
   /**
+   * Requests a password reset.
+   */
+  const resetPassword = async (email: string) => {
+    try {
+      await datastore.resetPassword(email);
+    } catch (error) {
+      throw new Error(`Unable to reset password.`);
+    }
+  };
+
+  /**
    * Refreshes the user from the server.
    */
   React.useEffect(() => {
@@ -109,6 +121,7 @@ const AuthProvider: React.FC = ({ children }) => {
     user,
     login,
     logout,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
