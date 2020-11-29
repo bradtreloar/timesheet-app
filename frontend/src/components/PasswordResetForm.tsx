@@ -64,7 +64,11 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
           <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button
+        variant="primary"
+        type="submit"
+        data-testid="password-reset-form-submit"
+      >
         Reset password
       </Button>
     </Form>
