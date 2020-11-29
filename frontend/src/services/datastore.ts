@@ -49,6 +49,12 @@ export const resetPassword = async (email: string) => {
   });
 };
 
+export const setPassword = async (password: string) => {
+  await client.post("/api/set-password", {
+    password,
+  });
+};
+
 export const fetchCurrentUser = async (): Promise<User | null> => {
   const response: AxiosResponse<UserData> = await client.get(`/api/user`);
   if (response.status === 204) {

@@ -52,11 +52,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
     handleSubmit,
     handleChange,
     handleBlur,
-  } = useForm(
-    initialValues,
-    onSubmit,
-    validate
-  );
+  } = useForm(initialValues, onSubmit, validate);
 
   const requiredTestErrors = useMemo(() => {
     return passwordStrength.test(values.password).requiredTestErrors;
@@ -105,7 +101,11 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
           <Form.Control.Feedback>{errors.password2}</Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button
+        variant="primary"
+        type="submit"
+        data-testid="password-form-submit"
+      >
         Save password
       </Button>
     </Form>
