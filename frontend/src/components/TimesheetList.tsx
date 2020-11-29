@@ -23,9 +23,7 @@ const TimesheetList: React.FC<TimesheetListProps> = ({ timesheets }) => {
           <th>Date</th>
         </tr>
       </thead>
-      <tbody>
-        {rows}
-      </tbody>
+      <tbody>{rows}</tbody>
     </table>
   );
 };

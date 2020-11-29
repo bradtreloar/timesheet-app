@@ -6,8 +6,7 @@ import DefaultLayout from "../layouts/DefaultLayout";
 const HomePage = () => (
   <DefaultLayout>
     <PageTitle>Home page</PageTitle>
-    <div className="container">
-    </div>
+    <div className="container"></div>
   </DefaultLayout>
 );
 

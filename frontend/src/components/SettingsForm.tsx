@@ -15,7 +15,11 @@ const validate = (values: Settings) => {
   const errors = {} as any;
 
   const firstDayOfWeekInt = parseInt(firstDayOfWeek);
-  if (isNaN(firstDayOfWeekInt) || firstDayOfWeekInt < 0 || firstDayOfWeekInt > 6) {
+  if (
+    isNaN(firstDayOfWeekInt) ||
+    firstDayOfWeekInt < 0 ||
+    firstDayOfWeekInt > 6
+  ) {
     errors.firstDayOfWeek = `Selection is not valid`;
   }
 

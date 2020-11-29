@@ -6,7 +6,7 @@ import { randomShiftTimesArray } from "../fixtures/random";
 import { enterShiftTimes, eraseShiftTimes } from "../fixtures/actions";
 import { expectTimesEqual, expectValidShift } from "../fixtures/expect";
 import { noop, range } from "lodash";
-import { Shift, ShiftTimes } from "../types";
+import { ShiftTimes } from "../types";
 
 export const EMPTY_SHIFT_TIMES = {
   isActive: false,

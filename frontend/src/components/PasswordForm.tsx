@@ -103,11 +103,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending }) => {
           <Form.Control.Feedback>{errors.password2}</Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button
-        variant="primary"
-        type="submit"
-        disabled={pending}
-      >
+      <Button variant="primary" type="submit" disabled={pending}>
         {pending ? `Saving` : `Save password`}
       </Button>
     </Form>

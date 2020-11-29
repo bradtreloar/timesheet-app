@@ -86,10 +86,13 @@ const UserForm: React.FC<UserFormProps> = ({
         )}
       </Form.Group>
       <Button variant="primary" type="submit" disabled={pending}>
-        {isNewUser 
-          ? (pending ? `Saving` : `Create user`)
-          : (pending ? `Saving` : `Save`)
-        }
+        {isNewUser
+          ? pending
+            ? `Saving`
+            : `Create user`
+          : pending
+          ? `Saving`
+          : `Save`}
       </Button>
     </Form>
   );

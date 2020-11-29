@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 export function useFormController<T>(
-  onSubmit: (values: T) => Promise<boolean>,
+  onSubmit: (values: T) => Promise<boolean>
 ) {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -15,6 +15,6 @@ export function useFormController<T>(
 
   return {
     formSubmitted,
-    handleSubmit
+    handleSubmit,
   };
 }

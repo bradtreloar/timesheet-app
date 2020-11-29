@@ -64,14 +64,20 @@ test("redirects to referer path when authenticated", async () => {
   localStorage.setItem("user", JSON.stringify(mockUser));
 
   await act(async () => {
-    render(<Fixture initialEntries={[{
-      pathname: "/login",
-      state: {
-        referer: {
-          pathname: "/referred-path"
-        }
-      }
-    }]} />);
+    render(
+      <Fixture
+        initialEntries={[
+          {
+            pathname: "/login",
+            state: {
+              referer: {
+                pathname: "/referred-path",
+              },
+            },
+          },
+        ]}
+      />
+    );
   });
 
   screen.getByText(/user is authenticated/i);

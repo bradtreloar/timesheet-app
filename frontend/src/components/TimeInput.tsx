@@ -20,7 +20,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   onBlur,
   onChange,
 }) => {
-  const {hours, minutes} = value;
+  const { hours, minutes } = value;
 
   return (
     <span id={id} onBlur={onBlur}>

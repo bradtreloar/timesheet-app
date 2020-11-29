@@ -30,7 +30,10 @@ interface PasswordResetFormProps {
   pending?: boolean;
 }
 
-const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ onSubmit, pending }) => {
+const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
+  onSubmit,
+  pending,
+}) => {
   const {
     values,
     errors,
@@ -63,11 +66,7 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ onSubmit, pending
           <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button
-        variant="primary"
-        type="submit"
-        disabled={pending}
-      >
+      <Button variant="primary" type="submit" disabled={pending}>
         {pending ? `Sending email` : `Send email`}
       </Button>
     </Form>

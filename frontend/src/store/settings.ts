@@ -1,5 +1,5 @@
 import { Setting } from "../types";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import * as datastore from "../services/datastore";
 import { RootState } from ".";
 
@@ -35,7 +35,7 @@ const settingsSlice = createSlice({
         status: "idle",
       };
     },
-    set(state, action) {
+    set(state, action: PayloadAction<Setting[]>) {
       return {
         settings: action.payload,
         status: "idle",

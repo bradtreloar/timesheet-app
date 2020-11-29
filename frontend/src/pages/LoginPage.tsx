@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import PageTitle from "../components/PageTitle";
 import { useAuth } from "../context/auth";

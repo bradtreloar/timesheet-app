@@ -8,7 +8,7 @@ import { isEmpty } from "lodash";
 type LoginFormValues = {
   email: string;
   password: string;
-}
+};
 
 interface LoginFormProps {
   onSubmit: (values: LoginFormValues) => void;

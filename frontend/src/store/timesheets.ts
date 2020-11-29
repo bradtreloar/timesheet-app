@@ -9,9 +9,12 @@ export interface TimesheetsState {
   error?: string;
 }
 
-const fetchTimesheets = createAsyncThunk("timesheets/fetchAll", async (user: User) => {
-  return await datastore.fetchTimesheets(user);
-});
+const fetchTimesheets = createAsyncThunk(
+  "timesheets/fetchAll",
+  async (user: User) => {
+    return await datastore.fetchTimesheets(user);
+  }
+);
 
 const addTimesheet = createAsyncThunk(
   "timesheets/add",

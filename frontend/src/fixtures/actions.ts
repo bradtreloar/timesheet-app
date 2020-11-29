@@ -23,7 +23,10 @@ const timeInputs = (shiftTimes: ShiftTimes) => [
   },
 ];
 
-export const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes) => {
+export const enterShiftTimes = (
+  shiftInput: HTMLElement,
+  shiftTimes: ShiftTimes
+) => {
   for (let { label, value } of timeInputs(shiftTimes)) {
     const timeInput = within(shiftInput).getByLabelText(label);
     if (value !== null) {
@@ -42,11 +45,7 @@ export const enterShiftTimes = (shiftInput: HTMLElement, shiftTimes: ShiftTimes)
 };
 
 export const eraseShiftTimes = (shiftInput: HTMLElement) => {
-  const inputLabels = [
-    /start time/i,
-    /end time/i,
-    /break duration/i,
-  ];
+  const inputLabels = [/start time/i, /end time/i, /break duration/i];
 
   for (let label of inputLabels) {
     const timeInput = within(shiftInput).getByLabelText(label);
