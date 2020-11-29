@@ -2,6 +2,8 @@ import {
   SettingResource,
   ShiftResource,
   TimesheetResource,
+  User,
+  UserData,
 } from "../types";
 import { Setting, Shift, Timesheet } from "../types";
 
@@ -48,6 +50,17 @@ export const parseTimesheet = (
     created: created as string,
     changed: changed as string,
     shifts: [],
+  };
+};
+
+export const parseUser = (data: UserData): User => {
+  const { id, name, email, is_admin, default_shifts } = data;
+  return {
+    id,
+    name,
+    email,
+    isAdmin: is_admin,
+    defaultShifts: JSON.parse(default_shifts),
   };
 };
 
@@ -130,4 +143,15 @@ export const makeTimesheetResource = (
     };
   }
   return resource;
+};
+
+export const makeUserData = (user: User): UserData => {
+  const { id, name, email, isAdmin, defaultShifts } = user;
+  return {
+    id,
+    name,
+    email,
+    is_admin: isAdmin,
+    default_shifts: JSON.stringify(defaultShifts),
+  };
 };
