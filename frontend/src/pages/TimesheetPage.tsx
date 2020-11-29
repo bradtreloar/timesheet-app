@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { isInteger } from "lodash";
 import classnames from "classnames";
@@ -10,12 +10,13 @@ import { addDays } from "../helpers/date";
 import DefaultLayout from "../layouts/DefaultLayout";
 import store from "../store";
 import { selectSettings } from "../store/settings";
-import { addTimesheet } from "../store/timesheets";
+import { addTimesheet, selectTimesheets } from "../store/timesheets";
 import { Shift, Timesheet } from "../types";
 
 const TimesheetPage = () => {
   const { user } = useAuth();
   const { settings } = useSelector(selectSettings);
+  const { error } = useSelector(selectTimesheets);
   const { formSubmitted, handleSubmit } = useFormController<{
     shifts: Shift[];
   }>(async ({ shifts }) => {
@@ -58,6 +59,7 @@ const TimesheetPage = () => {
     <DefaultLayout>
       <PageTitle>New Timesheet</PageTitle>
       <div className="container">
+        {error && <div className="alert alert-danger">{error}</div>}
         <TimesheetForm
           className={classnames(formSubmitted && "was-submitted")}
           defaultShifts={user.defaultShifts}

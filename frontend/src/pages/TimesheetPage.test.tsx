@@ -22,7 +22,7 @@ const testTimesheet = randomTimesheet(testUser);
 const testShifts = testTimesheet.shifts as Shift[];
 // Make the user's default shift times coincide with the test timesheet's times.
 testUser.defaultShifts = testShifts.map((shift) => getTimesFromShift(shift));
-// Make the first day of the week coincide with the date of the first shift 
+// Make the first day of the week coincide with the date of the first shift
 // in testTimesheet.
 const testSettings = randomSettings({
   firstDayOfWeek: new Date(testShifts[0].start).getDay().toString(),
@@ -67,4 +67,23 @@ test("handles TimesheetForm submission", async () => {
     userID: testTimesheet.userID,
     shifts: testTimesheet.shifts,
   });
+});
+
+test("displays error when timesheet creation fails", async () => {
+  const errorMessage = "unable to create timesheet";
+  jest.spyOn(datastore, "createTimesheet").mockRejectedValue(errorMessage);
+
+  await act(async () => {
+    render(<Fixture />);
+  });
+
+  expect(screen.getByRole("heading")).toHaveTextContent(/new timesheet/i);
+  await act(async () => {
+    userEvent.click(screen.getByText(/^submit$/i));
+  });
+  expect(datastore.createTimesheet).toHaveBeenCalledWith({
+    userID: testTimesheet.userID,
+    shifts: testTimesheet.shifts,
+  });
+  screen.getByText(errorMessage);
 });
