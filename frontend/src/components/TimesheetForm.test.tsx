@@ -9,6 +9,7 @@ import { noop, range } from "lodash";
 import { Shift, ShiftTimes } from "../types";
 
 export const EMPTY_SHIFT_TIMES = {
+  isActive: false,
   startTime: { hours: "", minutes: "" },
   endTime: { hours: "", minutes: "" },
   breakDuration: { hours: "", minutes: "" },
@@ -117,9 +118,9 @@ describe("form submission", () => {
   });
 
   test("with only some shifts", (done) => {
-    const testShifts: (ShiftTimes | null)[] = randomShiftTimesArray();
+    const testShifts = randomShiftTimesArray();
     testShifts.pop();
-    testShifts.push(null);
+    testShifts.push(EMPTY_SHIFT_TIMES);
     render(
       <TimesheetForm
         defaultWeekStartDate={testWeekStartDate}
@@ -135,7 +136,7 @@ describe("form submission", () => {
   });
 
   test("with no shifts", () => {
-    const testShifts: null[] = range(7).map(() => null);
+    const testShifts = range(7).map(() => EMPTY_SHIFT_TIMES);
     render(
       <TimesheetForm
         defaultWeekStartDate={testWeekStartDate}
