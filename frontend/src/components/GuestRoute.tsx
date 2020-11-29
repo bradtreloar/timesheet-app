@@ -1,9 +1,18 @@
 import React from "react";
-import { Route, Redirect, RouteProps } from "react-router-dom";
+import {
+  Route,
+  Redirect,
+  RouteProps,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
 import { useAuth } from "../context/auth";
 
 const GuestRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation<{
+    referer?: Location;
+  }>();
 
   return (
     <Route
@@ -13,7 +22,7 @@ const GuestRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
           children
         ) : (
           <Redirect
-            to={{ pathname: "/" }}
+            to={{ pathname: location.state?.referer?.pathname || "/" }}
           />
         )
       }
