@@ -128,5 +128,5 @@ export const randomSettings = (): Setting[] => [
 
 export const randomSettingsObject = (): Settings => ({
   timesheetRecipients: faker.internet.email(),
-  startOfWeek: randomInt(0, 6),
+  startOfWeek: randomInt(0, 6).toString(),
 });
