@@ -18,10 +18,7 @@ const range = (length: number) => [...Array.from(new Array(length).keys())];
 export const randomUser = (userIsAdmin?: boolean): User => {
   return {
     id: randomID(),
-    name: randomstring.generate({
-      length: 12,
-      charset: "alphabetic",
-    }),
+    name: faker.name.findName(),
     email: faker.internet.email(),
     isAdmin: userIsAdmin === true,
     defaultShifts: range(7).map((index) => randomShiftTimes()),
