@@ -68,7 +68,7 @@ describe("unauthenticated user", () => {
   });
 
   test("receives error when login fails", async () => {
-    jest.spyOn(datastore, "login").mockRejectedValue("login failed");
+    jest.spyOn(datastore, "login").mockRejectedValue(new Error("login failed"));
 
     await act(async () => {
       render(<AppFixture routerEntries={["/login"]} />);

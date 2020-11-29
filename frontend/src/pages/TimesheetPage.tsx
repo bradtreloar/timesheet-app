@@ -17,7 +17,7 @@ const TimesheetPage = () => {
   const { user } = useAuth();
   const { settings } = useSelector(selectSettings);
   const { error } = useSelector(selectTimesheets);
-  const { formSubmitted, handleSubmit } = useFormController<{
+  const { formError, formSubmitted, handleSubmit } = useFormController<{
     shifts: Shift[];
   }>(async ({ shifts }) => {
     if (user?.id) {
@@ -27,7 +27,6 @@ const TimesheetPage = () => {
       };
       await store.dispatch(addTimesheet(timesheet));
     }
-    return true;
   });
 
   const firstDayOfWeek = useMemo(
@@ -59,6 +58,7 @@ const TimesheetPage = () => {
     <DefaultLayout>
       <PageTitle>New Timesheet</PageTitle>
       <div className="container">
+        {formError && <div className="alert alert-danger">{formError}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
         <TimesheetForm
           className={classnames(formSubmitted && "was-submitted")}

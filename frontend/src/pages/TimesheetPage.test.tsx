@@ -2,7 +2,7 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider } from "../context/auth";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router-dom";
 import {
   randomSettings,
   randomTimesheet,
@@ -33,7 +33,12 @@ const Fixture: React.FC = () => {
     <Provider store={store}>
       <AuthProvider>
         <MemoryRouter>
-          <TimesheetPage />
+          <Route exact path="/">
+            <TimesheetPage />
+          </Route>
+          <Route exact path="/timesheet/confirmation">
+            form submitted
+          </Route>
         </MemoryRouter>
       </AuthProvider>
     </Provider>
@@ -62,7 +67,9 @@ test("handles TimesheetForm submission", async () => {
   });
 
   expect(screen.getByRole("heading")).toHaveTextContent(/new timesheet/i);
-  userEvent.click(screen.getByText(/^submit$/i));
+  await act(async () => {
+    userEvent.click(screen.getByText(/^submit$/i));
+  });
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
     userID: testTimesheet.userID,
     shifts: testTimesheet.shifts,

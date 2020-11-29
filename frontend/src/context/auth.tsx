@@ -9,8 +9,7 @@ interface AuthContextState {
   isAuthenticated: boolean;
   isAdmin: boolean;
   user: User | null;
-  error: string | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -36,7 +35,6 @@ const AuthProvider: React.FC = ({ children }) => {
     : null;
   const [isStale, setIsStale] = React.useState(true);
   const [user, setUser] = React.useState(initialUser);
-  const [error, setError] = React.useState<string | null>(null);
   const isAuthenticated = user !== null;
   const isAdmin = user !== null && user.isAdmin;
 
@@ -57,24 +55,22 @@ const AuthProvider: React.FC = ({ children }) => {
     try {
       const user = await datastore.login(email, password);
       setUser(user);
-      setError(null);
-      return true;
     } catch (error) {
       if (error.response) {
         const { status } = error.response;
         if (status === 422) {
-          setError("Unrecognized email or password.");
+          throw new Error(`Unrecognized email or password.`);
         } else if (status === 403) {
+          throw new Error(`User is already logged in.`);
           setIsStale(true);
         } else {
-          setError("Unable to log in. An error has occurred");
           console.error(error);
+          throw new Error(`Unable to log in. An error has occurred.`);
         }
       } else {
-        setError(error);
+        throw error;
       }
     }
-    return false;
   };
 
   /**
@@ -84,16 +80,10 @@ const AuthProvider: React.FC = ({ children }) => {
     try {
       await datastore.logout();
       setUser(null);
-      setError(null);
     } catch (error) {
-      if (error.response) {
-        const { status } = error.response;
-        if (status === 403) {
-          setIsStale(true);
-          return;
-        }
+      if (error.response?.status === 403) {
+        setIsStale(true);
       }
-      setError(error);
     }
   };
 
@@ -119,7 +109,6 @@ const AuthProvider: React.FC = ({ children }) => {
     user,
     login,
     logout,
-    error,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

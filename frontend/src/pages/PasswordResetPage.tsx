@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
@@ -7,21 +7,19 @@ import { useAuth } from "../context/auth";
 import DefaultLayout from "../layouts/DefaultLayout";
 import { useFormController } from "../form/formController";
 
-const LoginPage = () => {
-  const { login } = useAuth();
+const PasswordResetPage = () => {
+  const { login, error } = useAuth();
 
-  const { formError, formSubmitted, handleSubmit } = useFormController<{
+  const { formSubmitted, handleSubmit } = useFormController<{
     email: string;
     password: string;
-  }>(async ({ email, password }) => {
-    await login(email, password);
-  });
+  }>(async ({ email, password }) => await login(email, password));
 
   return (
     <DefaultLayout>
       <PageTitle>Log in</PageTitle>
       <div className="container">
-        {formError && <div className="alert alert-danger">{formError}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
         <LoginForm
           className={classnames(formSubmitted && "was-submitted")}
           onSubmit={handleSubmit}
@@ -36,4 +34,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default PasswordResetPage;

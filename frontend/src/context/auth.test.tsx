@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { render, act } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
@@ -26,16 +26,19 @@ const LoginFixture: React.FC<{ email: string; password: string }> = ({
   password,
 }) => {
   const { isAuthenticated, login } = useAuth();
+  const [error, setError] = useState("");
 
-  return (
+  return error ? (
+    <div data-testid="error">{error}</div>
+  ) : (
     <>
       <button
         onClick={async () => {
-          // Wrap call to login in asynchronous act call because it updates
-          // the AuthProvider's state.
-          await act(async () => {
-            login(email, password);
-          });
+          try {
+            await login(email, password);
+          } catch (error) {
+            setError(error.message);
+          }
         }}
       >
         Log in
@@ -123,7 +126,7 @@ describe("unauthenticated user", () => {
     await act(async () => {
       userEvent.click(screen.getByText(/Log in/));
     });
-    screen.getByText(/User is not logged in/);
+    screen.getByText(/unrecognized email or password/i);
   });
 
   test("has pre-existing session", async () => {

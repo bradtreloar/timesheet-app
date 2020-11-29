@@ -50,7 +50,7 @@ test("handles LoginForm submission", async () => {
 });
 
 test("displays error when login fails", async () => {
-  jest.spyOn(datastore, "login").mockRejectedValue("login failed");
+  jest.spyOn(datastore, "login").mockRejectedValue(new Error("login failed"));
 
   await act(async () => {
     render(<Fixture />);
