@@ -10,11 +10,6 @@ type LoginFormValues = {
   password: string;
 };
 
-interface LoginFormProps {
-  onSubmit: (values: LoginFormValues) => void;
-  className?: string;
-}
-
 const validate = (values: any) => {
   const errors = {} as { [key: string]: string };
   const { email, password } = values;
@@ -36,6 +31,11 @@ const initialValues: LoginFormValues = {
   email: "",
   password: "",
 };
+
+interface LoginFormProps {
+  onSubmit: (values: LoginFormValues) => void;
+  className?: string;
+}
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, className }) => {
   const {
