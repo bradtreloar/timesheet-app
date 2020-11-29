@@ -1,5 +1,23 @@
-import { ShiftResource, TimesheetResource } from "../services/resourceTypes";
-import { Shift, Timesheet } from "../types";
+import {
+  SettingResource,
+  ShiftResource,
+  TimesheetResource,
+} from "../services/resourceTypes";
+import { Setting, Shift, Timesheet } from "../types";
+
+export const parseSetting = (resource: SettingResource): Setting => {
+  const {
+    id,
+    attributes: { created, changed, name, value },
+  } = resource;
+  return {
+    id,
+    changed,
+    created,
+    name,
+    value,
+  };
+};
 
 export const parseShift = (resource: ShiftResource): Shift => {
   const {
@@ -16,7 +34,10 @@ export const parseShift = (resource: ShiftResource): Shift => {
   };
 };
 
-export const parseTimesheet = (userID: string, resource: TimesheetResource): Timesheet => {
+export const parseTimesheet = (
+  userID: string,
+  resource: TimesheetResource
+): Timesheet => {
   const {
     id,
     attributes: { created, changed },
@@ -28,6 +49,21 @@ export const parseTimesheet = (userID: string, resource: TimesheetResource): Tim
     created: created,
     shifts: [],
   };
+};
+
+export const makeSettingResource = (setting: Setting): SettingResource => {
+  const { id, changed, created, name, value } = setting;
+  const resource: SettingResource = {
+    id,
+    type: "settings",
+    attributes: {
+      changed,
+      created,
+      name,
+      value,
+    },
+  };
+  return resource;
 };
 
 export const makeShiftResource = (

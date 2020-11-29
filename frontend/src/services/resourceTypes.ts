@@ -52,3 +52,14 @@ export interface ShiftResource {
     timesheet: RelatedResource<"timesheets">;
   };
 }
+
+export type SettingResource = {
+  id: string;
+  type: "settings";
+  attributes: {
+    created: string;
+    changed: string;
+    name: string;
+    value: string;
+  };
+};

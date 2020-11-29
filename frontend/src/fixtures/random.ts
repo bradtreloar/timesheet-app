@@ -1,4 +1,4 @@
-import { Settings, Shift, ShiftTimes, Timesheet, User } from "../types";
+import { Setting, Settings, Shift, ShiftTimes, Timesheet, User } from "../types";
 import randomstring from "randomstring";
 import { addDays, addHours, Time } from "../helpers/date";
 import faker from "faker";
@@ -109,7 +109,24 @@ export const randomTimesheet = (user: User): Timesheet => {
 export const randomTimesheets = (user: User, count: number) =>
   range(count).map((index) => randomTimesheet(user));
 
-export const randomSettings = (): Settings => ({
+export const randomSettings = (): Setting[] => [
+  {
+    id: randomID(),
+    name: "timesheetRecipients",
+    value: faker.internet.email(),
+    created: new Date().toISOString(),
+    changed: new Date().toISOString(),
+  },
+  {
+    id: randomID(),
+    name: "startOfWeek",
+    value: randomInt(0, 6).toString(),
+    created: new Date().toISOString(),
+    changed: new Date().toISOString(),
+  },
+];
+
+export const randomSettingsObject = (): Settings => ({
   timesheetRecipients: faker.internet.email(),
   startOfWeek: randomInt(0, 6),
 });

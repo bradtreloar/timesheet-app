@@ -1,12 +1,18 @@
 import axios, { AxiosResponse } from "axios";
-import { Shift, Timesheet, User } from "../types";
-import { ShiftResource, TimesheetResource } from "./resourceTypes";
+import { Setting, Shift, Timesheet, User } from "../types";
+import {
+  SettingResource,
+  ShiftResource,
+  TimesheetResource,
+} from "./resourceTypes";
 import { HOST } from "../settings";
 import {
   parseTimesheet,
   makeTimesheetResource,
   parseShift,
   makeShiftResource,
+  parseSetting,
+  makeSettingResource,
 } from "../helpers/jsonAPI";
 
 export const client = axios.create({
@@ -72,7 +78,7 @@ export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
       const shifts = allShifts.filter(({ id }) => id === timesheet.id);
       timesheet.shifts = shifts;
     });
-  } 
+  }
   return timesheets;
 };
 
@@ -110,4 +116,32 @@ export const deleteTimesheet = async (
 ): Promise<Timesheet> => {
   await jsonAPIClient.delete(`/timesheets`);
   return timesheet;
+};
+
+export const fetchSettings = async (): Promise<Setting[]> => {
+  const response: AxiosResponse<{
+    data: SettingResource[];
+  }> = await jsonAPIClient.get(`settings`);
+  const { data } = response.data;
+  return data.map((resource: SettingResource) => {
+    const { id } = resource;
+    const { name, value, changed, created } = resource.attributes;
+    return { id, name, value, changed, created };
+  });
+};
+
+export const updateSettings = async (
+  settings: Setting[]
+): Promise<Setting[]> => {
+  return await Promise.all(
+    settings.map(async (setting) => {
+      const response: AxiosResponse<{
+        data: SettingResource;
+      }> = await jsonAPIClient.patch(`settings/${setting.id}`, {
+        data: makeSettingResource(setting),
+      });
+      const { data } = response.data;
+      return parseSetting(data);
+    })
+  );
 };

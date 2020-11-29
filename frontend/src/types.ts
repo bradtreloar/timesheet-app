@@ -38,6 +38,14 @@ export type ShiftTimes = {
   };
 };
 
+export type Setting = {
+  id: string;
+  created: string;
+  changed: string;
+  name: string;
+  value: string;
+};
+
 export type Settings = {
   timesheetRecipients: string;
   startOfWeek: number;
