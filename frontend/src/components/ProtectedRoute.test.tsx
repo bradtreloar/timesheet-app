@@ -12,7 +12,7 @@ const mockClient = new MockAdapter(client);
 
 const Fixture = () => (
   <AuthProvider>
-    <MemoryRouter>
+    <MemoryRouter initialEntries={["/"]}>
       <ProtectedRoute exact path="/">
         user is authenticated
       </ProtectedRoute>
@@ -23,8 +23,17 @@ const Fixture = () => (
   </AuthProvider>
 );
 
-afterEach(() => {
+beforeEach(() => {
   window.localStorage.clear();
+  jest.clearAllMocks();
+});
+
+test("redirects to /login when not authenticated", async () => {
+  mockClient.onGet("/api/user").reply(204);
+  await act(async () => {
+    render(<Fixture />);
+  });
+  screen.getByText(/user is not authenticated/i);
 });
 
 test("renders protected route when authenticated", async () => {
@@ -35,11 +44,4 @@ test("renders protected route when authenticated", async () => {
     render(<Fixture />);
   });
   screen.getByText(/user is authenticated/i);
-});
-
-test("redirects to /login when not authenticated", async () => {
-  await act(async () => {
-    render(<Fixture />);
-  });
-  screen.getByText(/user is not authenticated/i);
 });

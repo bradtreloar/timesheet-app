@@ -23,8 +23,9 @@ const Fixture = () => (
   </AuthProvider>
 );
 
-afterEach(() => {
+beforeEach(() => {
   window.localStorage.clear();
+  jest.clearAllMocks();
 });
 
 test("renders guest route when not authenticated", async () => {
