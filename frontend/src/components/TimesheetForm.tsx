@@ -33,29 +33,19 @@ export const shiftInputNames = ["isActive", ...shiftTimesInputNames] as const;
  */
 const buildInitialValues = (
   defaultWeekStartDate: Date,
-  defaultShifts: (ShiftTimes | null)[]
+  defaultShifts: ShiftTimes[]
 ) => ({
   weekStartDate: defaultWeekStartDate,
   ...range(7).reduce((values, index) => {
     const dv = defaultShifts[index];
     const name = `shift.${index}`;
-    if (dv !== null) {
-      values[`${name}.isActive`] = true;
-      values[`${name}.startTime.hours`] = dv.startTime.hours;
-      values[`${name}.startTime.minutes`] = dv.startTime.minutes;
-      values[`${name}.endTime.hours`] = dv.endTime.hours;
-      values[`${name}.endTime.minutes`] = dv.endTime.minutes;
-      values[`${name}.breakDuration.hours`] = dv.breakDuration.hours;
-      values[`${name}.breakDuration.minutes`] = dv.breakDuration.minutes;
-    } else {
-      values[`${name}.isActive`] = false;
-      values[`${name}.startTime.hours`] = "";
-      values[`${name}.startTime.minutes`] = "";
-      values[`${name}.endTime.hours`] = "";
-      values[`${name}.endTime.minutes`] = "";
-      values[`${name}.breakDuration.hours`] = "";
-      values[`${name}.breakDuration.minutes`] = "";
-    }
+    values[`${name}.isActive`] = true;
+    values[`${name}.startTime.hours`] = dv.startTime.hours;
+    values[`${name}.startTime.minutes`] = dv.startTime.minutes;
+    values[`${name}.endTime.hours`] = dv.endTime.hours;
+    values[`${name}.endTime.minutes`] = dv.endTime.minutes;
+    values[`${name}.breakDuration.hours`] = dv.breakDuration.hours;
+    values[`${name}.breakDuration.minutes`] = dv.breakDuration.minutes;
     return values;
   }, {} as any),
 });
@@ -78,11 +68,15 @@ const process = (values: any): Shift[] => {
         start: new Time(
           values[`shift.${index}.startTime.hours`],
           values[`shift.${index}.startTime.minutes`]
-        ).toDate(shiftDate).toISOString(),
+        )
+          .toDate(shiftDate)
+          .toISOString(),
         end: new Time(
           values[`shift.${index}.endTime.hours`],
           values[`shift.${index}.endTime.minutes`]
-        ).toDate(shiftDate).toISOString(),
+        )
+          .toDate(shiftDate)
+          .toISOString(),
         breakDuration: new Time(
           values[`shift.${index}.breakDuration.hours`],
           values[`shift.${index}.breakDuration.minutes`]
@@ -151,7 +145,7 @@ const validate = (values: any) => {
 
 interface TimesheetFormProps {
   defaultWeekStartDate: Date;
-  defaultShifts: (ShiftTimes | null)[];
+  defaultShifts: ShiftTimes[];
   onSubmit: (shifts: Shift[]) => void;
 }
 
