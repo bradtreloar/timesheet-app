@@ -1,5 +1,3 @@
-import { FIRST_DAY_OF_WEEK } from "../settings";
-
 /**
  * Add week to a Date.
  *
@@ -58,11 +56,12 @@ export const addMinutes = (date: Date, minutes: number) => {
  * Gets the start of the week that the date belongs to.
  *
  * @param date   The date to count back from.
+ * @param firstDayOfWeek   The first day of the week, where 0 = Sunday.
  * @return date  The date of the start of the week.
  */
-export const startOfWeek = (date: Date) => {
+export const startOfWeek = (date: Date, firstDayOfWeek: number) => {
   const day = date.getDay();
-  const newDate = addDays(date, FIRST_DAY_OF_WEEK - day);
+  const newDate = addDays(date, firstDayOfWeek - day);
   newDate.setHours(0, 0, 0, 0);
   return newDate;
 };
@@ -71,11 +70,12 @@ export const startOfWeek = (date: Date) => {
  * Gets the end of the week that the date belongs to.
  *
  * @param date   The date to count forward from.
+ * @param firstDayOfWeek   The first day of the week, where 0 = Sunday.
  * @return date  The date of the end of the week.
  */
-export const endOfWeek = (date: Date) => {
+export const endOfWeek = (date: Date, firstDayOfWeek: number) => {
   const day = date.getDay();
-  const newDate = addDays(date, FIRST_DAY_OF_WEEK - day + 7);
+  const newDate = addDays(date, firstDayOfWeek - day + 7);
   newDate.setHours(0, 0, 0, 0);
   return newDate;
 };
