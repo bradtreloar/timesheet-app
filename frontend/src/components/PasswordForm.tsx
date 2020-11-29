@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import classnames from "classnames";
 import passwordStrength from "owasp-password-strength-test";
 import Form from "react-bootstrap/Form";
 import { useForm } from "../form/form";
@@ -39,11 +40,11 @@ const validate = (values: PasswordFormValues) => {
 };
 
 interface PasswordFormProps {
-  onSubmit: (password: string) => void;
-  pending?: boolean;
+  onSubmit: (values: PasswordFormValues) => void;
+  className?: string;
 }
 
-const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending }) => {
+const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
   const {
     values,
     errors,
@@ -53,9 +54,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending }) => {
     handleBlur,
   } = useForm(
     initialValues,
-    (values) => {
-      onSubmit(values.password);
-    },
+    onSubmit,
     validate
   );
 
@@ -64,7 +63,10 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending }) => {
   }, [values.password]);
 
   return (
-    <Form className="form-narrow" onSubmit={handleSubmit}>
+    <Form
+      className={classnames("form-narrow", className)}
+      onSubmit={handleSubmit}
+    >
       {errors.form && <Alert variant="danger">{errors.form}</Alert>}
       <Form.Group controlId="password">
         <Form.Label>New Password</Form.Label>
@@ -103,8 +105,8 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending }) => {
           <Form.Control.Feedback>{errors.password2}</Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button variant="primary" type="submit" disabled={pending}>
-        {pending ? `Saving` : `Save password`}
+      <Button variant="primary" type="submit">
+        Save password
       </Button>
     </Form>
   );

@@ -15,7 +15,7 @@ test("Form submission succeeds", (done) => {
 
   render(
     <PasswordForm
-      onSubmit={(password) => {
+      onSubmit={({ password }) => {
         expect(password).toBe(mockPassword);
         done();
       }}
@@ -54,17 +54,4 @@ test("Reject invalid form input", () => {
   userEvent.type(screen.getByLabelText(/^new password/i), mockPassword);
   userEvent.click(screen.getByText(/save password/i));
   screen.getByText(/required/i);
-});
-
-test("Form handles pending authentication", () => {
-  render(
-    <PasswordForm
-      onSubmit={() => {
-        throw new Error("onSubmit should not be called.");
-      }}
-      pending
-    />
-  );
-
-  userEvent.click(screen.getByText(/saving/i));
 });
