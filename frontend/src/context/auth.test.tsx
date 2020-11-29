@@ -5,7 +5,6 @@ import userEvent from "@testing-library/user-event";
 import { AuthProvider, useAuth } from "./auth";
 import { client } from "../services/datastore";
 import { randomPassword, randomUser } from "../fixtures/random";
-import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
 import MockAdapter from "axios-mock-adapter";
 import { makeUserData } from "../services/adaptors";
 
@@ -15,6 +14,22 @@ const mockClient = new MockAdapter(client);
 const mockUser = randomUser();
 const mockAdminUser = randomUser(true);
 const mockPassword = randomPassword();
+
+const IsAuthenticatedFixture: React.FC<{
+  isAuthenticated: boolean;
+  isAdmin?: boolean;
+}> = ({ isAuthenticated, isAdmin }) => {
+  return (
+    <>
+      {isAuthenticated ? (
+        <div>User is logged in.</div>
+      ) : (
+        <div>User is not logged in.</div>
+      )}
+      {isAuthenticated && isAdmin && <div>User is admin.</div>}
+    </>
+  );
+};
 
 const PassiveFixture = () => {
   const { isAuthenticated } = useAuth();
