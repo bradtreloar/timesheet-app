@@ -89,6 +89,8 @@ export const randomShiftDates = (date: Date) => {
   const startHours = Math.floor(Math.random() * 12);
   const start = addHours(date, startHours);
   const end = addHours(date, startHours + shiftDuration);
+  start.setHours(start.getHours(), 0, 0, 0);
+  end.setHours(end.getHours(), 0, 0, 0);
   return [start, end];
 };
 
@@ -105,8 +107,8 @@ export const randomTimesheet = (user: User): Timesheet => {
   const weekStartDate = new Date(Date.now());
   return {
     id: randomID(),
-    userID: user.id,
-    shifts: range(5).map(
+    userID: user.id as string,
+    shifts: range(7).map(
       (dateOffset): Shift => randomShift(weekStartDate, dateOffset)
     ),
     created: new Date().toISOString(),
@@ -117,18 +119,22 @@ export const randomTimesheet = (user: User): Timesheet => {
 export const randomTimesheets = (user: User, count: number) =>
   range(count).map((index) => randomTimesheet(user));
 
-export const randomSettings = (): Setting[] => [
+export const randomSettings = (
+  settings: {
+    [P in keyof Settings]?: string;
+  }
+): Setting[] => [
   {
     id: randomID(),
     name: "timesheetRecipients",
-    value: faker.internet.email(),
+    value: settings?.timesheetRecipients || faker.internet.email(),
     created: new Date().toISOString(),
     changed: new Date().toISOString(),
   },
   {
     id: randomID(),
     name: "firstDayOfWeek",
-    value: randomInt(0, 6).toString(),
+    value: settings?.firstDayOfWeek || randomInt(0, 6).toString(),
     created: new Date().toISOString(),
     changed: new Date().toISOString(),
   },
