@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function useFormController<T>(onSubmit: (values: T) => Promise<void>) {
+const useFormController = <T>(onSubmit: (values: T) => Promise<void>) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -18,4 +18,6 @@ export function useFormController<T>(onSubmit: (values: T) => Promise<void>) {
     formSubmitted,
     handleSubmit,
   };
-}
+};
+
+export default useFormController;

@@ -5,7 +5,7 @@ import LoginForm from "../components/LoginForm";
 import PageTitle from "../components/PageTitle";
 import { useAuth } from "../context/auth";
 import DefaultLayout from "../layouts/DefaultLayout";
-import { useFormController } from "../form/formController";
+import useFormController from "../hooks/useFormController";
 
 const LoginPage = () => {
   const { login } = useAuth();

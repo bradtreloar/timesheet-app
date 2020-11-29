@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import * as EmailValidator from "email-validator";
 import Form from "react-bootstrap/Form";
-import { useForm } from "../form/form";
+import useForm from "../hooks/useForm";
 import { Alert, Button } from "react-bootstrap";
 
 interface PasswordResetFormValues {

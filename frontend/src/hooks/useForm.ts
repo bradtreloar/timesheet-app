@@ -17,11 +17,11 @@ export type FormVisibleErrors<T> = {
   [P in keyof T]?: boolean;
 };
 
-export function useForm<T>(
+const useForm = <T>(
   initialValues: FormValues<T>,
   onSubmit: (values: FormValues<T>) => void,
   validate: (values: FormValues<T>) => FormErrors<T>
-) {
+) => {
   const [values, setValues] = useState<FormValues<T>>(initialValues);
   const [touchedValues, setTouchedValues] = useState<FormTouchedValues<T>>({});
   const [errors, setErrors] = useState<FormErrors<T>>({});
@@ -110,4 +110,6 @@ export function useForm<T>(
     handleChange,
     handleSubmit,
   };
-}
+};
+
+export default useForm;

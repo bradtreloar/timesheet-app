@@ -3,7 +3,7 @@ import { addDays, longFormatDate, Time } from "../helpers/date";
 import { Shift, ShiftTimes } from "../types";
 import WeekSelect from "./WeekSelect";
 import { range } from "lodash";
-import { FormErrors, useForm } from "../form/form";
+import useForm, { FormErrors } from "../hooks/useForm";
 import TimeInput from "./TimeInput";
 
 export const shiftTimesNames = [

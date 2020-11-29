@@ -5,7 +5,7 @@ import classnames from "classnames";
 import PageTitle from "../components/PageTitle";
 import TimesheetForm from "../components/TimesheetForm";
 import { useAuth } from "../context/auth";
-import { useFormController } from "../form/formController";
+import useFormController from "../hooks/useFormController";
 import { addDays } from "../helpers/date";
 import DefaultLayout from "../layouts/DefaultLayout";
 import store from "../store";
