@@ -24,7 +24,7 @@ test("Form submission succeeds", (done) => {
   );
 
   userEvent.type(screen.getByLabelText(/your email address/i), testEmail);
-  userEvent.click(screen.getByText(/send email/i));
+  userEvent.click(screen.getByText(/reset password/i));
 });
 
 test("Empty form submission fails", async () => {
@@ -36,7 +36,7 @@ test("Empty form submission fails", async () => {
     />
   );
 
-  userEvent.click(screen.getByText(/send email/i));
+  userEvent.click(screen.getByText(/reset password/i));
   screen.getByText(/required/i);
 });
 
@@ -52,6 +52,6 @@ test("Reject invalid form input", () => {
   );
 
   userEvent.type(screen.getByLabelText(/your email address/i), invalidEmail);
-  userEvent.click(screen.getByText(/send email/i));
+  userEvent.click(screen.getByText(/reset password/i));
   screen.getByText(/must be a valid email address/i);
 });

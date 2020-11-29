@@ -65,7 +65,7 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
         )}
       </Form.Group>
       <Button variant="primary" type="submit">
-        Send email
+        Reset password
       </Button>
     </Form>
   );
