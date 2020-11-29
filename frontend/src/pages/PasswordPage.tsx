@@ -21,7 +21,7 @@ const PasswordPage = () => {
         <PasswordForm
           className={classnames(formSubmitted && "was-submitted")}
           onSubmit={handleSubmit}
-        ></PasswordForm>
+        />
       </div>
     </DefaultLayout>
   );

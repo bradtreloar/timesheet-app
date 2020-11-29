@@ -25,7 +25,7 @@ const LoginPage = () => {
         <LoginForm
           className={classnames(formSubmitted && "was-submitted")}
           onSubmit={handleSubmit}
-        ></LoginForm>
+        />
         <div>
           <Link to="reset-password">
             Forgot your password? Click here to reset it.

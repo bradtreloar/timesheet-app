@@ -21,7 +21,7 @@ const PasswordResetPage = () => {
         <PasswordResetForm
           className={classnames(formSubmitted && "was-submitted")}
           onSubmit={handleSubmit}
-        ></PasswordResetForm>
+        />
       </div>
     </DefaultLayout>
   );
