@@ -48,5 +48,5 @@ export type Setting = {
 
 export type Settings = {
   timesheetRecipients: string;
-  startOfWeek: number;
+  startOfWeek: string;
 };
