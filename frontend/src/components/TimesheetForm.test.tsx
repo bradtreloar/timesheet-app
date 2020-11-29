@@ -107,7 +107,7 @@ describe("form submission", () => {
       <TimesheetForm
         defaultWeekStartDate={testWeekStartDate}
         defaultShifts={testShifts}
-        onSubmit={(shifts: Shift[]) => {
+        onSubmit={({ shifts }) => {
           expect(shifts.length).toEqual(testShifts.length);
           shifts.forEach((shift) => expectValidShift(shift));
           done();
@@ -125,7 +125,7 @@ describe("form submission", () => {
       <TimesheetForm
         defaultWeekStartDate={testWeekStartDate}
         defaultShifts={testShifts}
-        onSubmit={(shifts: Shift[]) => {
+        onSubmit={({ shifts }) => {
           expect(shifts.length).toEqual(testShifts.length - 1);
           shifts.forEach((shift) => expectValidShift(shift));
           done();
@@ -141,7 +141,7 @@ describe("form submission", () => {
       <TimesheetForm
         defaultWeekStartDate={testWeekStartDate}
         defaultShifts={testShifts}
-        onSubmit={(shifts: Shift[]) => {
+        onSubmit={() => {
           throw new Error(`onSubmit should not be called with no shifts.`);
         }}
       />

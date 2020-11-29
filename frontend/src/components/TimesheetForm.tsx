@@ -58,7 +58,7 @@ const buildInitialValues = (
  * @returns
  *   A array of Shift objects.
  */
-const process = (values: any): Shift[] => {
+const process = (values: any): { shifts: Shift[] } => {
   const weekStartDate = values.weekStartDate;
   const shifts: Shift[] = [];
   range(7).forEach((index) => {
@@ -86,7 +86,7 @@ const process = (values: any): Shift[] => {
     }
   });
 
-  return shifts;
+  return { shifts };
 };
 
 /**
@@ -146,13 +146,15 @@ const validate = (values: any) => {
 interface TimesheetFormProps {
   defaultWeekStartDate: Date;
   defaultShifts: ShiftTimes[];
-  onSubmit: (shifts: Shift[]) => void;
+  onSubmit: (values: { shifts: Shift[] }) => void;
+  className?: string;
 }
 
 const TimesheetForm: React.FC<TimesheetFormProps> = ({
   defaultWeekStartDate,
   defaultShifts,
   onSubmit,
+  className,
 }) => {
   const initialValues = useCallback(
     () => buildInitialValues(defaultWeekStartDate, defaultShifts),
@@ -257,7 +259,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   });
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={className}>
       <WeekSelect
         value={values.weekStartDate}
         onChange={(value: Date) => {
