@@ -1,7 +1,7 @@
 import React from "react";
 import {
+  addDays,
   addWeek,
-  endOfWeek,
   longFormatDate,
   subtractWeek,
 } from "../helpers/date";
@@ -13,7 +13,7 @@ interface WeekSelectProps {
 
 const WeekSelect: React.FC<WeekSelectProps> = ({ value, onChange }) => {
   const weekStartDate = value;
-  const weekEndDate = endOfWeek(value);
+  const weekEndDate = addDays(weekStartDate, 6);
   const label = `${longFormatDate(weekStartDate)} to ${longFormatDate(
     weekEndDate
   )}`;
