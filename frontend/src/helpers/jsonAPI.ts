@@ -2,7 +2,7 @@ import {
   SettingResource,
   ShiftResource,
   TimesheetResource,
-} from "../services/resourceTypes";
+} from "../types";
 import { Setting, Shift, Timesheet } from "../types";
 
 export const parseSetting = (resource: SettingResource): Setting => {

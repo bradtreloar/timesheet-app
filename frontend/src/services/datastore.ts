@@ -4,7 +4,7 @@ import {
   SettingResource,
   ShiftResource,
   TimesheetResource,
-} from "./resourceTypes";
+} from "../types";
 import { HOST } from "../settings";
 import {
   parseTimesheet,
@@ -47,16 +47,27 @@ export const logout = async () => {
 };
 
 export const fetchCurrentUser = async (): Promise<User | null> => {
-  try {
-    const response = await client.get(`/api/user`);
-    if (response.status === 204) {
-      // No current user.
-      return null;
-    }
-    return response.data;
-  } catch (error) {
-    throw error;
+  const response: AxiosResponse<{
+    id: string;
+    name: string;
+    email: string;
+    is_admin: boolean;
+    default_shifts: string;
+  }> = await client.get(`/api/user`);
+  if (response.status === 204) {
+    // No current user.
+    return null;
   }
+  const userData = response.data;
+  const { id, name, email, is_admin, default_shifts } = userData;
+  const defaultShifts = JSON.parse(default_shifts);
+  return {
+    id,
+    name,
+    email,
+    isAdmin: is_admin,
+    defaultShifts,
+  };
 };
 
 export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
@@ -70,7 +81,7 @@ export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
   });
   const { data, included } = response.data;
   const timesheets = data.map((resource: TimesheetResource) => {
-    return parseTimesheet(user.id, resource);
+    return parseTimesheet(user.id as string, resource);
   });
   if (included !== undefined) {
     const allShifts = included.map((resource) => parseShift(resource));
