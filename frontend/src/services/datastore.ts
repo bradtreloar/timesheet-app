@@ -1,10 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { Setting, Shift, Timesheet, User } from "../types";
-import {
-  SettingResource,
-  ShiftResource,
-  TimesheetResource,
-} from "../types";
+import { Setting, Shift, Timesheet, User, UserData } from "../types";
+import { SettingResource, ShiftResource, TimesheetResource } from "../types";
 import { HOST } from "../settings";
 import {
   parseTimesheet,
@@ -13,6 +9,7 @@ import {
   makeShiftResource,
   parseSetting,
   makeSettingResource,
+  parseUser,
 } from "../helpers/jsonAPI";
 
 export const client = axios.create({
@@ -35,11 +32,11 @@ export const jsonAPIClient = axios.create({
 
 export const login = async (email: string, password: string): Promise<User> => {
   await client.get("/api/csrf-cookie");
-  const response: AxiosResponse<User> = await client.post("/api/login", {
+  const response: AxiosResponse<UserData> = await client.post("/api/login", {
     email,
     password,
   });
-  return response.data;
+  return parseUser(response.data);
 };
 
 export const logout = async () => {
@@ -47,27 +44,12 @@ export const logout = async () => {
 };
 
 export const fetchCurrentUser = async (): Promise<User | null> => {
-  const response: AxiosResponse<{
-    id: string;
-    name: string;
-    email: string;
-    is_admin: boolean;
-    default_shifts: string;
-  }> = await client.get(`/api/user`);
+  const response: AxiosResponse<UserData> = await client.get(`/api/user`);
   if (response.status === 204) {
     // No current user.
     return null;
   }
-  const userData = response.data;
-  const { id, name, email, is_admin, default_shifts } = userData;
-  const defaultShifts = JSON.parse(default_shifts);
-  return {
-    id,
-    name,
-    email,
-    isAdmin: is_admin,
-    defaultShifts,
-  };
+  return parseUser(response.data);
 };
 
 export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {

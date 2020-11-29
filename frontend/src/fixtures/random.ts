@@ -1,4 +1,11 @@
-import { Setting, Settings, Shift, ShiftTimes, Timesheet, User } from "../types";
+import {
+  Setting,
+  Settings,
+  Shift,
+  ShiftTimes,
+  Timesheet,
+  User,
+} from "../types";
 import randomstring from "randomstring";
 import { addDays, addHours, Time } from "../helpers/date";
 import faker from "faker";
@@ -17,6 +24,7 @@ export const randomUser = (userIsAdmin?: boolean): User => {
     }),
     email: faker.internet.email(),
     isAdmin: userIsAdmin === true,
+    defaultShifts: range(7).map((index) => randomShiftTimes()),
   };
 };
 

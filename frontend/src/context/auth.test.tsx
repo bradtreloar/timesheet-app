@@ -7,6 +7,7 @@ import { client } from "../services/datastore";
 import { randomPassword, randomUser } from "../fixtures/random";
 import IsAuthenticatedFixture from "../fixtures/IsAuthenticated";
 import MockAdapter from "axios-mock-adapter";
+import { makeUserData } from "../helpers/jsonAPI";
 
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);
@@ -92,7 +93,7 @@ describe("unauthenticated user", () => {
   });
 
   test("user logs in successfully", async () => {
-    mockClient.onPost("/api/login").reply(200, mockUser);
+    mockClient.onPost("/api/login").reply(200, makeUserData(mockUser));
 
     await act(async () => {
       render(
@@ -126,7 +127,7 @@ describe("unauthenticated user", () => {
   });
 
   test("has pre-existing session", async () => {
-    mockClient.onGet("/api/user").reply(200, mockUser);
+    mockClient.onGet("/api/user").reply(200, makeUserData(mockUser));
 
     await act(async () => {
       render(
@@ -143,12 +144,10 @@ describe("unauthenticated user", () => {
 describe("authenticated user", () => {
   beforeEach(() => {
     localStorage.setItem("user", JSON.stringify(mockUser));
-    mockClient.onGet("/api/user").reply(200, mockUser);
+    mockClient.onGet("/api/user").reply(200, makeUserData(mockUser));
   });
 
   test("user is authenticated", async () => {
-    mockClient.onGet("/api/user").reply(200, mockUser);
-
     await act(async () => {
       render(
         <AuthProvider>
@@ -161,7 +160,6 @@ describe("authenticated user", () => {
   });
 
   test("user logs out successfully", async () => {
-    mockClient.onGet("/api/user").reply(200, mockUser);
     mockClient.onPost("/api/logout").reply(200);
 
     await act(async () => {
@@ -179,7 +177,7 @@ describe("authenticated user", () => {
   });
 
   test("session has expired", async () => {
-    mockClient.onGet("/api/user").reply(204, mockUser);
+    mockClient.onGet("/api/user").reply(204, makeUserData(mockUser));
 
     await act(async () => {
       render(
@@ -196,12 +194,10 @@ describe("authenticated user", () => {
 describe("admin user", () => {
   beforeEach(() => {
     localStorage.setItem("user", JSON.stringify(mockAdminUser));
-    mockClient.onGet("/api/user").reply(200, mockAdminUser);
+    mockClient.onGet("/api/user").reply(200, makeUserData(mockAdminUser));
   });
 
   test("admin user is authenticated", async () => {
-    mockClient.onGet("/api/user").reply(200, mockAdminUser);
-
     const Fixture = () => {
       const { isAuthenticated, isAdmin } = useAuth();
 

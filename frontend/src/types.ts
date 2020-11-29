@@ -65,19 +65,12 @@ interface RelatedResourceArray<T> {
   data: RelatedResourceData<T>[];
 }
 
-export interface UserResource {
+export interface UserData {
   id?: string;
-  type: "users";
-  attributes: {
-    name: string;
-    email: string;
-    created?: string;
-    changed?: string;
-    default_shifts: string;
-  };
-  relationships: {
-    timesheets?: RelatedResourceArray<"users">;
-  };
+  name: string;
+  email: string;
+  is_admin: boolean;
+  default_shifts: string;
 }
 
 export interface TimesheetResource {
