@@ -45,8 +45,8 @@ export const parseTimesheet = (
   return {
     id: id,
     userID,
-    changed: changed,
-    created: created,
+    created: created as string,
+    changed: changed as string,
     shifts: [],
   };
 };
