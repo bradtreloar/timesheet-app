@@ -56,7 +56,6 @@ const timesheetsSlice = createSlice({
       })
       .addCase(fetchTimesheets.fulfilled, (state, action) => {
         state.status = "fulfilled";
-        // Replace the exam results in the store.
         state.timesheets = action.payload;
       })
       .addCase(fetchTimesheets.rejected, (state, action) => {
