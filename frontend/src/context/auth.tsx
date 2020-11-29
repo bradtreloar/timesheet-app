@@ -10,7 +10,7 @@ interface AuthContextState {
   isAdmin: boolean;
   user: User | null;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -58,6 +58,7 @@ const AuthProvider: React.FC = ({ children }) => {
       const user = await datastore.login(email, password);
       setUser(user);
       setError(null);
+      return true;
     } catch (error) {
       if (error.response) {
         const { status } = error.response;
@@ -75,6 +76,7 @@ const AuthProvider: React.FC = ({ children }) => {
       }
       setError(error);
     }
+    return false;
   };
 
   /**

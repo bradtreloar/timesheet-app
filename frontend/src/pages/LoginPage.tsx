@@ -15,20 +15,21 @@ const LoginPage = () => {
 
   const handleSubmitLogin = async (email: string, password: string) => {
     setLoginPending(true);
-    await login(email, password);
-    setLoginPending(false);
+    const success = await login(email, password);
+    if (!success) {
+      setLoginPending(false);
+    }
   };
 
   React.useEffect(() => {
-    // Wait until login is no longer pending before redirecting.
-    if (!loginPending && isAuthenticated) {
+    if (isAuthenticated) {
       if (location.state?.referer) {
         history.push(location.state.referer.pathname);
       } else {
         history.push("/");
       }
     }
-  }, [isAuthenticated, loginPending, history, location.state]);
+  }, [isAuthenticated, history, location.state]);
 
   return (
     <DefaultLayout>
