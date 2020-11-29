@@ -39,7 +39,7 @@ test("redirects to /login when not authenticated", async () => {
 test("renders protected route when authenticated", async () => {
   const mockUser = randomUser();
   mockClient.onGet("/api/user").reply(200, mockUser);
-  (window as any).localStorage.setItem("user", JSON.stringify(mockUser));
+  localStorage.setItem("user", JSON.stringify(mockUser));
   await act(async () => {
     render(<Fixture />);
   });

@@ -44,7 +44,7 @@ const AuthProvider: React.FC = ({ children }) => {
    * Persist the user's information.
    */
   React.useEffect(() => {
-    (window as any).localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
 
   /**
