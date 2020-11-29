@@ -15,7 +15,7 @@ test("form renders", () => {
   ).toEqual(testSettings.timesheetRecipients);
   expect(
     screen.getByLabelText(/start of week/i).getAttribute("data-value")
-  ).toEqual(testSettings.startOfWeek.toString());
+  ).toEqual(testSettings.firstDayOfWeek.toString());
 });
 
 describe("handles inputs", () => {
@@ -31,18 +31,18 @@ describe("handles inputs", () => {
   });
 
   test("start of week", () => {
-    const testStartOfWeek =
-      testSettings.startOfWeek > 0 ? testSettings.startOfWeek - 1 : 6;
+    const testfirstDayOfWeek =
+      testSettings.firstDayOfWeek > 0 ? testSettings.firstDayOfWeek - 1 : 6;
     render(<SettingsForm defaultValues={testSettings} onSubmit={noop} />);
-    const startOfWeekSelect = screen.getByLabelText(/start of week/i);
-    fireEvent.change(startOfWeekSelect, {
+    const firstDayOfWeekSelect = screen.getByLabelText(/start of week/i);
+    fireEvent.change(firstDayOfWeekSelect, {
       target: {
-        value: testStartOfWeek.toString(),
+        value: testfirstDayOfWeek.toString(),
       },
     });
     expect(
       screen.getByLabelText(/start of week/i).getAttribute("data-value")
-    ).toEqual(testStartOfWeek.toString());
+    ).toEqual(testfirstDayOfWeek.toString());
   });
 });
 

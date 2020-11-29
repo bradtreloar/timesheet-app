@@ -3,7 +3,7 @@ export type User = {
   name: string;
   email: string;
   isAdmin: boolean;
-  defaultShifts: ShiftTimes[] | null;
+  defaultShifts: ShiftTimes[];
 };
 
 export type Timesheet = {
@@ -49,7 +49,7 @@ export type Setting = {
 
 export type Settings = {
   timesheetRecipients: string;
-  startOfWeek: string;
+  firstDayOfWeek: string;
 };
 
 interface RelatedResourceData<T> {

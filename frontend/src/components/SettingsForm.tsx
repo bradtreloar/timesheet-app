@@ -11,12 +11,12 @@ interface SettingsFormProps {
 }
 
 const validate = (values: Settings) => {
-  const { startOfWeek, timesheetRecipients } = values;
+  const { firstDayOfWeek, timesheetRecipients } = values;
   const errors = {} as any;
 
-  const startOfWeekInt = parseInt(startOfWeek);
-  if (isNaN(startOfWeekInt) || startOfWeekInt < 0 || startOfWeekInt > 6) {
-    errors.startOfWeek = `Selection is not valid`;
+  const firstDayOfWeekInt = parseInt(firstDayOfWeek);
+  if (isNaN(firstDayOfWeekInt) || firstDayOfWeekInt < 0 || firstDayOfWeekInt > 6) {
+    errors.firstDayOfWeek = `Selection is not valid`;
   }
 
   if (
@@ -67,15 +67,15 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
         )}
       </Form.Group>
 
-      <Form.Group controlId="startOfWeek">
+      <Form.Group controlId="firstDayOfWeek">
         <Form.Label>Start of Week</Form.Label>
         <Form.Control
           as="select"
           custom
-          name="startOfWeek"
-          value={values.startOfWeek}
-          data-value={values.startOfWeek}
-          isInvalid={visibleErrors.startOfWeek}
+          name="firstDayOfWeek"
+          value={values.firstDayOfWeek}
+          data-value={values.firstDayOfWeek}
+          isInvalid={visibleErrors.firstDayOfWeek}
           onBlur={handleBlur}
           onChange={handleChange}
         >

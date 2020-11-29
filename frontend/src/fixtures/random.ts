@@ -127,7 +127,7 @@ export const randomSettings = (): Setting[] => [
   },
   {
     id: randomID(),
-    name: "startOfWeek",
+    name: "firstDayOfWeek",
     value: randomInt(0, 6).toString(),
     created: new Date().toISOString(),
     changed: new Date().toISOString(),
@@ -136,5 +136,5 @@ export const randomSettings = (): Setting[] => [
 
 export const randomSettingsObject = (): Settings => ({
   timesheetRecipients: faker.internet.email(),
-  startOfWeek: randomInt(0, 6).toString(),
+  firstDayOfWeek: randomInt(0, 6).toString(),
 });
