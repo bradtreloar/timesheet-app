@@ -126,15 +126,11 @@ export const fetchSettings = async (): Promise<Setting[]> => {
 export const updateSettings = async (
   settings: Setting[]
 ): Promise<Setting[]> => {
-  return await Promise.all(
-    settings.map(async (setting) => {
-      const response: AxiosResponse<{
-        data: SettingResource;
-      }> = await jsonAPIClient.patch(`settings/${setting.id}`, {
-        data: makeSettingResource(setting),
-      });
-      const { data } = response.data;
-      return parseSetting(data);
-    })
-  );
+  const response: AxiosResponse<{
+    data: SettingResource[];
+  }> = await jsonAPIClient.put(`settings`, {
+    data: settings.map((setting) => makeSettingResource(setting)),
+  });
+  const { data } = response.data;
+  return data.map((resource) => parseSetting(resource));
 };
