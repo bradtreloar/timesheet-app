@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, useEffect } from "react";
+import React, { useContext, createContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Message, MessageType } from "../types";
 
