@@ -111,3 +111,11 @@ export type SettingResource = {
     value: string;
   };
 };
+
+export type MessageType = "success" | "warning" | "danger"
+
+export type Message = {
+  id: string;
+  value: string;
+  type: MessageType;
+};
