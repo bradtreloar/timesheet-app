@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import LoginForm from "./LoginForm";
-import { randomPassword, randomUser } from "../fixtures/random";
+import { randomPassword, randomUser } from "../../fixtures/random";
 
 test("Form submission succeeds", (done) => {
   const mockEmail = randomUser().email;

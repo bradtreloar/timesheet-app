@@ -4,7 +4,7 @@ import PageTitle from "../components/PageTitle";
 import { useAuth } from "../context/auth";
 import DefaultLayout from "../layouts/DefaultLayout";
 import useFormController from "../hooks/useFormController";
-import PasswordForm from "../components/PasswordForm";
+import PasswordForm from "../components/forms/PasswordForm";
 import { useHistory } from "react-router";
 
 const PasswordPage = () => {

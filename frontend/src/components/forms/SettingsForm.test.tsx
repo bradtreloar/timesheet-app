@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { randomSettingsObject } from "../fixtures/random";
+import { randomSettingsObject } from "../../fixtures/random";
 import SettingsForm from "./SettingsForm";
 import faker from "faker";
 import { noop } from "lodash";
@@ -31,8 +31,8 @@ describe("handles inputs", () => {
   });
 
   test("start of week", () => {
-    const testfirstDayOfWeek =
-      testSettings.firstDayOfWeek > 0 ? testSettings.firstDayOfWeek - 1 : 6;
+    const firstDayOfWeek = parseInt(testSettings.firstDayOfWeek);
+    const testfirstDayOfWeek = firstDayOfWeek > 0 ? firstDayOfWeek - 1 : 6;
     render(<SettingsForm defaultValues={testSettings} onSubmit={noop} />);
     const firstDayOfWeekSelect = screen.getByLabelText(/start of week/i);
     fireEvent.change(firstDayOfWeekSelect, {

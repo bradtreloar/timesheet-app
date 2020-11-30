@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import PasswordResetForm from "./PasswordResetForm";
-import { randomUser } from "../fixtures/random";
+import { randomUser } from "../../fixtures/random";
 import { noop } from "lodash";
 
 const testEmail = randomUser().email;

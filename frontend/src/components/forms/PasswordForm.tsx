@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import classnames from "classnames";
 import passwordStrength from "owasp-password-strength-test";
 import Form from "react-bootstrap/Form";
-import useForm from "../hooks/useForm";
+import useForm from "../../hooks/useForm";
 import { Alert, Button } from "react-bootstrap";
 
 interface PasswordFormValues {
