@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { useAuth } from "../context/auth";
-import getMenu from "../data/menus";
+import { useAuth } from "context/auth";
+import getMenu from "data/menus";
 import classNames from "classnames";
 import "./Navbar.scss";
 

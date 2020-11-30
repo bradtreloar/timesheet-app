@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import PasswordForm from "./PasswordForm";
-import { randomPassword } from "../../fixtures/random";
+import { randomPassword } from "fixtures/random";
 import { noop } from "lodash";
 
 test("Form renders", () => {

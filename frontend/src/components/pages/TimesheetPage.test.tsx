@@ -1,22 +1,22 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "../context/auth";
+import { AuthProvider } from "context/auth";
 import { MemoryRouter, Route } from "react-router-dom";
 import {
   randomSettings,
   randomTimesheet,
   randomUser,
-} from "../fixtures/random";
+} from "fixtures/random";
 import TimesheetPage from "./TimesheetPage";
-import * as datastore from "../services/datastore";
+import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
-import store from "../store";
-import { setSettings } from "../store/settings";
-import { Shift } from "../types";
-import { getTimesFromShift } from "../services/adaptors";
+import store from "store";
+import { setSettings } from "store/settings";
+import { Shift } from "types";
+import { getTimesFromShift } from "services/adaptors";
 
-jest.mock("../services/datastore");
+jest.mock("services/datastore");
 const testUser = randomUser();
 const testTimesheet = randomTimesheet(testUser);
 const testShifts = testTimesheet.shifts as Shift[];

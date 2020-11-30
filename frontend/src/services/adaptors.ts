@@ -1,4 +1,4 @@
-import { getShiftDuration } from "../services/shift";
+import { getShiftDuration } from "services/shift";
 import {
   SettingResource,
   ShiftResource,
@@ -6,8 +6,8 @@ import {
   TimesheetResource,
   User,
   UserData,
-} from "../types";
-import { Setting, Shift, Timesheet } from "../types";
+} from "types";
+import { Setting, Shift, Timesheet } from "types";
 import { Time } from "./date";
 
 export const parseSetting = (resource: SettingResource): Setting => {

@@ -1,13 +1,13 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import TimesheetList from "./TimesheetList";
-import { randomTimesheets, randomUser } from "../fixtures/random";
-import { formattedDate } from "../services/date";
+import TimesheetTable from "./TimesheetTable";
+import { randomTimesheets, randomUser } from "fixtures/random";
+import { formattedDate } from "services/date";
 
 test("renders timesheet list", () => {
   const testUser = randomUser();
   const testTimesheets = randomTimesheets(testUser, 10);
-  render(<TimesheetList timesheets={testTimesheets} />);
+  render(<TimesheetTable timesheets={testTimesheets} />);
 
   testTimesheets.forEach((timesheet) => {
     const created = new Date(timesheet.created as string);

@@ -1,6 +1,6 @@
 import React, { useContext, createContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Message, MessageType } from "../types";
+import { Message, MessageType } from "types";
 
 interface MessagesContextValue {
   messages: Message[];

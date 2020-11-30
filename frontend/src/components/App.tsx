@@ -1,14 +1,14 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import GuestRoute from "./components/GuestRoute";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { useAuth } from "./context/auth";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import NotFoundPage from "./pages/NotFoundPage";
-import store from "./store";
-import { fetchTimesheets } from "./store/timesheets";
-import { User } from "./types";
+import GuestRoute from "components/routes/GuestRoute";
+import ProtectedRoute from "components/routes/ProtectedRoute";
+import { useAuth } from "context/auth";
+import HomePage from "components/pages/HomePage";
+import LoginPage from "components/pages/LoginPage";
+import NotFoundPage from "components/pages/NotFoundPage";
+import store from "store";
+import { fetchTimesheets } from "store/timesheets";
+import { User } from "types";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));

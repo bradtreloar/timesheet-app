@@ -2,16 +2,16 @@ import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { isInteger } from "lodash";
 import classnames from "classnames";
-import PageTitle from "../components/PageTitle";
-import TimesheetForm from "../components/forms/TimesheetForm";
-import { useAuth } from "../context/auth";
-import useFormController from "../hooks/useFormController";
-import { addDays } from "../services/date";
-import DefaultLayout from "../layouts/DefaultLayout";
-import store from "../store";
-import { selectSettings } from "../store/settings";
-import { addTimesheet, selectTimesheets } from "../store/timesheets";
-import { Shift, Timesheet } from "../types";
+import PageTitle from "components/PageTitle";
+import TimesheetForm from "components/forms/TimesheetForm";
+import { useAuth } from "context/auth";
+import useFormController from "hooks/useFormController";
+import { addDays } from "services/date";
+import DefaultLayout from "components/layouts/DefaultLayout";
+import store from "store";
+import { selectSettings } from "store/settings";
+import { addTimesheet, selectTimesheets } from "store/timesheets";
+import { Shift, Timesheet } from "types";
 import { useHistory } from "react-router";
 
 const TimesheetPage = () => {

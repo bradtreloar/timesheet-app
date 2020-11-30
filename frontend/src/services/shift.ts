@@ -1,5 +1,5 @@
-import { ShiftTimes } from "../types";
-import { Time } from "../services/date";
+import { ShiftTimes } from "types";
+import { Time } from "services/date";
 
 export const getShiftDuration = (shiftTimes: ShiftTimes) => {
   const startTime = new Time(

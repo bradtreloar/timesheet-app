@@ -1,9 +1,9 @@
 import { orderBy } from "lodash";
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { User } from "../types";
+import { User } from "types";
 
-interface UserIndexProps {
+interface UserTableProps {
   users: User[];
 }
 
@@ -13,7 +13,7 @@ interface TableHeadingProps {
   className?: string;
 }
 
-const UserIndex: React.FC<UserIndexProps> = ({ users }) => {
+const UserTable: React.FC<UserTableProps> = ({ users }) => {
   const [sortOrder, setSortOrder] = useState({
     column: "name" as keyof User,
     ascending: true,
@@ -88,4 +88,4 @@ const UserIndex: React.FC<UserIndexProps> = ({ users }) => {
   );
 };
 
-export default UserIndex;
+export default UserTable;

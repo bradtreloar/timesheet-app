@@ -1,6 +1,6 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ShiftTimes } from "../types";
+import { ShiftTimes } from "types";
 
 export const submitLoginForm = (email: string, password: string) => {
   userEvent.type(screen.getByLabelText(/Email Address/), email);

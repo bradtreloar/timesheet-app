@@ -3,10 +3,10 @@ import { render, act } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider, useAuth } from "./auth";
-import { client } from "../services/datastore";
-import { randomPassword, randomUser } from "../fixtures/random";
+import { client } from "services/datastore";
+import { randomPassword, randomUser } from "fixtures/random";
 import MockAdapter from "axios-mock-adapter";
-import { makeUserData } from "../services/adaptors";
+import { makeUserData } from "services/adaptors";
 
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);

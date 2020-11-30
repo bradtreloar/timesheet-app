@@ -6,14 +6,14 @@ import {
   selectTimesheets,
   clearTimesheets,
 } from "./timesheets";
-import * as datastore from "../services/datastore";
+import * as datastore from "services/datastore";
 import {
   randomInt,
   randomTimesheet,
   randomTimesheets,
   randomUser,
-} from "../fixtures/random";
-jest.mock("../services/datastore");
+} from "fixtures/random";
+jest.mock("services/datastore");
 
 beforeEach(() => {
   jest.useFakeTimers();

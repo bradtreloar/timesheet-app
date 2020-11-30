@@ -1,7 +1,7 @@
 import React from "react";
 import * as EmailValidator from "email-validator";
 import Form from "react-bootstrap/Form";
-import useForm from "../hooks/useForm";
+import useForm from "hooks/useForm";
 import { Alert, Button } from "react-bootstrap";
 
 interface UserFormValues {

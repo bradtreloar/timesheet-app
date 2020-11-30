@@ -1,13 +1,13 @@
 import store from ".";
-import * as datastore from "../services/datastore";
-import { randomSettings } from "../fixtures/random";
+import * as datastore from "services/datastore";
+import { randomSettings } from "fixtures/random";
 import {
   clearSettings,
   fetchSettings,
   selectSettings,
   updateSettings,
 } from "./settings";
-jest.mock("../services/datastore");
+jest.mock("services/datastore");
 
 const testSettings = randomSettings();
 

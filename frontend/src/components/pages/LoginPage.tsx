@@ -1,11 +1,11 @@
 import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import LoginForm from "../components/forms/LoginForm";
-import PageTitle from "../components/PageTitle";
-import { useAuth } from "../context/auth";
-import DefaultLayout from "../layouts/DefaultLayout";
-import useFormController from "../hooks/useFormController";
+import LoginForm from "components/forms/LoginForm";
+import PageTitle from "components/PageTitle";
+import { useAuth } from "context/auth";
+import DefaultLayout from "components/layouts/DefaultLayout";
+import useFormController from "hooks/useFormController";
 
 const LoginPage = () => {
   const { login } = useAuth();

@@ -5,9 +5,9 @@ import {
   ShiftTimes,
   Timesheet,
   User,
-} from "../types";
+} from "types";
 import randomstring from "randomstring";
-import { addDays, addHours, Time } from "../services/date";
+import { addDays, addHours, Time } from "services/date";
 import faker from "faker";
 import { random as randomNumber } from "lodash";
 

@@ -1,12 +1,12 @@
 import React from "react";
-import { formattedDate } from "../services/date";
-import { Timesheet } from "../types";
+import { formattedDate } from "services/date";
+import { Timesheet } from "types";
 
-interface TimesheetListProps {
+interface TimesheetTableProps {
   timesheets: Timesheet[];
 }
 
-const TimesheetList: React.FC<TimesheetListProps> = ({ timesheets }) => {
+const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
   const rows = timesheets.map((timesheet, index) => {
     const created = new Date(timesheet.created as string);
     return (
@@ -28,4 +28,4 @@ const TimesheetList: React.FC<TimesheetListProps> = ({ timesheets }) => {
   );
 };
 
-export default TimesheetList;
+export default TimesheetTable;

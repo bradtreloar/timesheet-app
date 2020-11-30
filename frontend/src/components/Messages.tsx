@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert } from "react-bootstrap";
-import { useMessages } from "../context/messages";
+import { useMessages } from "context/messages";
 
 const Messages: React.FC = () => {
   const { messages, dismissMessage } = useMessages();

@@ -1,12 +1,12 @@
 import React from "react";
 import { MemoryRouter, Route } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
-import { AuthProvider } from "../context/auth";
+import { AuthProvider } from "context/auth";
 import GuestRoute from "./GuestRoute";
-import { randomUser } from "../fixtures/random";
-import { client } from "../services/datastore";
+import { randomUser } from "fixtures/random";
+import { client } from "services/datastore";
 import MockAdapter from "axios-mock-adapter";
-import { makeUserData } from "../services/adaptors";
+import { makeUserData } from "services/adaptors";
 
 // Mock the HTTP client used by the datastore.
 const mockClient = new MockAdapter(client);

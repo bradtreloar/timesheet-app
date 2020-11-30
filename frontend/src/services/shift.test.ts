@@ -1,4 +1,4 @@
-import { randomShiftTimes } from "../fixtures/random";
+import { randomShiftTimes } from "fixtures/random";
 import { getShiftDuration } from "./shift";
 
 test("getShiftDuration", () => {

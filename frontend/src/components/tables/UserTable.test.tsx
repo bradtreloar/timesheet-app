@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { orderBy, random, range } from "lodash";
-import { randomUser } from "../fixtures/random";
-import UserIndex from "./UserIndex";
+import { randomUser } from "fixtures/random";
+import UserTable from "./UserTable";
 import { MemoryRouter } from "react-router";
 import userEvent from "@testing-library/user-event";
 
@@ -16,7 +16,7 @@ const Fixture: React.FC = ({ children }) => (
 test("renders rows", () => {
   render(
     <Fixture>
-      <UserIndex users={testUsers} />
+      <UserTable users={testUsers} />
     </Fixture>
   );
 
@@ -33,7 +33,7 @@ test("renders rows", () => {
 test("handles changes in sort order", () => {
   render(
     <Fixture>
-      <UserIndex users={testUsers} />
+      <UserTable users={testUsers} />
     </Fixture>
   );
 

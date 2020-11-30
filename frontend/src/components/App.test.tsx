@@ -2,13 +2,13 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import App from "./App";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "./context/auth";
+import { AuthProvider } from "../context/auth";
 import { MemoryRouter } from "react-router-dom";
-import { randomPassword, randomUser } from "./fixtures/random";
-import * as datastore from "./services/datastore";
+import { randomPassword, randomUser } from "../fixtures/random";
+import * as datastore from "../services/datastore";
 import { Provider } from "react-redux";
-import store from "./store";
-jest.mock("./services/datastore");
+import store from "../store";
+jest.mock("services/datastore");
 
 const mockUser = randomUser();
 const mockPassword = randomPassword();

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-import { Setting, Shift, Timesheet, User, UserData } from "../types";
-import { SettingResource, ShiftResource, TimesheetResource } from "../types";
-import { HOST } from "../settings";
+import { Setting, Shift, Timesheet, User, UserData } from "types";
+import { SettingResource, ShiftResource, TimesheetResource } from "types";
+import { HOST } from "settings";
 import {
   parseTimesheet,
   makeTimesheetResource,

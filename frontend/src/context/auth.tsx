@@ -1,6 +1,6 @@
 import React, { useContext, createContext } from "react";
-import { User } from "../types";
-import * as datastore from "../services/datastore";
+import { User } from "types";
+import * as datastore from "services/datastore";
 import { isEqual } from "lodash";
 
 type Status = "idle" | "pending" | "fulfilled" | "rejected";

@@ -1,6 +1,6 @@
-import { Timesheet, User } from "../types";
+import { Timesheet, User } from "types";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as datastore from "../services/datastore";
+import * as datastore from "services/datastore";
 import { RootState } from ".";
 
 export interface TimesheetsState {

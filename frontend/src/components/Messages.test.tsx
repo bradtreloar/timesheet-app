@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MessagesProvider, useMessages } from "../context/messages";
+import { MessagesProvider, useMessages } from "context/messages";
 import randomstring from "randomstring";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

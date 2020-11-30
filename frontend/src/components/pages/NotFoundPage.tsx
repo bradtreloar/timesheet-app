@@ -1,7 +1,7 @@
 import * as React from "react";
-import PageTitle from "../components/PageTitle";
+import PageTitle from "components/PageTitle";
 
-import DefaultLayout from "../layouts/DefaultLayout";
+import DefaultLayout from "components/layouts/DefaultLayout";
 
 const NotFoundPage = () => (
   <DefaultLayout>

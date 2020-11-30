@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
-import { addDays, longFormatDate, Time } from "../../services/date";
-import { Shift, ShiftTimes } from "../../types";
-import WeekSelect from "../WeekSelect";
 import { range } from "lodash";
-import useForm, { FormErrors } from "../../hooks/useForm";
-import TimeInput from "../TimeInput";
+import { addDays, longFormatDate, Time } from "services/date";
+import { Shift, ShiftTimes } from "types";
+import useForm, { FormErrors } from "hooks/useForm";
+import WeekSelect from "components/inputs/WeekSelect";
+import TimeInput from "components/inputs/TimeInput";
 
 export const shiftTimesNames = [
   "startTime",

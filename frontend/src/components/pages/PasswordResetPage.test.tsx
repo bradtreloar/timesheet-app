@@ -1,13 +1,13 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "../context/auth";
+import { AuthProvider } from "context/auth";
 import { MemoryRouter } from "react-router-dom";
-import { randomUser } from "../fixtures/random";
+import { randomUser } from "fixtures/random";
 import PasswordResetPage from "./PasswordResetPage";
-import * as datastore from "../services/datastore";
+import * as datastore from "services/datastore";
 
-jest.mock("../services/datastore");
+jest.mock("services/datastore");
 jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
 const testUser = randomUser();
 

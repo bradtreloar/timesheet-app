@@ -1,11 +1,11 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
-import { AuthProvider } from "../context/auth";
+import { AuthProvider } from "context/auth";
 import NotFoundPage from "./NotFoundPage";
-import * as datastore from "../services/datastore";
+import * as datastore from "services/datastore";
 import { MemoryRouter } from "react-router";
 
-jest.mock("../services/datastore");
+jest.mock("services/datastore");
 jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
 
 const Fixture: React.FC = () => {
