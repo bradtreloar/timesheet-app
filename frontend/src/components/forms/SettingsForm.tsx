@@ -8,6 +8,7 @@ import useForm from "hooks/useForm";
 interface SettingsFormProps {
   defaultValues: Settings;
   onSubmit: (values: Settings) => void;
+  className?: string;
 }
 
 const validate = (values: Settings) => {
@@ -37,6 +38,7 @@ const validate = (values: Settings) => {
 const SettingsForm: React.FC<SettingsFormProps> = ({
   defaultValues,
   onSubmit,
+  className,
 }) => {
   const {
     values,
@@ -48,7 +50,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
   } = useForm<Settings>(defaultValues, onSubmit, validate);
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className={className}>
       <Form.Group controlId="timesheetRecipients">
         <Form.Label>Timesheet Recipients</Form.Label>
         <Form.Control
