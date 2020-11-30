@@ -112,7 +112,7 @@ export type SettingResource = {
   };
 };
 
-export type MessageType = "success" | "warning" | "danger"
+export type MessageType = "success" | "warning" | "danger";
 
 export type Message = {
   id: string;

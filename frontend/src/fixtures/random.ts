@@ -1,11 +1,4 @@
-import {
-  Setting,
-  Settings,
-  Shift,
-  ShiftTimes,
-  Timesheet,
-  User,
-} from "types";
+import { Setting, Settings, Shift, ShiftTimes, Timesheet, User } from "types";
 import randomstring from "randomstring";
 import { addDays, addHours, Time } from "services/date";
 import faker from "faker";

@@ -15,7 +15,7 @@ const Fixture: React.FC = () => {
     if (!hasMessage) {
       setMessage("success", testMessage);
     }
-    setHasMessage(true)
+    setHasMessage(true);
   }, [hasMessage, setMessage]);
 
   return (

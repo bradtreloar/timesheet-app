@@ -15,7 +15,7 @@ const Fixture: React.FC = () => {
     if (!hasMessage) {
       setMessage("success", testMessage);
     }
-    setHasMessage(true)
+    setHasMessage(true);
   }, [hasMessage, setMessage]);
 
   return (
@@ -33,7 +33,6 @@ const Fixture: React.FC = () => {
 };
 
 test("set message", () => {
-
   render(
     <MessagesProvider>
       <Fixture />
