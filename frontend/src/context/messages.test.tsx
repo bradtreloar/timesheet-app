@@ -1,19 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { MessagesProvider, useMessages } from "./messages";
 import randomstring from "randomstring";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 
 const testMessage = randomstring.generate();
 
 const Fixture: React.FC = () => {
   const { messages, setMessage, dismissMessages } = useMessages();
+  const [hasMessage, setHasMessage] = useState(false);
 
   useEffect(() => {
-    setMessage("success", testMessage);
-  }, []);
+    if (!hasMessage) {
+      setMessage("success", testMessage);
+    }
+    setHasMessage(true)
+  }, [hasMessage, setMessage]);
 
   return (
     <>

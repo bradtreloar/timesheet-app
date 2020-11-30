@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MessagesProvider, useMessages } from "../context/messages";
 import randomstring from "randomstring";
 import { render, screen } from "@testing-library/react";
@@ -8,11 +8,15 @@ import Messages from "./Messages";
 const testMessage = randomstring.generate();
 
 const Fixture: React.FC = () => {
-  const { setMessage, dismissMessages } = useMessages();
+  const { setMessage } = useMessages();
+  const [hasMessage, setHasMessage] = useState(false);
 
   useEffect(() => {
-    setMessage("success", testMessage);
-  }, []);
+    if (!hasMessage) {
+      setMessage("success", testMessage);
+    }
+    setHasMessage(true)
+  }, [hasMessage, setMessage]);
 
   return (
     <>
