@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useAuth } from "context/auth";
 import getMenu from "data/menus";
@@ -49,7 +49,6 @@ const NavbarWrapper: React.FC<NavbarWrapperProps> = ({ className }) => {
 
 const UserMenu: React.FC = () => {
   const { user, logout } = useAuth();
-  const history = useHistory();
 
   if (user) {
     return (
