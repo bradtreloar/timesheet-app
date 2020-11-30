@@ -51,15 +51,10 @@ const UserMenu: React.FC = () => {
   const { user, logout } = useAuth();
   const history = useHistory();
 
-  const handleLogout = async () => {
-    await logout();
-    history.push("/");
-  };
-
   if (user) {
     return (
       <NavDropdown id="user-menu" title={user.name}>
-        <NavDropdown.Item data-testid="logout-button" onClick={handleLogout}>
+        <NavDropdown.Item data-testid="logout-button" onClick={logout}>
           Log out
         </NavDropdown.Item>
       </NavDropdown>
