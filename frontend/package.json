@@ -55,7 +55,12 @@
     "lint": "eslint ./src/**.ts* ./src/**/*.ts*"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      }
+    }
   },
   "browserslist": {
     "production": [
