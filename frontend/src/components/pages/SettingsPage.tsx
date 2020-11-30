@@ -12,11 +12,7 @@ import { Alert } from "react-bootstrap";
 
 const SettingsPage = () => {
   const { settings, error: settingsStoreError } = useSelector(selectSettings);
-
-  useEffect(() => {
-    // console.warn(settings);
-  }, [settings]);
-
+  
   const settingsObject = useMemo(() => {
     return settings.reduce((settings, { name, value }) => {
       settings[name as keyof Settings] = value;
