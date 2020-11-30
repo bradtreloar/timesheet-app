@@ -12,7 +12,7 @@ import { Alert } from "react-bootstrap";
 
 const SettingsPage = () => {
   const { settings, error: settingsStoreError } = useSelector(selectSettings);
-  
+
   const settingsObject = useMemo(() => {
     return settings.reduce((settings, { name, value }) => {
       settings[name as keyof Settings] = value;
@@ -35,7 +35,9 @@ const SettingsPage = () => {
     <DefaultLayout>
       <PageTitle>Settings</PageTitle>
       <div className="container">
-        {settingsStoreError && <Alert variant="danger">{settingsStoreError}</Alert>}
+        {settingsStoreError && (
+          <Alert variant="danger">{settingsStoreError}</Alert>
+        )}
         {formError && <Alert variant="danger">{formError}</Alert>}
         <SettingsForm
           className={classnames(formPending && "is-pending")}
