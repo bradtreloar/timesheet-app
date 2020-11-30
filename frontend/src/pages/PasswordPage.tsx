@@ -5,13 +5,18 @@ import { useAuth } from "../context/auth";
 import DefaultLayout from "../layouts/DefaultLayout";
 import useFormController from "../hooks/useFormController";
 import PasswordForm from "../components/PasswordForm";
+import { useHistory } from "react-router";
 
 const PasswordPage = () => {
   const { setPassword } = useAuth();
+  const history = useHistory();
 
   const { formError, formPending, handleSubmit } = useFormController<{
     password: string;
-  }>(({ password }) => setPassword(password));
+  }>(async ({ password }) => {
+    await setPassword(password);
+    history.push(`/account`);
+  });
 
   return (
     <DefaultLayout>

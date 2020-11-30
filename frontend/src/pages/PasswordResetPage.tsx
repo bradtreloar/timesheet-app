@@ -5,13 +5,18 @@ import { useAuth } from "../context/auth";
 import DefaultLayout from "../layouts/DefaultLayout";
 import useFormController from "../hooks/useFormController";
 import PasswordResetForm from "../components/PasswordResetForm";
+import { useHistory } from "react-router";
 
 const PasswordResetPage = () => {
   const { resetPassword } = useAuth();
+  const history = useHistory();
 
   const { formError, formPending, handleSubmit } = useFormController<{
     email: string;
-  }>(({ email }) => resetPassword(email));
+  }>(async ({ email }) => {
+    await resetPassword(email);
+    history.push("/");
+  });
 
   return (
     <DefaultLayout>

@@ -12,9 +12,11 @@ import store from "../store";
 import { selectSettings } from "../store/settings";
 import { addTimesheet, selectTimesheets } from "../store/timesheets";
 import { Shift, Timesheet } from "../types";
+import { useHistory } from "react-router";
 
 const TimesheetPage = () => {
   const { user } = useAuth();
+  const history = useHistory();
   const { settings } = useSelector(selectSettings);
   const { error } = useSelector(selectTimesheets);
   const { formError, formPending, handleSubmit } = useFormController<{
@@ -22,10 +24,13 @@ const TimesheetPage = () => {
   }>(async ({ shifts }) => {
     if (user?.id) {
       const timesheet: Timesheet = {
-        userID: user.id as string,
+        userID: user.id,
         shifts: shifts,
       };
       await store.dispatch(addTimesheet(timesheet));
+      history.push("/");
+    } else {
+      throw new Error(`User is not valid`);
     }
   });
 
