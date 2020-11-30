@@ -60,7 +60,7 @@ test("renders timesheet page", async () => {
 });
 
 test("handles TimesheetForm submission", async () => {
-  // jest.spyOn(datastore, "createTimesheet").mockResolvedValue(testTimesheet);
+  jest.spyOn(datastore, "createTimesheet").mockResolvedValue(testTimesheet);
 
   await act(async () => {
     render(<Fixture />);
