@@ -109,7 +109,7 @@ export const randomTimesheets = (user: User, count: number) =>
   range(count).map((index) => randomTimesheet(user));
 
 export const randomSettings = (
-  settings: {
+  settings?: {
     [P in keyof Settings]?: string;
   }
 ): Setting[] => [
