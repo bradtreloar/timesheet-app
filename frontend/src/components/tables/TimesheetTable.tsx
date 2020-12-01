@@ -1,5 +1,5 @@
 import React from "react";
-import { formattedDate } from "services/date";
+import { formattedDate, getShiftHours, getTimesheetTotalHours } from "services/date";
 import { Timesheet } from "types";
 
 interface TimesheetTableProps {
@@ -8,10 +8,13 @@ interface TimesheetTableProps {
 
 const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
   const rows = timesheets.map((timesheet, index) => {
-    const created = new Date(timesheet.created as string);
+    const created = formattedDate(new Date(timesheet.created as string));
+    const totalHours = getTimesheetTotalHours(timesheet);
+
     return (
       <tr key={index}>
-        <td>{formattedDate(created)}</td>
+        <td>{created}</td>
+        <td>{totalHours}</td>
       </tr>
     );
   });
@@ -20,7 +23,8 @@ const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
     <table className="table">
       <thead>
         <tr>
-          <th>Date</th>
+          <th>Date submitted</th>
+          <th>Total hours</th>
         </tr>
       </thead>
       <tbody>{rows}</tbody>

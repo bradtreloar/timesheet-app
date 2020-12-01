@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import TimesheetTable from "./TimesheetTable";
 import { randomTimesheets, randomUser } from "fixtures/random";
-import { formattedDate } from "services/date";
+import { formattedDate, getTimesheetTotalHours } from "services/date";
 
 test("renders timesheet list", () => {
   const testUser = randomUser();
@@ -11,7 +11,7 @@ test("renders timesheet list", () => {
 
   testTimesheets.forEach((timesheet) => {
     const created = new Date(timesheet.created as string);
-    const date = formattedDate(created);
-    screen.getAllByText(date);
+    screen.getAllByText(formattedDate(created));
+    screen.getAllByText(getTimesheetTotalHours(timesheet));
   });
 });
