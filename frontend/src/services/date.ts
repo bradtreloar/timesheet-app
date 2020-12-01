@@ -1,3 +1,5 @@
+import { Shift, ShiftTimes, Timesheet } from "types";
+
 /**
  * Add week to a Date.
  *
@@ -324,3 +326,63 @@ export class InvalidTimeException extends Error {
     Object.setPrototypeOf(this, InvalidTimeException.prototype);
   }
 }
+
+/**
+ * Calculates a shift duration in hours from a set of times.
+ *
+ * @param shiftTimes
+ */
+export const getShiftHoursFromTimes = (shiftTimes: ShiftTimes) => {
+  const startTime = new Time(
+    shiftTimes.startTime.hours,
+    shiftTimes.startTime.minutes
+  );
+  const endTime = new Time(
+    shiftTimes.endTime.hours,
+    shiftTimes.endTime.minutes
+  );
+  const breakDuration = new Time(
+    shiftTimes.breakDuration.hours,
+    shiftTimes.breakDuration.minutes
+  );
+
+  if (startTime.isNull() || endTime.isNull() || breakDuration.isNull()) {
+    return null;
+  }
+
+  const shiftMinutes =
+    endTime.toMinutes() - startTime.toMinutes() - breakDuration.toMinutes();
+  if (shiftMinutes <= 0) {
+    return 0;
+  }
+
+  return Time.fromMinutes(shiftMinutes).toHours();
+};
+
+/**
+ * Calculates a shift duration in hours from a set of dates.
+ *
+ * @param shiftTimes
+ */
+export const getShiftHours = ({ start, end, breakDuration }: Shift) => {
+  // Get the difference between start and end times, minus break duration.
+  const shiftMinutes =
+    (new Date(end).getTime() - new Date(start).getTime()) / 60000 -
+    breakDuration;
+  return shiftMinutes / 60;
+};
+
+/**
+ * Calculates a shift duration in hours from a set of dates.
+ *
+ * @param shiftTimes
+ */
+export const getTimesheetTotalHours = ({ shifts }: Timesheet) => {
+  return shifts
+    ? shifts
+        .reduce((totalHours, shift) => {
+          return totalHours + getShiftHours(shift);
+        }, 0)
+        .toFixed(2)
+    : "0.00";
+};

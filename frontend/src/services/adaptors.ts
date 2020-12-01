@@ -1,4 +1,4 @@
-import { getShiftDuration } from "services/shift";
+import { getShiftHoursFromTimes } from "services/date";
 import {
   SettingResource,
   ShiftResource,
@@ -168,7 +168,7 @@ export const getShiftFromTimes = (
   }
 
   const { startTime, endTime, breakDuration } = shiftTimes;
-  const shiftDuration = getShiftDuration(shiftTimes);
+  const shiftDuration = getShiftHoursFromTimes(shiftTimes);
 
   if (shiftDuration === null || shiftDuration <= 0) {
     throw new Error(`Invalid shift times.`);
