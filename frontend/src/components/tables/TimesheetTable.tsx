@@ -1,5 +1,10 @@
 import React from "react";
-import { formattedDate, getShiftHours, getTimesheetTotalHours } from "services/date";
+import { Link } from "react-router-dom";
+import {
+  formattedDate,
+  getShiftHours,
+  getTimesheetTotalHours,
+} from "services/date";
 import { Timesheet } from "types";
 
 interface TimesheetTableProps {
@@ -10,10 +15,13 @@ const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
   const rows = timesheets.map((timesheet, index) => {
     const created = formattedDate(new Date(timesheet.created as string));
     const totalHours = getTimesheetTotalHours(timesheet);
+    const pathname = `/timesheet/${timesheet.id}`;
 
     return (
       <tr key={index}>
-        <td>{created}</td>
+        <td>
+          <Link to={pathname}>{created}</Link>
+        </td>
         <td>{totalHours}</td>
       </tr>
     );
