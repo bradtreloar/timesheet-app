@@ -16,78 +16,55 @@ test("Form renders", () => {
   render(<AccountForm defaultValues={testDefaultValues} onSubmit={noop} />);
 });
 
-describe("New User", () => {
-  test("Form submission succeeds", (done) => {
-    render(
-      <AccountForm
-        defaultValues={null}
-        onSubmit={({ name, email }) => {
-          expect(name).toEqual(testName);
-          expect(email).toEqual(testEmail);
-          done();
-        }}
-      />
-    );
+test("Form submission succeeds", (done) => {
+  render(
+    <AccountForm
+      defaultValues={testDefaultValues}
+      onSubmit={({ name, email }) => {
+        expect(name).toEqual(testName);
+        expect(email).toEqual(testEmail);
+        done();
+      }}
+    />
+  );
 
-    userEvent.clear(screen.getByLabelText(/name/i));
-    userEvent.type(screen.getByLabelText(/name/i), testName);
-    userEvent.clear(screen.getByLabelText(/email address/i));
-    userEvent.type(screen.getByLabelText(/email address/i), testEmail);
-    userEvent.click(screen.getByText(/create/i));
-  });
+  userEvent.clear(screen.getByLabelText(/name/i));
+  userEvent.type(screen.getByLabelText(/name/i), testName);
+  userEvent.clear(screen.getByLabelText(/email address/i));
+  userEvent.type(screen.getByLabelText(/email address/i), testEmail);
+  userEvent.click(screen.getByText(/save/i));
 });
 
-describe("Existing User", () => {
-  test("Form submission succeeds", (done) => {
-    render(
-      <AccountForm
-        defaultValues={testDefaultValues}
-        onSubmit={({ name, email }) => {
-          expect(name).toEqual(testName);
-          expect(email).toEqual(testEmail);
-          done();
-        }}
-      />
-    );
+test("Empty form submission fails", () => {
+  render(
+    <AccountForm
+      defaultValues={testDefaultValues}
+      onSubmit={() => {
+        throw new Error("onSubmit should not be called.");
+      }}
+    />
+  );
 
-    userEvent.clear(screen.getByLabelText(/name/i));
-    userEvent.type(screen.getByLabelText(/name/i), testName);
-    userEvent.clear(screen.getByLabelText(/email address/i));
-    userEvent.type(screen.getByLabelText(/email address/i), testEmail);
-    userEvent.click(screen.getByText(/save/i));
-  });
+  userEvent.clear(screen.getByLabelText(/email address/i));
+  userEvent.clear(screen.getByLabelText(/name/i));
+  userEvent.click(screen.getByText(/save/i));
+  expect(screen.getAllByText(/required/i)).toHaveLength(2);
+});
 
-  test("Empty form submission fails", () => {
-    render(
-      <AccountForm
-        defaultValues={testDefaultValues}
-        onSubmit={() => {
-          throw new Error("onSubmit should not be called.");
-        }}
-      />
-    );
+test("Reject invalid form input", () => {
+  const invalidEmail = testEmail.replace("@", "_");
 
-    userEvent.clear(screen.getByLabelText(/email address/i));
-    userEvent.clear(screen.getByLabelText(/name/i));
-    userEvent.click(screen.getByText(/save/i));
-    expect(screen.getAllByText(/required/i)).toHaveLength(2);
-  });
+  render(
+    <AccountForm
+      defaultValues={testDefaultValues}
+      onSubmit={() => {
+        throw new Error("onSubmit should not be called.");
+      }}
+    />
+  );
 
-  test("Reject invalid form input", () => {
-    const invalidEmail = testEmail.replace("@", "_");
-
-    render(
-      <AccountForm
-        defaultValues={testDefaultValues}
-        onSubmit={() => {
-          throw new Error("onSubmit should not be called.");
-        }}
-      />
-    );
-
-    userEvent.clear(screen.getByLabelText(/email address/i));
-    userEvent.type(screen.getByLabelText(/email address/i), invalidEmail);
-    userEvent.click(screen.getByText(/save/i));
-    screen.getByText(/must be a valid email address/i);
-  });
+  userEvent.clear(screen.getByLabelText(/email address/i));
+  userEvent.type(screen.getByLabelText(/email address/i), invalidEmail);
+  userEvent.click(screen.getByText(/save/i));
+  screen.getByText(/must be a valid email address/i);
 });

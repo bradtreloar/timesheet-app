@@ -31,7 +31,7 @@ interface AccountFormProps {
   defaultValues: {
     name: string;
     email: string;
-  } | null;
+  };
   onSubmit: (values: AccountFormValues) => void;
   className?: string;
 }
@@ -41,9 +41,6 @@ const AccountForm: React.FC<AccountFormProps> = ({
   onSubmit,
   className,
 }) => {
-  const isNewUser = defaultValues === null;
-  const initialValues = defaultValues ? defaultValues : { name: "", email: "" };
-
   const {
     values,
     errors,
@@ -51,7 +48,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
     handleSubmit,
     handleChange,
     handleBlur,
-  } = useForm(initialValues, onSubmit, validate);
+  } = useForm(defaultValues, onSubmit, validate);
 
   return (
     <Form
@@ -88,7 +85,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
         )}
       </Form.Group>
       <Button variant="primary" type="submit">
-        {isNewUser ? `Create user` : `Save`}
+        Save
       </Button>
     </Form>
   );
