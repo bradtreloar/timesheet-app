@@ -28,10 +28,7 @@ const validate = (values: AccountFormValues) => {
 };
 
 interface AccountFormProps {
-  defaultValues: {
-    name: string;
-    email: string;
-  };
+  defaultValues: AccountFormValues;
   onSubmit: (values: AccountFormValues) => void;
   className?: string;
 }
