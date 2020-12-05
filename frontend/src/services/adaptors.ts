@@ -163,6 +163,24 @@ export const makeTimesheetResource = (
   return resource;
 };
 
+export const makeUserResource = (user: User): UserResource => {
+  const { id, name, email, isAdmin, defaultShifts } = user;
+  const resource: UserResource = {
+    type: "users",
+    attributes: {
+      name,
+      email,
+      is_admin: isAdmin,
+      default_shifts: JSON.stringify(defaultShifts),
+    },
+    relationships: {},
+  };
+  if (id) {
+    resource.id = id;
+  }
+  return resource;
+};
+
 export const makeUserData = (user: User): UserData => {
   const { id, name, email, isAdmin, defaultShifts } = user;
   return {

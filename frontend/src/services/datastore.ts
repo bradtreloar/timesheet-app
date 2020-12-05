@@ -11,6 +11,7 @@ import {
   makeSettingResource,
   parseUser,
   parseUserFromResource,
+  makeUserResource,
 } from "./adaptors";
 
 export const client = axios.create({
@@ -73,6 +74,19 @@ export const fetchUsers = async (): Promise<User[]> => {
   return data.map((resource: UserResource) => {
     return parseUserFromResource(resource);
   });
+};
+
+export const createUser = async (
+  user: User
+): Promise<User> => {
+  const userResource: UserResource = makeUserResource(user);
+  const response: AxiosResponse<{
+    data: UserResource;
+  }> = await jsonAPIClient.post(`/users`, {
+    data: userResource,
+  });
+  const { data } = response.data;
+  return parseUserFromResource(data);
 };
 
 export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
