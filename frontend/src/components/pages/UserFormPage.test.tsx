@@ -13,13 +13,9 @@ import { Provider } from "react-redux";
 import { MemoryRouter, Route } from "react-router";
 import faker from "faker";
 import * as datastore from "services/datastore";
-import { formattedDate, getTimesheetTotalHours } from "services/date";
 import store from "store";
-import { setSettings } from "store/settings";
-import { setTimesheets } from "store/timesheets";
 import { clearUsers, setUsers } from "store/users";
 import UserFormPage from "./UserFormPage";
-import UserIndexPage from "./UserIndexPage";
 
 jest.mock("services/datastore");
 const testUser = randomUser();
