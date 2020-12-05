@@ -87,6 +87,17 @@ export const createUser = async (user: User): Promise<User> => {
   return parseUserFromResource(data);
 };
 
+export const updateUser = async (user: User): Promise<User> => {
+  const userResource: UserResource = makeUserResource(user);
+  const response: AxiosResponse<{
+    data: UserResource;
+  }> = await jsonAPIClient.put(`/users/${user.id}`, {
+    data: userResource,
+  });
+  const { data } = response.data;
+  return parseUserFromResource(data);
+};
+
 export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
   const response: AxiosResponse<{
     data: TimesheetResource[];

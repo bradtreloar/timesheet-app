@@ -17,6 +17,10 @@ const addUser = createAsyncThunk("users/add", async (user: User) => {
   return await datastore.createUser(user);
 });
 
+const updateUser = createAsyncThunk("users/update", async (user: User) => {
+  return await datastore.updateUser(user);
+});
+
 const initialState: UsersState = {
   users: [],
   status: "idle",
@@ -65,12 +69,28 @@ const usersSlice = createSlice({
         state.status = "rejected";
         state.error = action.error.message;
       });
+
+    builder
+      .addCase(updateUser.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        const updatedUser = action.payload;
+        state.users = state.users.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        );
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.error.message;
+      });
   },
 });
 
 const selectUsers = (state: RootState) => state.users;
 
-export { fetchUsers, addUser };
+export { fetchUsers, addUser, updateUser };
 export const { clear: clearUsers, set: setUsers } = usersSlice.actions;
 export default usersSlice.reducer;
 export { selectUsers };
