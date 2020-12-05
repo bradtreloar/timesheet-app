@@ -15,6 +15,9 @@ import TimesheetFormPage from "./pages/TimesheetFormPage";
 import AdminRoute from "./routes/AdminRoute";
 import SettingsPage from "./pages/SettingsPage";
 import HomePage from "./pages/HomePage";
+import UserIndexPage from "./pages/UserIndexPage";
+import UserFormPage from "./pages/UserFormPage";
+import UserDeletePage from "./pages/UserDeletePage";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
@@ -49,6 +52,18 @@ const App: React.FC = () => {
       </ProtectedRoute>
       <AdminRoute exact path="/settings">
         <SettingsPage />
+      </AdminRoute>
+      <AdminRoute exact path="/users">
+        <UserIndexPage />
+      </AdminRoute>
+      <AdminRoute exact path="/users/add">
+        <UserFormPage />
+      </AdminRoute>
+      <AdminRoute exact path="/users/:id">
+        <UserFormPage />
+      </AdminRoute>
+      <AdminRoute exact path="/users/:id/delete">
+        <UserDeletePage />
       </AdminRoute>
       <GuestRoute exact path="/login">
         <LoginPage />
