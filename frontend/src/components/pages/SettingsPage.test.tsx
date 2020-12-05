@@ -3,7 +3,6 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route } from "react-router-dom";
 import { randomSettings, randomTimesheet, randomUser } from "fixtures/random";
-import TimesheetPage from "./TimesheetPage";
 import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
 import store from "store";
