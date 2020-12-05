@@ -6,6 +6,7 @@ import {
   TimesheetResource,
   User,
   UserData,
+  UserResource,
 } from "types";
 import { Setting, Shift, Timesheet } from "types";
 import { Time } from "./date";
@@ -53,6 +54,20 @@ export const parseTimesheet = (
     created: created as string,
     changed: changed as string,
     shifts: [],
+  };
+};
+
+export const parseUserFromResource = (resource: UserResource): User => {
+  const {
+    id,
+    attributes: { name, email, is_admin, default_shifts, created, changed },
+  } = resource;
+  return {
+    id,
+    name,
+    email,
+    isAdmin: is_admin,
+    defaultShifts: JSON.parse(default_shifts),
   };
 };
 

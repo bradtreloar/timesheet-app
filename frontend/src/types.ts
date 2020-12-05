@@ -73,6 +73,22 @@ export interface UserData {
   default_shifts: string;
 }
 
+export interface UserResource {
+  id?: string;
+  type: "users";
+  attributes: {
+    name: string;
+    email: string;
+    is_admin: boolean;
+    default_shifts: string;
+    created?: string;
+    changed?: string;
+  };
+  relationships: {
+    timesheets?: RelatedResourceArray<"timesheets">;
+  };
+}
+
 export interface TimesheetResource {
   id?: string;
   type: "timesheets";

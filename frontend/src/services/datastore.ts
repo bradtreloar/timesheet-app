@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Setting, Shift, Timesheet, User, UserData } from "types";
+import { Setting, Shift, Timesheet, User, UserData, UserResource } from "types";
 import { SettingResource, ShiftResource, TimesheetResource } from "types";
 import { HOST } from "settings";
 import {
@@ -10,6 +10,7 @@ import {
   parseSetting,
   makeSettingResource,
   parseUser,
+  parseUserFromResource,
 } from "./adaptors";
 
 export const client = axios.create({
@@ -62,6 +63,16 @@ export const fetchCurrentUser = async (): Promise<User | null> => {
     return null;
   }
   return parseUser(response.data);
+};
+
+export const fetchUsers = async (): Promise<User[]> => {
+  const response: AxiosResponse<{
+    data: UserResource[];
+  }> = await jsonAPIClient.get(`users`);
+  const { data } = response.data;
+  return data.map((resource: UserResource) => {
+    return parseUserFromResource(resource);
+  });
 };
 
 export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
