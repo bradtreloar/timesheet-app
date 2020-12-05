@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import useForm from "hooks/useForm";
 import { Alert, Button } from "react-bootstrap";
 
-interface UserFormValues {
+export interface UserFormValues {
   name: string;
   email: string;
   isAdmin: boolean;
