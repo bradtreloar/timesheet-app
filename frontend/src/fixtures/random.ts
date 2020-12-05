@@ -104,7 +104,7 @@ export const randomTimesheet = (user: User): Timesheet => {
 };
 
 export const randomTimesheets = (user: User, count: number) =>
-  range(count).map((index) => randomTimesheet(user));
+  range(count).map(() => randomTimesheet(user));
 
 export const randomSettings = (
   settings?: {
