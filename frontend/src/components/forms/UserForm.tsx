@@ -28,10 +28,10 @@ const validate = (values: UserFormValues) => {
 };
 
 interface UserFormProps {
-  defaultValues?: {
+  defaultValues: {
     name: string;
     email: string;
-  };
+  } | null;
   onSubmit: (values: UserFormValues) => void;
   className?: string;
 }

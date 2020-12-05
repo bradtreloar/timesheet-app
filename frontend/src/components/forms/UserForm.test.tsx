@@ -20,6 +20,7 @@ describe("New User", () => {
   test("Form submission succeeds", (done) => {
     render(
       <UserForm
+        defaultValues={null}
         onSubmit={({ name, email }) => {
           expect(name).toEqual(testName);
           expect(email).toEqual(testEmail);
