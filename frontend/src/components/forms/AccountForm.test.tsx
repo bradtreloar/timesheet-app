@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
-import UserForm from "./UserForm";
+import AccountForm from "./AccountForm";
 import { randomUser } from "fixtures/random";
 import { noop } from "lodash";
 
@@ -13,13 +13,13 @@ const testDefaultValues = {
 };
 
 test("Form renders", () => {
-  render(<UserForm defaultValues={testDefaultValues} onSubmit={noop} />);
+  render(<AccountForm defaultValues={testDefaultValues} onSubmit={noop} />);
 });
 
 describe("New User", () => {
   test("Form submission succeeds", (done) => {
     render(
-      <UserForm
+      <AccountForm
         defaultValues={null}
         onSubmit={({ name, email }) => {
           expect(name).toEqual(testName);
@@ -40,7 +40,7 @@ describe("New User", () => {
 describe("Existing User", () => {
   test("Form submission succeeds", (done) => {
     render(
-      <UserForm
+      <AccountForm
         defaultValues={testDefaultValues}
         onSubmit={({ name, email }) => {
           expect(name).toEqual(testName);
@@ -59,7 +59,7 @@ describe("Existing User", () => {
 
   test("Empty form submission fails", () => {
     render(
-      <UserForm
+      <AccountForm
         defaultValues={testDefaultValues}
         onSubmit={() => {
           throw new Error("onSubmit should not be called.");
@@ -77,7 +77,7 @@ describe("Existing User", () => {
     const invalidEmail = testEmail.replace("@", "_");
 
     render(
-      <UserForm
+      <AccountForm
         defaultValues={testDefaultValues}
         onSubmit={() => {
           throw new Error("onSubmit should not be called.");

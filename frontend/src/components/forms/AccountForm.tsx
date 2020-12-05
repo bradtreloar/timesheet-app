@@ -5,12 +5,12 @@ import Form from "react-bootstrap/Form";
 import useForm from "hooks/useForm";
 import { Alert, Button } from "react-bootstrap";
 
-interface UserFormValues {
+interface AccountFormValues {
   name: string;
   email: string;
 }
 
-const validate = (values: UserFormValues) => {
+const validate = (values: AccountFormValues) => {
   const errors = {} as { [key: string]: any };
   const { name, email } = values;
 
@@ -27,22 +27,22 @@ const validate = (values: UserFormValues) => {
   return errors;
 };
 
-interface UserFormProps {
+interface AccountFormProps {
   defaultValues: {
     name: string;
     email: string;
   } | null;
-  onSubmit: (values: UserFormValues) => void;
+  onSubmit: (values: AccountFormValues) => void;
   className?: string;
 }
 
-const UserForm: React.FC<UserFormProps> = ({
+const AccountForm: React.FC<AccountFormProps> = ({
   defaultValues,
   onSubmit,
   className,
 }) => {
+  const isNewUser = defaultValues === null;
   const initialValues = defaultValues ? defaultValues : { name: "", email: "" };
-  const isNewUser = defaultValues === undefined;
 
   const {
     values,
@@ -94,4 +94,4 @@ const UserForm: React.FC<UserFormProps> = ({
   );
 };
 
-export default UserForm;
+export default AccountForm;
