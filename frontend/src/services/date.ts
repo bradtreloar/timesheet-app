@@ -200,20 +200,27 @@ export class Time {
   }
 
   /**
-   * Creates a Time object from a string..
+   * Creates a Time object from a Date.
+   *
+   * @param value  The Date input value
+   *
+   * @return  The Time object.
+   */
+  static fromDate(value: Date) {
+    return new Time(value.getHours(), value.getMinutes());
+  }
+
+  /**
+   * Creates a Time object from a string.
    *
    * @param value  The string input value, in format HH:MM
    *
    * @return  The Time object.
    */
   static fromString(value: string) {
-    const throwException = () => {
-      throw new InvalidTimeException(`${value} is not formatted as HH:MM`);
-    };
-
     const components = value.split(":");
     if (components.length !== 2) {
-      throwException();
+      throw new InvalidTimeException(`${value} is not formatted as HH:MM`);
     }
 
     const hours = parseInt(components[0]);
