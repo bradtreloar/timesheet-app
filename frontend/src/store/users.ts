@@ -9,19 +9,13 @@ export interface UsersState {
   error?: string;
 }
 
-const fetchUsers = createAsyncThunk(
-  "users/fetchAll",
-  async () => {
-    return await datastore.fetchUsers();
-  }
-);
+const fetchUsers = createAsyncThunk("users/fetchAll", async () => {
+  return await datastore.fetchUsers();
+});
 
-const addUser = createAsyncThunk(
-  "users/add",
-  async (user: User) => {
-    return await datastore.createUser(user);
-  }
-);
+const addUser = createAsyncThunk("users/add", async (user: User) => {
+  return await datastore.createUser(user);
+});
 
 const initialState: UsersState = {
   users: [],
@@ -71,16 +65,12 @@ const usersSlice = createSlice({
         state.status = "rejected";
         state.error = action.error.message;
       });
-
   },
 });
 
 const selectUsers = (state: RootState) => state.users;
 
 export { fetchUsers, addUser };
-export const {
-  clear: clearUsers,
-  set: setUsers,
-} = usersSlice.actions;
+export const { clear: clearUsers, set: setUsers } = usersSlice.actions;
 export default usersSlice.reducer;
 export { selectUsers };

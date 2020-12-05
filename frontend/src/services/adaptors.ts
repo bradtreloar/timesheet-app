@@ -60,7 +60,7 @@ export const parseTimesheet = (
 export const parseUserFromResource = (resource: UserResource): User => {
   const {
     id,
-    attributes: { name, email, is_admin, default_shifts, created, changed },
+    attributes: { name, email, is_admin, default_shifts },
   } = resource;
   return {
     id,

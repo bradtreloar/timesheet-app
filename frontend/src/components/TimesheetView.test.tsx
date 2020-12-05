@@ -1,6 +1,6 @@
 import React from "react";
 import { randomTimesheet, randomUser } from "fixtures/random";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import TimesheetView from "./TimesheetView";
 
 const testUser = randomUser();

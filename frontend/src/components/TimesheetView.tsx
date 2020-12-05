@@ -7,7 +7,7 @@ interface TimesheetViewProps {
 }
 
 const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
-  const { shifts, created } = timesheet;
+  const { shifts } = timesheet;
 
   const tableRows = useMemo(
     () =>

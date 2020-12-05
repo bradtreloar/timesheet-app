@@ -76,9 +76,7 @@ export const fetchUsers = async (): Promise<User[]> => {
   });
 };
 
-export const createUser = async (
-  user: User
-): Promise<User> => {
+export const createUser = async (user: User): Promise<User> => {
   const userResource: UserResource = makeUserResource(user);
   const response: AxiosResponse<{
     data: UserResource;

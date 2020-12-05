@@ -1,16 +1,7 @@
 import store from ".";
-import {
-  fetchUsers,
-  addUser,
-  selectUsers,
-  clearUsers,
-} from "./users";
+import { fetchUsers, addUser, selectUsers, clearUsers } from "./users";
 import * as datastore from "services/datastore";
-import {
-  randomInt,
-  randomUser,
-  randomUsers,
-} from "fixtures/random";
+import { randomInt, randomUser, randomUsers } from "fixtures/random";
 jest.mock("services/datastore");
 
 beforeEach(() => {
