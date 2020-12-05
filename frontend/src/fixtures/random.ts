@@ -16,6 +16,9 @@ export const randomUser = (userIsAdmin?: boolean): User => {
   };
 };
 
+export const randomUsers = (count: number) =>
+  range(count).map(() => randomUser());
+
 export const randomPassword = () => randomstring.generate();
 
 export const randomBoolean = () => Math.random() > 0.5;
