@@ -8,7 +8,7 @@ import {
   randomTimesheet,
   randomUser,
 } from "fixtures/random";
-import TimesheetPage from "./TimesheetPage";
+import TimesheetFormPage from "./TimesheetFormPage";
 import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
 import store from "store";
@@ -34,7 +34,7 @@ const Fixture: React.FC = () => {
       <AuthProvider>
         <MemoryRouter>
           <Route exact path="/">
-            <TimesheetPage />
+            <TimesheetFormPage />
           </Route>
           <Route exact path="/timesheet/confirmation">
             form submitted

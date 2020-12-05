@@ -11,7 +11,7 @@ import { User } from "types";
 import PasswordResetPage from "./pages/PasswordResetPage";
 import PasswordPage from "./pages/PasswordPage";
 import TimesheetConfirmPage from "./pages/TimesheetConfirmPage";
-import TimesheetPage from "./pages/TimesheetPage";
+import TimesheetFormPage from "./pages/TimesheetFormPage";
 import AdminRoute from "./routes/AdminRoute";
 import SettingsPage from "./pages/SettingsPage";
 import HomePage from "./pages/HomePage";
@@ -39,7 +39,7 @@ const App: React.FC = () => {
         <HomePage />
       </ProtectedRoute>
       <ProtectedRoute exact path="/timesheet/new">
-        <TimesheetPage />
+        <TimesheetFormPage />
       </ProtectedRoute>
       <ProtectedRoute exact path="/timesheet/confirmation">
         <TimesheetConfirmPage />

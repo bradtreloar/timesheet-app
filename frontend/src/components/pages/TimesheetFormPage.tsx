@@ -14,7 +14,7 @@ import { addTimesheet, selectTimesheets } from "store/timesheets";
 import { Shift, Timesheet } from "types";
 import { useHistory } from "react-router";
 
-const TimesheetPage = () => {
+const TimesheetFormPage = () => {
   const { user } = useAuth();
   const history = useHistory();
   const { settings } = useSelector(selectSettings);
@@ -76,4 +76,4 @@ const TimesheetPage = () => {
   );
 };
 
-export default TimesheetPage;
+export default TimesheetFormPage;
