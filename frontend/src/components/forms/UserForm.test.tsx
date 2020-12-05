@@ -20,7 +20,7 @@ describe("New User", () => {
   test("Form submission succeeds", (done) => {
     render(
       <UserForm
-        onSubmit={(name, email) => {
+        onSubmit={({ name, email }) => {
           expect(name).toEqual(testName);
           expect(email).toEqual(testEmail);
           done();
@@ -41,7 +41,7 @@ describe("Existing User", () => {
     render(
       <UserForm
         defaultValues={testDefaultValues}
-        onSubmit={(name, email) => {
+        onSubmit={({ name, email }) => {
           expect(name).toEqual(testName);
           expect(email).toEqual(testEmail);
           done();
@@ -88,19 +88,5 @@ describe("Existing User", () => {
     userEvent.type(screen.getByLabelText(/email address/i), invalidEmail);
     userEvent.click(screen.getByText(/save/i));
     screen.getByText(/must be a valid email address/i);
-  });
-
-  test("Form handles pending authentication", () => {
-    render(
-      <UserForm
-        defaultValues={testDefaultValues}
-        onSubmit={() => {
-          throw new Error("onSubmit should not be called.");
-        }}
-        pending
-      />
-    );
-
-    userEvent.click(screen.getByText(/saving/i));
   });
 });

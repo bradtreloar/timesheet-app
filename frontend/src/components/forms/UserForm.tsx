@@ -1,5 +1,6 @@
 import React from "react";
 import * as EmailValidator from "email-validator";
+import classnames from "classnames";
 import Form from "react-bootstrap/Form";
 import useForm from "hooks/useForm";
 import { Alert, Button } from "react-bootstrap";
@@ -31,15 +32,18 @@ interface UserFormProps {
     name: string;
     email: string;
   };
-  onSubmit: (name: string, email: string) => void;
-  pending?: boolean;
+  onSubmit: (values: UserFormValues) => void;
+  className?: string;
 }
 
 const UserForm: React.FC<UserFormProps> = ({
   defaultValues,
   onSubmit,
-  pending,
+  className,
 }) => {
+  const initialValues = defaultValues ? defaultValues : { name: "", email: "" };
+  const isNewUser = defaultValues === undefined;
+
   const {
     values,
     errors,
@@ -47,15 +51,13 @@ const UserForm: React.FC<UserFormProps> = ({
     handleSubmit,
     handleChange,
     handleBlur,
-  } = useForm(
-    defaultValues ? defaultValues : { name: "", email: "" },
-    (values) => onSubmit(values.name, values.email),
-    validate
-  );
-  const isNewUser = defaultValues === undefined;
+  } = useForm(initialValues, onSubmit, validate);
 
   return (
-    <Form className="form-narrow" onSubmit={handleSubmit}>
+    <Form
+      className={classnames("form-narrow", className)}
+      onSubmit={handleSubmit}
+    >
       {errors.form && <Alert variant="danger">{errors.form}</Alert>}
       <Form.Group controlId="name">
         <Form.Label>Name</Form.Label>
@@ -85,14 +87,8 @@ const UserForm: React.FC<UserFormProps> = ({
           <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button variant="primary" type="submit" disabled={pending}>
-        {isNewUser
-          ? pending
-            ? `Saving`
-            : `Create user`
-          : pending
-          ? `Saving`
-          : `Save`}
+      <Button variant="primary" type="submit">
+        {isNewUser ? `Create user` : `Save`}
       </Button>
     </Form>
   );
