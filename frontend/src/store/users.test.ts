@@ -6,6 +6,7 @@ import {
   clearUsers,
   updateUser,
   setUsers,
+  deleteUser,
 } from "./users";
 import * as datastore from "services/datastore";
 import { randomInt, randomUser, randomUsers } from "fixtures/random";
@@ -92,4 +93,19 @@ test("update user", async () => {
   const { status, users } = selectUsers(store.getState());
   expect(status).toBe("fulfilled");
   expect(users).toStrictEqual([testUpdatedUser]);
+});
+
+test("delete user", async () => {
+  const testUser = randomUser();
+  store.dispatch(setUsers([testUser]));
+  jest.spyOn(datastore, "deleteUser").mockImplementation((user) => {
+    expect(user).toBe(testUser);
+    return Promise.resolve(user);
+  });
+  const action = await store.dispatch(deleteUser(testUser));
+  expect(action.payload).toStrictEqual(testUser);
+  expect(action.type).toBe("users/delete/fulfilled");
+  const { status, users } = selectUsers(store.getState());
+  expect(status).toBe("fulfilled");
+  expect(users).toStrictEqual([]);
 });

@@ -98,6 +98,12 @@ export const updateUser = async (user: User): Promise<User> => {
   return parseUserFromResource(data);
 };
 
+export const deleteUser = async (user: User): Promise<User> => {
+  const userResource: UserResource = makeUserResource(user);
+  await jsonAPIClient.delete(`/users/${user.id}`);
+  return user;
+};
+
 export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
   const response: AxiosResponse<{
     data: TimesheetResource[];
