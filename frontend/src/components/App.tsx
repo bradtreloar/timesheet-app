@@ -47,7 +47,7 @@ const App: React.FC = () => {
       <ProtectedRoute exact path="/timesheet/confirmation">
         <TimesheetConfirmPage />
       </ProtectedRoute>
-      <ProtectedRoute exact path="/account/new-password">
+      <ProtectedRoute exact path="/account/password">
         <PasswordPage />
       </ProtectedRoute>
       <AdminRoute exact path="/settings">
