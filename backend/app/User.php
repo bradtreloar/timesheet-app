@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'is_admin'
+        'name', 'email', 'password', 'is_admin', 'default_shifts'
     ];
 
     /**
@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     /**
      * Checks if user has given role
-     * 
+     *
      * @param string $role
      *   The role to search for.
      * @return bool

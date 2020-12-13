@@ -224,6 +224,7 @@ class ApiTest extends TestCase
                     "email" => $user->email,
                     "password" => $user->password,
                     "is_admin" => $user->is_admin,
+                    "default_shifts" => $user->default_shifts,
                 ],
             ],
         ];
