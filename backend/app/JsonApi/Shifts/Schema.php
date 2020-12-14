@@ -33,8 +33,8 @@ class Schema extends SchemaProvider
             'start' => $resource->start,
             'end' => $resource->end,
             'break_duration' => $resource->break_duration,
-            'created_at' => $resource->created_at->toISOString(),
-            'updated_at' => $resource->updated_at->toISOString(),
+            'created' => $resource->created_at->toISOString(),
+            'changed' => $resource->updated_at->toISOString(),
         ];
     }
 

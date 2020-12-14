@@ -2,18 +2,27 @@
 
 namespace Tests\Feature;
 
-use App\Shift;
 use App\Timesheet;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class ApiTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Mail::fake();
+    }
 
     /**
      * Call the given URI with a JSON:API request.
@@ -47,6 +56,9 @@ class ApiTest extends TestCase
     {
         return  [
             "type" => "timesheets",
+            "attributes" => [
+                "is_completed" => false
+            ],
             "relationships" => [
                 "user" => [
                     "data" => [
@@ -142,8 +154,14 @@ class ApiTest extends TestCase
         $response = $this->actingAs($user)
             ->jsonApi("GET", "/api/timesheets/{$timesheet->id}");
         $response->assertStatus(200);
-        $id = $response->json("data.id");
-        $this->assertEquals("1", $id);
+        $response->assertJson([
+            "data" => [
+                "id" => "1",
+                "attributes" => [
+                    "is_completed" => false,
+                ],
+            ],
+        ]);
     }
 
 
@@ -348,5 +366,26 @@ class ApiTest extends TestCase
 
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
+    }
+
+
+    public function testUpdateTimesheet()
+    {
+        $this->seed();
+        $timesheet = Timesheet::find(1);
+        $user = $timesheet->user;
+        $response = $this->actingAs($user)
+            ->jsonApi("GET", "/api/timesheets/{$timesheet->id}");
+        $data = $response->json("data");
+        $data["attributes"]["is_completed"] = true;
+        unset($data["relationships"]);
+        $request_data = [
+            "data" => $data,
+        ];
+        $response = $this->actingAs($user)
+            ->jsonApi("PATCH", "/api/timesheets/{$timesheet->id}", $request_data);
+        $response->assertStatus(200);
+        $timesheet = Timesheet::find(1);
+        $this->assertTrue($timesheet->is_completed);
     }
 }

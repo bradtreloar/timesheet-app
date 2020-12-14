@@ -7,6 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Timesheet::class, function (Faker $faker) {
     return [
-        //
+        'is_completed' => false,
     ];
 });
