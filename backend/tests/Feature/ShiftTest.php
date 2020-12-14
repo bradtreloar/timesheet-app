@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Shift;
-use App\Timesheet;
-use App\User;
+use App\Models\Shift;
+use App\Models\Timesheet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -19,11 +19,11 @@ class ShiftTest extends TestCase
      */
     public function testDatabase()
     {
-        $user = factory(User::class)->create();
-        $timesheet = factory(Timesheet::class)->create([
+        $user = User::factory()->create();
+        $timesheet = Timesheet::factory()->create([
             'user_id' => $user->id
         ]);
-        $shift = factory(Shift::class)->create([
+        $shift = Shift::factory()->create([
             'timesheet_id' => $timesheet->id
         ]);
         $this->assertInstanceOf(
@@ -40,11 +40,11 @@ class ShiftTest extends TestCase
      */
     public function testHours()
     {
-        $user = factory(User::class)->create();
-        $timesheet = factory(Timesheet::class)->create([
+        $user = User::factory()->create();
+        $timesheet = Timesheet::factory()->create([
             'user_id' => $user->id
         ]);
-        $shift = factory(Shift::class)->create([
+        $shift = Shift::factory()->create([
             'timesheet_id' => $timesheet->id
         ]);
         $this->assertNotNull($shift->hours);

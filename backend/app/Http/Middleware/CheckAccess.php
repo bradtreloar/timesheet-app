@@ -16,12 +16,12 @@ class CheckAccess
      */
     public function handle(Request $request, Closure $next, $permitted_roles)
     {
-        /** @var \App\User */
+        /** @var \App\Models\User */
         $user = $request->user();
 
         $roles = explode('|', $permitted_roles);
         $user_roles = explode('|', $user->roles);
-        
+
         foreach ($roles as $role) {
             if (in_array($role, $user_roles)) {
                 return $next($request);

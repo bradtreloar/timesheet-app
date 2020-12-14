@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Policies\TimesheetPolicy;
-use App\Timesheet;
+use App\Models\Timesheet;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 

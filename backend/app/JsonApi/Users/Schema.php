@@ -13,7 +13,7 @@ class Schema extends SchemaProvider
     protected $resourceType = 'users';
 
     /**
-     * @param \App\User $resource
+     * @param \App\Models\User $resource
      *      the domain record being serialized.
      * @return string
      */
@@ -23,7 +23,7 @@ class Schema extends SchemaProvider
     }
 
     /**
-     * @param \App\User $resource
+     * @param \App\Models\User $resource
      *      the domain record being serialized.
      * @return array
      */

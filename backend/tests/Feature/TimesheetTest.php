@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Events\TimesheetCompleted;
-use App\Timesheet;
-use App\User;
+use App\Models\Timesheet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
@@ -44,8 +44,8 @@ class TimesheetTest extends TestCase
     public function testTimesheetCompletedEvent()
     {
         $this->fakeTimesheetEvents();
-        $user = factory(User::class)->create();
-        $timesheet = factory(Timesheet::class)->create([
+        $user = User::factory()->create();
+        $timesheet = Timesheet::factory()->create([
             "user_id" => $user->id,
         ]);
         $timesheet->is_completed = true;

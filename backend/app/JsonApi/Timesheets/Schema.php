@@ -13,7 +13,7 @@ class Schema extends SchemaProvider
     protected $resourceType = 'timesheets';
 
     /**
-     * @param \App\Timesheet $resource
+     * @param \App\Models\Timesheet $resource
      *      the domain record being serialized.
      * @return string
      */
@@ -23,7 +23,7 @@ class Schema extends SchemaProvider
     }
 
     /**
-     * @param \App\Timesheet $resource
+     * @param \App\Models\Timesheet $resource
      *      the domain record being serialized.
      * @return array
      */

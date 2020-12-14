@@ -31,7 +31,7 @@ class Adapter extends AbstractAdapter
      */
     public function __construct(StandardStrategy $paging)
     {
-        parent::__construct(new \App\Timesheet(), $paging);
+        parent::__construct(new \App\Models\Timesheet(), $paging);
     }
 
     /**

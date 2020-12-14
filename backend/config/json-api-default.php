@@ -66,10 +66,10 @@ return [
     | `'posts' => App\Post::class`
     */
     'resources' => [
-        'settings' => \App\Setting::class,
-        'shifts' => \App\Shift::class,
-        'timesheets' => \App\Timesheet::class,
-        'users' => \App\User::class,
+        'settings' => \App\Models\Setting::class,
+        'shifts' => \App\Models\Shift::class,
+        'timesheets' => \App\Models\Timesheet::class,
+        'users' => \App\Models\User::class,
     ],
 
     /*

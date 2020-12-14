@@ -34,13 +34,9 @@ class Validators extends AbstractValidators
     ];
 
     /**
-     * Get resource validation rules.
-     *
-     * @param mixed|null $record
-     *      the record being updated, or null if creating a resource.
-     * @return mixed
+     * {@inheritdoc}
      */
-    protected function rules($record = null): array
+    protected function rules($record, array $data): array
     {
         return [];
     }

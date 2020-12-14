@@ -31,7 +31,7 @@ class Adapter extends AbstractAdapter
      */
     public function __construct(StandardStrategy $paging)
     {
-        parent::__construct(new \App\Shift(), $paging);
+        parent::__construct(new \App\Models\Shift(), $paging);
     }
 
     /**

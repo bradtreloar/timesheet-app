@@ -1,18 +1,34 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Shift;
+use App\Models\Shift;
 use Carbon\Carbon;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Shift::class, function (Faker $faker) {
-    $start = Carbon::yesterday();
-    $end = Carbon::yesterday()->addHours(8);
+class ShiftFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Shift::class;
 
-    return [
-        'start' => $start,
-        'end' => $end,
-        'break_duration' => 45,
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        $start = Carbon::yesterday();
+        $end = Carbon::yesterday()->addHours(8);
+
+        return [
+            'start' => $start,
+            'end' => $end,
+            'break_duration' => 45,
+        ];
+    }
+}

@@ -1,12 +1,28 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Timesheet;
-use Faker\Generator as Faker;
+use App\Models\Timesheet;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Timesheet::class, function (Faker $faker) {
-    return [
-        'is_completed' => false,
-    ];
-});
+class TimesheetFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Timesheet::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'is_completed' => false,
+        ];
+    }
+}

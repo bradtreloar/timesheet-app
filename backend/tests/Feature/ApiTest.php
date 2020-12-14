@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Setting;
-use App\Timesheet;
-use App\User;
+use App\Models\Setting;
+use App\Models\Timesheet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
@@ -96,7 +96,7 @@ class ApiTest extends TestCase
     public function testSuccessfulLoginAttempt()
     {
         $plain_password = $this->faker()->password();
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'password' => Hash::make($plain_password),
         ]);
         $request_data = [
@@ -118,7 +118,7 @@ class ApiTest extends TestCase
     public function testFailedLoginAttempt()
     {
         $plain_password = $this->faker()->password();
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'password' => Hash::make($plain_password),
         ]);
         $incorrect_password = $plain_password . "!";
@@ -305,7 +305,7 @@ class ApiTest extends TestCase
     {
         $this->seed();
         $this->assertDatabaseCount('users', 2);
-        $user = factory(User::class)->make();
+        $user = User::factory()->make();
 
         $request_data = [
             "data" => [

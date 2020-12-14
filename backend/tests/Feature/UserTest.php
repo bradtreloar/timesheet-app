@@ -2,9 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\ExpectationFailedException;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -18,7 +17,7 @@ class UserTest extends TestCase
      */
     public function testCreateUser()
     {
-        $user = factory(User::class)->make();
+        $user = User::factory()->make();
         $user->save();
         $this->assertDatabaseCount($user->getTable(), 1);
     }
@@ -30,7 +29,7 @@ class UserTest extends TestCase
      */
     public function testDeleteUser()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $this->assertDatabaseCount($user->getTable(), 1);
         $user->delete();
         $this->assertDeleted($user);

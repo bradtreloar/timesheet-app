@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Mail\TimesheetSubmitted;
-use App\Timesheet;
-use App\User;
+use App\Models\Timesheet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
@@ -22,8 +22,8 @@ class MailTest extends TestCase
     public function testTimesheetSubmittedNotificationSent()
     {
         Mail::fake();
-        $user = factory(User::class)->create();
-        $timesheet = factory(Timesheet::class)->create([
+        $user = User::factory()->create();
+        $timesheet = Timesheet::factory()->create([
             'user_id' => $user->id,
         ]);
         $timesheet->is_completed = true;

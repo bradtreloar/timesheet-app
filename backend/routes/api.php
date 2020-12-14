@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Middleware\CheckAccess;
+use App\Http\Controllers\Auth\LoginController;
 use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout');
+Route::post('login', [LoginController::class, 'login']);
+Route::post('logout', [LoginController::class, 'logout']);
 
 Route::get('user', function (Request $request) {
     $user = $request->user();

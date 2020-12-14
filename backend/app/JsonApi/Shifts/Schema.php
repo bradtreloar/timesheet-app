@@ -13,7 +13,7 @@ class Schema extends SchemaProvider
     protected $resourceType = 'shifts';
 
     /**
-     * @param \App\Shift $resource
+     * @param \App\Models\Shift $resource
      *      the domain record being serialized.
      * @return string
      */
@@ -23,7 +23,7 @@ class Schema extends SchemaProvider
     }
 
     /**
-     * @param \App\Shift $resource
+     * @param \App\Models\Shift $resource
      *      the domain record being serialized.
      * @return array
      */

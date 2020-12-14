@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Timesheet;
+use App\Models\Timesheet;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;

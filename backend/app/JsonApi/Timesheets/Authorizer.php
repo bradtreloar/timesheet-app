@@ -2,7 +2,7 @@
 
 namespace App\JsonApi\Timesheets;
 
-use App\User;
+use App\Models\User;
 use CloudCreativity\LaravelJsonApi\Auth\AbstractAuthorizer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
