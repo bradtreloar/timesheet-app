@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Setting;
 use App\Timesheet;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -143,6 +144,78 @@ class ApiTest extends TestCase
             'name' => $user->name,
             'is_admin' => $user->is_admin,
         ], $data);
+    }
+
+    public function testFetchUnrestrictedSettings()
+    {
+        $this->seed();
+        $user = User::find(1);
+        $settings = Setting::where('is_restricted', false)->get();
+        $this->assertCount(1, $settings);
+        $response = $this->actingAs($user)->jsonApi("GET", "/api/settings?filter[is_restricted]=0");
+        $response->assertStatus(200);
+        $this->assertCount(1, $response->json("data"));
+        foreach ($settings as $setting) {
+            $response->assertJson([
+                'data' => [
+                    [
+                        "attributes" => [
+                            "name" => $setting->name,
+                            "value" => $setting->value,
+                        ]
+                    ]
+                ]
+            ]);
+        }
+    }
+
+    public function testFetchAllSettings()
+    {
+        $this->seed();
+        $user = User::find(1);
+        $user->is_admin = true;
+        $user->save();
+        $settings = Setting::all();
+        $response = $this->actingAs($user)->jsonApi("GET", "/api/settings");
+        $response->assertStatus(200);
+        $this->assertCount(2, $response->json("data"));
+        foreach ($settings as $index => $setting) {
+            $response->assertJson([
+                'data' => [
+                    $index => [
+                        "attributes" => [
+                            "name" => $setting->name,
+                            "value" => $setting->value,
+                        ]
+                    ]
+                ]
+            ]);
+        }
+    }
+
+
+    public function testUpdateSetting()
+    {
+        $this->seed();
+        $user = User::find(1);
+        $user->is_admin = true;
+        $user->save();
+        $setting = Setting::where("name", "startOfWeek")->first();
+        $sid = $setting->id;
+        $request_data = [
+            "data" => [
+                "id" => (string) $sid,
+                "type" => "settings",
+                "attributes" => [
+                    "value" => "5",
+                ],
+            ],
+        ];
+        $response = $this->actingAs($user)
+            ->jsonApi("PATCH", "/api/settings/{$setting->id}", $request_data);
+        $response->assertStatus(200);
+        $setting = Setting::find($sid);
+        $this->assertEquals("5", $setting->value);
     }
 
 

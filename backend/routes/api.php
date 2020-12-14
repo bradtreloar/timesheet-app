@@ -50,4 +50,5 @@ JsonApi::register('default')
         $api->resource('shifts')->relationships(function ($relations) {
             $relations->hasOne('timesheet');
         });
+        $api->resource('settings');
     });

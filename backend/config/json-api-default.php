@@ -66,6 +66,7 @@ return [
     | `'posts' => App\Post::class`
     */
     'resources' => [
+        'settings' => \App\Setting::class,
         'shifts' => \App\Shift::class,
         'timesheets' => \App\Timesheet::class,
         'users' => \App\User::class,
