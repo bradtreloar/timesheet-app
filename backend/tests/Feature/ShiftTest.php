@@ -48,5 +48,6 @@ class ShiftTest extends TestCase
             'timesheet_id' => $timesheet->id
         ]);
         $this->assertNotNull($shift->hours);
+        $this->assertGreaterThan(0, (float) $shift->hours);
     }
 }
