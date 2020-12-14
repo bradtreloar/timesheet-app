@@ -11,6 +11,16 @@ class Shift extends Model
         'start', 'end', 'break_duration',
     ];
 
+    protected $appends = ['hours'];
+
+    public function getHoursAttribute()
+    {
+        $shift_duration = $this->start->diff($this->end);
+        $shift_minutes = $shift_duration->h * 60 + $shift_duration->m - $this->break_duration;
+        $shift_hours = $shift_minutes / 60;
+        return number_format($shift_hours, 2);
+    }
+
     public function timesheet(): BelongsTo
     {
         return $this->belongsTo(Timesheet::class);

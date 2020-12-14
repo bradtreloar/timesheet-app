@@ -8,8 +8,8 @@ use Faker\Generator as Faker;
 $factory->define(Shift::class, function (Faker $faker) {
 
     return [
-        'start' => $faker->date(),
-        'end' => $faker->date(),
+        'start' => $faker->dateTime(),
+        'end' => $faker->dateTime(),
         'break_duration' => 45,
     ];
 });

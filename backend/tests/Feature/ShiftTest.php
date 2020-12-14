@@ -34,4 +34,19 @@ class ShiftTest extends TestCase
         $shift->delete();
         $this->assertDeleted($shift);
     }
+
+    /**
+     * Tests that the calculated property `hours` is working.
+     */
+    public function testHours()
+    {
+        $user = factory(User::class)->create();
+        $timesheet = factory(Timesheet::class)->create([
+            'user_id' => $user->id
+        ]);
+        $shift = factory(Shift::class)->create([
+            'timesheet_id' => $timesheet->id
+        ]);
+        $this->assertNotNull($shift->hours);
+    }
 }
