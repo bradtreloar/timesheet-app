@@ -51,7 +51,8 @@ class User extends Authenticatable
      * @return bool
      *   Whether the user has the role.
      */
-    public function hasRole(string $role) {
+    public function hasRole(string $role)
+    {
         $user_roles = explode('|', $this->roles);
         return in_array($role, $user_roles);
     }
