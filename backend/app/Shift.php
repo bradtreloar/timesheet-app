@@ -11,7 +11,9 @@ class Shift extends Model
         'start', 'end', 'break_duration',
     ];
 
-    protected $appends = ['hours'];
+    protected $appends = [
+        'hours'
+    ];
 
     protected $dates = [
         'start',
