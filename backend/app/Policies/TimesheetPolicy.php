@@ -69,7 +69,9 @@ class TimesheetPolicy
      */
     public function update(User $user, Timesheet $timesheet): bool
     {
-        return $user->is($timesheet->user);
+        // User can only update the timesheet if they own it and it isn't
+        // flagged as completed.
+        return $user->is($timesheet->user) && $timesheet->is_completed === false;
     }
 
     /**
