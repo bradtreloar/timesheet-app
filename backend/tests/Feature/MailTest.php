@@ -43,9 +43,10 @@ class MailTest extends TestCase
     {
         $this->seed();
         $timesheet = Timesheet::first();
+        $user = $timesheet->user;
         $html_output = (new TimesheetSubmitted($timesheet))->render();
         $this->assertStringContainsString("Timesheet Submitted", $html_output);
-        $this->assertStringContainsString($timesheet->user->name, $html_output);
+        $this->assertStringContainsString($user->name, $html_output);
         $this->assertStringContainsString($timesheet->created_at->toString(), $html_output);
         foreach ($timesheet->shifts as $shift) {
             $this->assertStringContainsString($shift->start->toString(), $html_output);
