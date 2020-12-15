@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\LoginRequest;
 use App\Http\Responses\NoContentResponse;
 use App\Http\Responses\UserDataResponse;
 use Illuminate\Auth\Events\PasswordReset;
