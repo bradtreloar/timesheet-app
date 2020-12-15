@@ -17,11 +17,6 @@ class TimesheetPolicy
         if ($user->is_admin) {
             return true;
         }
-
-        // Deny all actions by users without a verified email address.
-        if (!$user->hasVerifiedEmail()) {
-            return false;
-        }
     }
 
     /**
