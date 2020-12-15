@@ -49,11 +49,11 @@ const UserFormPage: React.FC = () => {
         };
         await store.dispatch(addUser(newUser));
         history.push("/users");
-        setMessage("success", `New user ${name} created.`);
+        setMessage("success", `New user ${newUser.name} created.`);
       } else {
         const updatedUser = Object.assign({}, selectedUser, values);
         await store.dispatch(updateUser(updatedUser));
-        setMessage("success", `User ${name} updated.`);
+        setMessage("success", `User ${updatedUser.name} updated.`);
       }
     }
   );
