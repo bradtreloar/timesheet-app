@@ -158,6 +158,39 @@ class ApiTest extends TestCase
     }
 
 
+    public function testCreateUser()
+    {
+        $this->seed();
+        $this->assertDatabaseCount('users', 2);
+        $user = User::factory()->make();
+
+        $request_data = [
+            "data" => [
+                "type" => "users",
+                "attributes" => [
+                    "name" => $user->name,
+                    "email" => $user->email,
+                    "password" => $user->password,
+                    "is_admin" => $user->is_admin,
+                    "default_shifts" => $user->default_shifts,
+                ],
+            ],
+        ];
+
+        $response = $this->actingAs($user)
+            ->jsonApi("POST", "/api/users", $request_data);
+        $response->assertStatus(201);
+        $response->assertJson([
+            "data" => [
+                "type" => "users",
+                "id" => "3",
+            ]
+        ]);
+
+        $this->assertDatabaseCount('users', 3);
+    }
+
+
     public function testFetchUnrestrictedSettings()
     {
         $this->seed();
@@ -314,39 +347,6 @@ class ApiTest extends TestCase
     }
 
 
-    public function testCreateUser()
-    {
-        $this->seed();
-        $this->assertDatabaseCount('users', 2);
-        $user = User::factory()->make();
-
-        $request_data = [
-            "data" => [
-                "type" => "users",
-                "attributes" => [
-                    "name" => $user->name,
-                    "email" => $user->email,
-                    "password" => $user->password,
-                    "is_admin" => $user->is_admin,
-                    "default_shifts" => $user->default_shifts,
-                ],
-            ],
-        ];
-
-        $response = $this->actingAs($user)
-            ->jsonApi("POST", "/api/users", $request_data);
-        $response->assertStatus(201);
-        $response->assertJson([
-            "data" => [
-                "type" => "users",
-                "id" => "3",
-            ]
-        ]);
-
-        $this->assertDatabaseCount('users', 3);
-    }
-
-
     public function testCreateTimesheet()
     {
         $this->seed();
@@ -379,50 +379,6 @@ class ApiTest extends TestCase
             ->jsonApi("POST", "/api/timesheets", $request_data);
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
-    }
-
-
-    public function testCreateShift()
-    {
-        $this->seed();
-        $timesheet = Timesheet::find(1);
-        $user = $timesheet->user;
-        $request_data = [
-            "data" => $this->fakeShiftData($timesheet),
-        ];
-        $response = $this->actingAs($user)
-            ->jsonApi("POST", "/api/shifts", $request_data);
-        $response->assertStatus(201);
-        $response->assertJson([
-            "data" => [
-                "type" => "shifts",
-                "id" => "3",
-            ]
-        ]);
-        $this->assertDatabaseCount("shifts", 3);
-    }
-
-
-    public function testCreateMultipleShifts()
-    {
-        $this->seed();
-        $timesheet = Timesheet::find(1);
-        $user = $timesheet->user;
-        for ($i = 0; $i < 5; $i++) {
-            $request_data = [
-                "data" => $this->fakeShiftData($timesheet),
-            ];
-            $response = $this->actingAs($user)
-                ->jsonApi("POST", "/api/shifts", $request_data);
-            $response->assertStatus(201);
-            $response->assertJson([
-                "data" => [
-                    "type" => "shifts",
-                ]
-            ]);
-        }
-        $this->assertDatabaseCount("shifts", 7);
-        $this->assertCount(6, $timesheet->shifts);
     }
 
 
@@ -473,5 +429,49 @@ class ApiTest extends TestCase
         $response->assertStatus(200);
         $timesheet = Timesheet::find(1);
         $this->assertTrue($timesheet->is_completed);
+    }
+
+
+    public function testCreateShift()
+    {
+        $this->seed();
+        $timesheet = Timesheet::find(1);
+        $user = $timesheet->user;
+        $request_data = [
+            "data" => $this->fakeShiftData($timesheet),
+        ];
+        $response = $this->actingAs($user)
+            ->jsonApi("POST", "/api/shifts", $request_data);
+        $response->assertStatus(201);
+        $response->assertJson([
+            "data" => [
+                "type" => "shifts",
+                "id" => "3",
+            ]
+        ]);
+        $this->assertDatabaseCount("shifts", 3);
+    }
+
+
+    public function testCreateMultipleShifts()
+    {
+        $this->seed();
+        $timesheet = Timesheet::find(1);
+        $user = $timesheet->user;
+        for ($i = 0; $i < 5; $i++) {
+            $request_data = [
+                "data" => $this->fakeShiftData($timesheet),
+            ];
+            $response = $this->actingAs($user)
+                ->jsonApi("POST", "/api/shifts", $request_data);
+            $response->assertStatus(201);
+            $response->assertJson([
+                "data" => [
+                    "type" => "shifts",
+                ]
+            ]);
+        }
+        $this->assertDatabaseCount("shifts", 7);
+        $this->assertCount(6, $timesheet->shifts);
     }
 }
