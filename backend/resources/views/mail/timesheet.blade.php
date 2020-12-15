@@ -1,4 +1,4 @@
-@extends('layouts.mail')
+@extends('mail.layout')
 
 @section('content')
 <table style="margin: 0 auto; width: 100%; max-width: 720px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
