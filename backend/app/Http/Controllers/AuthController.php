@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Responses\NoContentResponse;
 use App\Http\Responses\UserDataResponse;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
@@ -81,7 +82,7 @@ class AuthController extends Controller
         );
 
         if ($status == Password::RESET_LINK_SENT) {
-            return new Response('', 204);
+            return new NoContentResponse();
         } else {
             throw new BadRequestException();
         }
@@ -119,7 +120,7 @@ class AuthController extends Controller
         );
 
         if ($status == Password::PASSWORD_RESET) {
-            return new Response('', 204);
+            return new NoContentResponse();
         } else {
             throw new BadRequestException();
         }
