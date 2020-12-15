@@ -22,6 +22,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 Route::get('user', [AuthController::class, 'currentUser']);
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 JsonApi::register('default')
     ->middleware('auth:sanctum')
