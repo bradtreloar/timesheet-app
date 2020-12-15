@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthController;
 use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
 use Illuminate\Http\JsonResponse;
@@ -18,22 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', [LoginController::class, 'login']);
-Route::post('logout', [LoginController::class, 'logout']);
-
-Route::get('user', function (Request $request) {
-    $user = $request->user();
-    if ($user) {
-        return new JsonResponse([
-            'id' => $user->id,
-            'email' => $user->email,
-            'name' => $user->name,
-            'is_admin' => $user->is_admin,
-        ], 200);
-    } else {
-        return new JsonResponse(null, 204);
-    }
-});
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout']);
+Route::get('user', [AuthController::class, 'currentUser']);
 
 JsonApi::register('default')
     ->middleware('auth:sanctum')
