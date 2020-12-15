@@ -7,11 +7,10 @@ use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
-class ApiTest extends TestCase
+class JsonApiTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
@@ -71,7 +70,15 @@ class ApiTest extends TestCase
         ];
     }
 
-
+    /**
+     * Creates a shift data array.
+     *
+     * @param Timesheet $timesheet
+     *   The shift's timesheet.
+     *
+     * @return array
+     *   The shift data.
+     */
     protected function fakeShiftData(Timesheet $timesheet): array
     {
         return [
@@ -91,72 +98,6 @@ class ApiTest extends TestCase
             ],
         ];
     }
-
-
-    public function testSuccessfulLoginAttempt()
-    {
-        $plain_password = $this->faker()->password();
-        $user = User::factory()->create([
-            'password' => Hash::make($plain_password),
-        ]);
-        $request_data = [
-            'email' => $user->email,
-            'password' => $plain_password,
-        ];
-        $response = $this->postJson("/api/login", $request_data);
-        $response->assertStatus(200);
-        $data = $response->json();
-        $this->assertEquals([
-            'id' => $user->id,
-            'email' => $user->email,
-            'name' => $user->name,
-            'is_admin' => $user->is_admin,
-        ], $data);
-    }
-
-
-    public function testFailedLoginAttempt()
-    {
-        $plain_password = $this->faker()->password();
-        $user = User::factory()->create([
-            'password' => Hash::make($plain_password),
-        ]);
-        $incorrect_password = $plain_password . "!";
-        $request_data = [
-            'email' => $user->email,
-            'password' => $incorrect_password,
-        ];
-        $response = $this->postJson("/api/login", $request_data);
-        $response->assertStatus(422);
-    }
-
-
-    public function testFetchCurrentUser()
-    {
-        $this->seed();
-        $user = User::find(1);
-        $response = $this->actingAs($user)->getJson("/api/user");
-        $response->assertStatus(200);
-        $data = $response->json();
-        $this->assertEquals([
-            'id' => $user->id,
-            'email' => $user->email,
-            'name' => $user->name,
-            'is_admin' => $user->is_admin,
-        ], $data);
-    }
-
-
-    public function testForgotPassword()
-    {
-        $this->seed();
-        $user = User::find(1);
-        $response = $this->actingAs($user)->postJson("/api/forgot-password", [
-            'email' => $user->email,
-        ]);
-        $response->assertStatus(204);
-    }
-
 
     public function testCreateUser()
     {
@@ -190,7 +131,6 @@ class ApiTest extends TestCase
         $this->assertDatabaseCount('users', 3);
     }
 
-
     public function testFetchUnrestrictedSettings()
     {
         $this->seed();
@@ -213,7 +153,6 @@ class ApiTest extends TestCase
             ]);
         }
     }
-
 
     public function testFetchAllSettings()
     {
@@ -239,7 +178,6 @@ class ApiTest extends TestCase
         }
     }
 
-
     public function testUpdateSetting()
     {
         $this->seed();
@@ -264,7 +202,6 @@ class ApiTest extends TestCase
         $this->assertEquals("5", $setting->value);
     }
 
-
     public function testFetchTimesheet()
     {
         $this->seed();
@@ -283,7 +220,6 @@ class ApiTest extends TestCase
         ]);
     }
 
-
     public function testFetchTimesheetWithShifts()
     {
         $this->seed();
@@ -299,7 +235,6 @@ class ApiTest extends TestCase
         $this->assertEquals(1, count($shifts));
     }
 
-
     public function testDenyFetchAllTimesheets()
     {
         $this->seed();
@@ -308,7 +243,6 @@ class ApiTest extends TestCase
             ->jsonApi("GET", "/api/timesheets");
         $response->assertStatus(403);
     }
-
 
     public function testDenyFetchTimesheetForOtherUser()
     {
@@ -323,7 +257,6 @@ class ApiTest extends TestCase
         $response->assertStatus(403);
     }
 
-
     public function testFetchAllTimesheetsForUser()
     {
         $this->seed();
@@ -335,7 +268,6 @@ class ApiTest extends TestCase
         $this->assertEquals(1, count($data));
     }
 
-
     public function testDenyFetchAllTimesheetsForOtherUser()
     {
         $this->seed();
@@ -345,7 +277,6 @@ class ApiTest extends TestCase
             ->jsonApi("GET", "/api/users/{$other_user->id}/timesheets");
         $response->assertStatus(403);
     }
-
 
     public function testCreateTimesheet()
     {
@@ -366,7 +297,6 @@ class ApiTest extends TestCase
         $this->assertDatabaseCount("timesheets", 3);
     }
 
-
     public function testDenyCreateTimesheetForOtherUser()
     {
         $this->seed();
@@ -381,7 +311,6 @@ class ApiTest extends TestCase
         $this->assertDatabaseCount("timesheets", 2);
     }
 
-
     public function testDeleteTimesheet()
     {
         $this->seed();
@@ -394,7 +323,6 @@ class ApiTest extends TestCase
         $response->assertStatus(204);
         $this->assertDatabaseCount("timesheets", 1);
     }
-
 
     public function testDenyDeleteTimesheetForOtherUser()
     {
@@ -409,7 +337,6 @@ class ApiTest extends TestCase
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
     }
-
 
     public function testUpdateTimesheet()
     {
@@ -431,7 +358,6 @@ class ApiTest extends TestCase
         $this->assertTrue($timesheet->is_completed);
     }
 
-
     public function testCreateShift()
     {
         $this->seed();
@@ -451,7 +377,6 @@ class ApiTest extends TestCase
         ]);
         $this->assertDatabaseCount("shifts", 3);
     }
-
 
     public function testCreateMultipleShifts()
     {
