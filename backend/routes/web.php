@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Named route required for password reset email.
+// @see Illuminate\Auth\Notifications\ResetPassword::toMail
+Route::get('/reset-password/{token}', function () {
+    throw new NotFoundHttpException();
+})->name('password.reset');

@@ -146,6 +146,18 @@ class ApiTest extends TestCase
         ], $data);
     }
 
+
+    public function testForgotPassword()
+    {
+        $this->seed();
+        $user = User::find(1);
+        $response = $this->actingAs($user)->postJson("/api/forgot-password", [
+            'email' => $user->email,
+        ]);
+        $response->assertStatus(204);
+    }
+
+
     public function testFetchUnrestrictedSettings()
     {
         $this->seed();
@@ -168,6 +180,7 @@ class ApiTest extends TestCase
             ]);
         }
     }
+
 
     public function testFetchAllSettings()
     {
