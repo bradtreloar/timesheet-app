@@ -15,6 +15,10 @@ class JsonApiTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    protected $defaultHeaders = [
+        "Origin" => "localhost",
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -137,7 +141,8 @@ class JsonApiTest extends TestCase
         $user = User::find(1);
         $settings = Setting::where('is_restricted', false)->get();
         $this->assertCount(1, $settings);
-        $response = $this->actingAs($user)->jsonApi("GET", "/api/settings?filter[is_restricted]=0");
+        $response = $this->actingAs($user)
+            ->jsonApi("GET", "/api/settings?filter[is_restricted]=0");
         $response->assertStatus(200);
         $this->assertCount(1, $response->json("data"));
         foreach ($settings as $setting) {

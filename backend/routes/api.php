@@ -19,23 +19,36 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
+
+Route::post('logout', [AuthController::class, 'logout'])
+    ->middleware('auth:api');
+
 Route::get('user', [AuthController::class, 'currentUser']);
+
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 JsonApi::register('default')
-    ->middleware('auth:sanctum')
-    ->routes(function (RouteRegistrar $api) {
-        $api->resource('users')->relationships(function ($relations) {
-            $relations->hasMany('timesheets');
-        });
-        $api->resource('timesheets')->relationships(function ($relations) {
-            $relations->hasMany('shifts');
-            $relations->hasOne('user');
-        });
-        $api->resource('shifts')->relationships(function ($relations) {
-            $relations->hasOne('timesheet');
-        });
-        $api->resource('settings');
-    });
+    ->middleware('auth:api')
+    ->routes(
+        function (RouteRegistrar $api) {
+            $api->resource('users')->relationships(
+                function ($relations) {
+                    $relations->hasMany('timesheets');
+                }
+            );
+            $api->resource('timesheets')->relationships(
+                function ($relations) {
+                    $relations->hasMany('shifts');
+                    $relations->hasOne('user');
+                }
+            );
+            $api->resource('shifts')->relationships(
+                function ($relations) {
+                    $relations->hasOne('timesheet');
+                }
+            );
+            $api->resource('settings');
+        }
+    );

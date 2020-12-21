@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 class Authorizer extends AbstractAuthorizer
 {
     /**
-     * Use Sanctum to authenticate users.
-     */
-    protected $guards = ['sanctum'];
-
-    /**
      * Authorize a resource index request.
      *
      * @param string $type

@@ -15,6 +15,10 @@ class AuthApiTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    protected $defaultHeaders = [
+        "Origin" => "localhost",
+    ];
+
     protected function getUserData($user)
     {
         return [
