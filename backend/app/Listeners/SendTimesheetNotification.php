@@ -4,8 +4,7 @@ namespace App\Listeners;
 
 use App\Events\TimesheetCompleted;
 use App\Mail\TimesheetNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Mail;
 
 class SendTimesheetNotification
@@ -19,6 +18,10 @@ class SendTimesheetNotification
     public function handle(TimesheetCompleted $event)
     {
         $timesheet = $event->timesheet;
-        Mail::to($timesheet->user)->send(new TimesheetNotification($timesheet));
+        $recipientsSetting = Setting::where('name', 'timesheetRecipients')->first();
+        $recipients = explode(",", $recipientsSetting->value);
+        foreach ($recipients as $recipient) {
+            Mail::to(trim($recipient))->send(new TimesheetNotification($timesheet));
+        }
     }
 }

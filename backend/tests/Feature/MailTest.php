@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Mail\TimesheetNotification;
+use App\Mail\TimesheetReceipt;
+use App\Models\Setting;
 use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,26 +19,44 @@ class MailTest extends TestCase
     use WithFaker;
 
     /**
-     * Tests that the timesheet submitted notification is sent to the user
+     * Tests that the timesheet receipt is sent to the user
+     *
+     * @return void
+     */
+    public function testTimesheetReceiptSent()
+    {
+        Mail::fake();
+        $this->seed();
+        $timesheet = Timesheet::first();
+        $stateMachine = StateMachine::get($timesheet, 'timesheetState');
+        $stateMachine->apply('complete');
+        Mail::assertSent(function (TimesheetReceipt $mail) use ($timesheet) {
+            return $mail->timesheet->id === $timesheet->id &&
+                   $mail->hasTo($timesheet->user);
+        });
+    }
+
+    /**
+     * Tests that the timesheet notification is sent to the addresses defined
+     * in settings.
      *
      * @return void
      */
     public function testTimesheetNotificationSent()
     {
         Mail::fake();
-        $user = User::factory()->create();
-        $timesheet = Timesheet::factory()->create([
-            'user_id' => $user->id,
-        ]);
-        $timesheet = Timesheet::factory()->create([
-            "user_id" => $user->id,
-        ]);
+        $this->seed();
+        $timesheet = Timesheet::first();
         $stateMachine = StateMachine::get($timesheet, 'timesheetState');
         $stateMachine->apply('complete');
-        Mail::assertSent(function (TimesheetNotification $mail) use ($timesheet) {
-            return $mail->timesheet->id === $timesheet->id &&
-                   $mail->hasTo($timesheet->user);
-        });
+        $recipientsSetting = Setting::where('name', 'timesheetRecipients')->first();
+        $recipients = explode(",", $recipientsSetting->value);
+        foreach ($recipients as $recipient) {
+            Mail::assertSent(function (TimesheetNotification $mail) use ($timesheet, $recipient) {
+                return $mail->timesheet->id === $timesheet->id &&
+                       $mail->hasTo($recipient);
+            });
+        }
     }
 
     /**
