@@ -44,18 +44,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Timesheet::class);
     }
-
-    /**
-     * Checks if user has given role
-     *
-     * @param string $role
-     *   The role to search for.
-     * @return bool
-     *   Whether the user has the role.
-     */
-    public function hasRole(string $role)
-    {
-        $user_roles = explode('|', $this->roles);
-        return in_array($role, $user_roles);
-    }
 }
