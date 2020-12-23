@@ -7,6 +7,7 @@ use App\Models\Shift;
 use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,9 +37,12 @@ class DatabaseSeeder extends Seeder
             'is_restricted' => false,
         ]);
 
+        $timesheetRecipients = [];
+        $timesheetRecipients[] = Str::random(10) . '@example.com';
+        $timesheetRecipients[] = Str::random(10) . '@example.com';
         Setting::create([
             'name' => 'timesheetRecipients',
-            'value' => 'admin@example.com',
+            'value' => implode(",", $timesheetRecipients),
             'is_restricted' => true,
         ]);
     }
