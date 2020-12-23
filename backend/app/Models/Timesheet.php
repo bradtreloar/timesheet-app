@@ -12,22 +12,17 @@ class Timesheet extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'is_completed',
-    ];
+    const STATE_DRAFT = 'timesheet.draft';
+
+    const STATE_COMPLETED = 'timesheet.completed';
 
     /**
-     * The attributes that should be cast to native types.
+     * The model's default values for attributes.
      *
      * @var array
      */
-    protected $casts = [
-        'is_completed' => 'bool',
+    protected $attributes = [
+        'state' => self::STATE_DRAFT,
     ];
 
     public function user(): BelongsTo
@@ -38,16 +33,5 @@ class Timesheet extends Model
     public function shifts(): HasMany
     {
         return $this->hasMany(Shift::class);
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::updated(function (Timesheet $timesheet) {
-            if ($timesheet->is_completed) {
-                TimesheetCompleted::dispatch($timesheet);
-            }
-        });
     }
 }

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
+use Sebdesign\SM\Facade as StateMachine;
 use Tests\TestCase;
 
 class MailTest extends TestCase
@@ -26,8 +27,11 @@ class MailTest extends TestCase
         $timesheet = Timesheet::factory()->create([
             'user_id' => $user->id,
         ]);
-        $timesheet->is_completed = true;
-        $timesheet->save();
+        $timesheet = Timesheet::factory()->create([
+            "user_id" => $user->id,
+        ]);
+        $stateMachine = StateMachine::get($timesheet, 'timesheetState');
+        $stateMachine->apply('complete');
         Mail::assertSent(function (TimesheetSubmitted $mail) use ($timesheet) {
             return $mail->timesheet->id === $timesheet->id &&
                    $mail->hasTo($timesheet->user);

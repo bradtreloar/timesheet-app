@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
+use Sebdesign\SM\Facade as StateMachine;
 use Tests\TestCase;
 
 class TimesheetTest extends TestCase
@@ -39,6 +40,21 @@ class TimesheetTest extends TestCase
     }
 
     /**
+     * Tests that timesheet state transition.
+     */
+    public function testTimesheetStateTransition()
+    {
+        $this->fakeTimesheetEvents();
+        $user = User::factory()->create();
+        $timesheet = Timesheet::factory()->create([
+            "user_id" => $user->id,
+        ]);
+        $stateMachine = StateMachine::get($timesheet, 'timesheetState');
+        $stateMachine->apply('complete');
+        $this->assertEquals(Timesheet::STATE_COMPLETED, $timesheet->state);
+    }
+
+    /**
      * Tests that the TimesheetCompleted event is fired.
      */
     public function testTimesheetCompletedEvent()
@@ -48,8 +64,8 @@ class TimesheetTest extends TestCase
         $timesheet = Timesheet::factory()->create([
             "user_id" => $user->id,
         ]);
-        $timesheet->is_completed = true;
-        $timesheet->save();
+        $stateMachine = StateMachine::get($timesheet, 'timesheetState');
+        $stateMachine->apply('complete');
         Event::assertDispatched(TimesheetCompleted::class);
         Event::assertDispatched(function (TimesheetCompleted $event) use ($timesheet) {
             return $event->timesheet->id === $timesheet->id;

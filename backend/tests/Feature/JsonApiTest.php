@@ -60,9 +60,6 @@ class JsonApiTest extends TestCase
     {
         return  [
             "type" => "timesheets",
-            "attributes" => [
-                "is_completed" => false
-            ],
             "relationships" => [
                 "user" => [
                     "data" => [
@@ -218,9 +215,6 @@ class JsonApiTest extends TestCase
         $response->assertJson([
             "data" => [
                 "id" => "1",
-                "attributes" => [
-                    "is_completed" => false,
-                ],
             ],
         ]);
     }
@@ -341,26 +335,6 @@ class JsonApiTest extends TestCase
 
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
-    }
-
-    public function testUpdateTimesheet()
-    {
-        $this->seed();
-        $timesheet = Timesheet::find(1);
-        $user = $timesheet->user;
-        $response = $this->actingAs($user)
-            ->jsonApi("GET", "/api/timesheets/{$timesheet->id}");
-        $data = $response->json("data");
-        $data["attributes"]["is_completed"] = true;
-        unset($data["relationships"]);
-        $request_data = [
-            "data" => $data,
-        ];
-        $response = $this->actingAs($user)
-            ->jsonApi("PATCH", "/api/timesheets/{$timesheet->id}", $request_data);
-        $response->assertStatus(200);
-        $timesheet = Timesheet::find(1);
-        $this->assertTrue($timesheet->is_completed);
     }
 
     public function testCreateShift()

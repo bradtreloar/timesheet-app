@@ -16,7 +16,7 @@ class CreateTimesheetsTable extends Migration
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->boolean('is_completed');
+            $table->string('state');
             $table->timestamps();
         });
     }

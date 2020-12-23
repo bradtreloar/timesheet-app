@@ -66,7 +66,7 @@ class TimesheetPolicy
     {
         // User can only update the timesheet if they own it and it isn't
         // flagged as completed.
-        return $user->is($timesheet->user) && $timesheet->is_completed === false;
+        return $user->is($timesheet->user) && $timesheet->state === Timesheet::STATE_DRAFT;
     }
 
     /**
