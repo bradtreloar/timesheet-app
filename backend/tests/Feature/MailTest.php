@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\TimesheetSubmitted;
+use App\Mail\TimesheetNotification;
 use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,13 +14,14 @@ use Tests\TestCase;
 class MailTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Tests that the timesheet submitted notification is sent to the user
      *
      * @return void
      */
-    public function testTimesheetSubmittedNotificationSent()
+    public function testTimesheetNotificationSent()
     {
         Mail::fake();
         $user = User::factory()->create();
@@ -32,7 +33,7 @@ class MailTest extends TestCase
         ]);
         $stateMachine = StateMachine::get($timesheet, 'timesheetState');
         $stateMachine->apply('complete');
-        Mail::assertSent(function (TimesheetSubmitted $mail) use ($timesheet) {
+        Mail::assertSent(function (TimesheetNotification $mail) use ($timesheet) {
             return $mail->timesheet->id === $timesheet->id &&
                    $mail->hasTo($timesheet->user);
         });
@@ -43,12 +44,12 @@ class MailTest extends TestCase
      *
      * @return void
      */
-    public function testTimesheetSubmittedNotificationRenders()
+    public function testTimesheetNotificationRenders()
     {
         $this->seed();
         $timesheet = Timesheet::first();
         $user = $timesheet->user;
-        $html_output = (new TimesheetSubmitted($timesheet))->render();
+        $html_output = (new TimesheetNotification($timesheet))->render();
         $this->assertStringContainsString("Timesheet Submitted", $html_output);
         $this->assertStringContainsString($user->name, $html_output);
         $this->assertStringContainsString($timesheet->created_at->toString(), $html_output);
