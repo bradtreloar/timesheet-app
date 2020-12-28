@@ -8,7 +8,14 @@
                     </a>
                 </div>
                 <div>
-                    @yield('content')
+                <table style="margin: 0 auto; width: 100%; max-width: 720px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif">
+	                <tbody>
+		                <tr>
+			                <td>
+				                @yield('content')
+                            </td>
+                        </tr>
+                    </tbody>
                 </div>
             </div>
             <div style="padding: 1rem 0.5rem; width: 100%; max-width: 720px; margin: 0 auto;">
