@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
@@ -36,6 +38,7 @@ class AuthApiTest extends TestCase
     {
         parent::setUp();
         Mail::fake();
+        Notification::fake();
     }
 
     public function testSuccessfulLoginAttempt()
@@ -87,6 +90,7 @@ class AuthApiTest extends TestCase
             'email' => $user->email,
         ]);
         $response->assertStatus(204);
+        Notification::assertSentTo($user, ResetPassword::class);
     }
 
     public function testResetPassword()
