@@ -14,9 +14,3 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-// Named route required for password reset email.
-// @see Illuminate\Auth\Notifications\ResetPassword::toMail
-Route::get('/reset-password/{token}', function () {
-    throw new NotFoundHttpException();
-})->name('password.reset');
