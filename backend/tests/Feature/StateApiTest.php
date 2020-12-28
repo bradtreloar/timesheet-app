@@ -35,7 +35,7 @@ class StateApiTest extends TestCase
         $timesheet = Timesheet::first();
         $user = $timesheet->user;
         $response = $this->actingAs($user)
-            ->postJson("/api/timesheets/{$timesheet->id}/complete");
+            ->postJson("/timesheets/{$timesheet->id}/complete");
         $response->assertStatus(204);
         $timesheet = Timesheet::first();
         $this->assertEquals(Timesheet::STATE_COMPLETED, $timesheet->state);

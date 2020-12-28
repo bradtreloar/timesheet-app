@@ -120,7 +120,7 @@ class JsonApiTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-            ->jsonApi("POST", "/api/users", $request_data);
+            ->jsonApi("POST", "/users", $request_data);
         $response->assertStatus(201);
         $response->assertJson([
             "data" => [
@@ -139,7 +139,7 @@ class JsonApiTest extends TestCase
         $settings = Setting::where('is_restricted', false)->get();
         $this->assertCount(1, $settings);
         $response = $this->actingAs($user)
-            ->jsonApi("GET", "/api/settings?filter[is_restricted]=0");
+            ->jsonApi("GET", "/settings?filter[is_restricted]=0");
         $response->assertStatus(200);
         $this->assertCount(1, $response->json("data"));
         foreach ($settings as $setting) {
@@ -163,7 +163,7 @@ class JsonApiTest extends TestCase
         $user->is_admin = true;
         $user->save();
         $settings = Setting::all();
-        $response = $this->actingAs($user)->jsonApi("GET", "/api/settings");
+        $response = $this->actingAs($user)->jsonApi("GET", "/settings");
         $response->assertStatus(200);
         $this->assertCount(2, $response->json("data"));
         foreach ($settings as $index => $setting) {
@@ -198,7 +198,7 @@ class JsonApiTest extends TestCase
             ],
         ];
         $response = $this->actingAs($user)
-            ->jsonApi("PATCH", "/api/settings/{$setting->id}", $request_data);
+            ->jsonApi("PATCH", "/settings/{$setting->id}", $request_data);
         $response->assertStatus(200);
         $setting = Setting::find($sid);
         $this->assertEquals("5", $setting->value);
@@ -210,7 +210,7 @@ class JsonApiTest extends TestCase
         $timesheet = Timesheet::first();
         $user = $timesheet->user;
         $response = $this->actingAs($user)
-            ->jsonApi("GET", "/api/timesheets/{$timesheet->id}");
+            ->jsonApi("GET", "/timesheets/{$timesheet->id}");
         $response->assertStatus(200);
         $response->assertJson([
             "data" => [
@@ -225,7 +225,7 @@ class JsonApiTest extends TestCase
         $timesheet = Timesheet::first();
         $user = $timesheet->user;
         $response = $this->actingAs($user)
-            ->jsonApi("GET", "/api/timesheets/{$timesheet->id}?include=shifts");
+            ->jsonApi("GET", "/timesheets/{$timesheet->id}?include=shifts");
         $response->assertStatus(200);
         $id = $response->json("data.id");
         $this->assertEquals("1", $id);
@@ -239,7 +239,7 @@ class JsonApiTest extends TestCase
         $this->seed();
         $user = User::find(1);
         $response = $this->actingAs($user)
-            ->jsonApi("GET", "/api/timesheets");
+            ->jsonApi("GET", "/timesheets");
         $response->assertStatus(403);
     }
 
@@ -252,7 +252,7 @@ class JsonApiTest extends TestCase
         $timesheet = Timesheet::find(2);
         $this->assertEquals(2, $timesheet->id);
         $response = $this->actingAs($user)
-            ->get("/api/timesheets/{$timesheet->id}");
+            ->get("/timesheets/{$timesheet->id}");
         $response->assertStatus(403);
     }
 
@@ -261,7 +261,7 @@ class JsonApiTest extends TestCase
         $this->seed();
         $user = User::first();
         $response = $this->actingAs($user)
-            ->jsonApi("GET", "/api/users/{$user->id}/timesheets");
+            ->jsonApi("GET", "/users/{$user->id}/timesheets");
         $response->assertStatus(200);
         $data = $response->json("data");
         $this->assertEquals(1, count($data));
@@ -273,7 +273,7 @@ class JsonApiTest extends TestCase
         $user = User::find(1);
         $other_user = User::find(2);
         $response = $this->actingAs($user)
-            ->jsonApi("GET", "/api/users/{$other_user->id}/timesheets");
+            ->jsonApi("GET", "/users/{$other_user->id}/timesheets");
         $response->assertStatus(403);
     }
 
@@ -285,7 +285,7 @@ class JsonApiTest extends TestCase
             "data" => $this->fakeTimesheetData($user),
         ];
         $response = $this->actingAs($user)
-            ->jsonApi("POST", "/api/timesheets", $request_data);
+            ->jsonApi("POST", "/timesheets", $request_data);
         $response->assertStatus(201);
         $response->assertJson([
             "data" => [
@@ -305,7 +305,7 @@ class JsonApiTest extends TestCase
             "data" => $this->fakeTimesheetData($other_user),
         ];
         $response = $this->actingAs($user)
-            ->jsonApi("POST", "/api/timesheets", $request_data);
+            ->jsonApi("POST", "/timesheets", $request_data);
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
     }
@@ -317,7 +317,7 @@ class JsonApiTest extends TestCase
         $user = $timesheet->user;
 
         $response = $this->actingAs($user)
-            ->jsonApi("DELETE", "/api/timesheets/{$timesheet->id}");
+            ->jsonApi("DELETE", "/timesheets/{$timesheet->id}");
 
         $response->assertStatus(204);
         $this->assertDatabaseCount("timesheets", 1);
@@ -331,7 +331,7 @@ class JsonApiTest extends TestCase
         $user = $timesheet->user;
 
         $response = $this->actingAs($user)
-            ->jsonApi("DELETE", "/api/timesheets/{$other_timesheet->id}");
+            ->jsonApi("DELETE", "/timesheets/{$other_timesheet->id}");
 
         $response->assertStatus(403);
         $this->assertDatabaseCount("timesheets", 2);
@@ -346,7 +346,7 @@ class JsonApiTest extends TestCase
             "data" => $this->fakeShiftData($timesheet),
         ];
         $response = $this->actingAs($user)
-            ->jsonApi("POST", "/api/shifts", $request_data);
+            ->jsonApi("POST", "/shifts", $request_data);
         $response->assertStatus(201);
         $response->assertJson([
             "data" => [
@@ -367,7 +367,7 @@ class JsonApiTest extends TestCase
                 "data" => $this->fakeShiftData($timesheet),
             ];
             $response = $this->actingAs($user)
-                ->jsonApi("POST", "/api/shifts", $request_data);
+                ->jsonApi("POST", "/shifts", $request_data);
             $response->assertStatus(201);
             $response->assertJson([
                 "data" => [

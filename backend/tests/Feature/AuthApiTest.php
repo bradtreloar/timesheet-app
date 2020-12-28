@@ -51,7 +51,7 @@ class AuthApiTest extends TestCase
             'email' => $user->email,
             'password' => $plain_password,
         ];
-        $response = $this->postJson("/api/login", $request_data);
+        $response = $this->postJson("/login", $request_data);
         $response->assertStatus(200);
         $data = $response->json();
         $this->assertEquals($this->getUserData($user), $data);
@@ -68,7 +68,7 @@ class AuthApiTest extends TestCase
             'email' => $user->email,
             'password' => $incorrect_password,
         ];
-        $response = $this->postJson("/api/login", $request_data);
+        $response = $this->postJson("/login", $request_data);
         $response->assertStatus(422);
     }
 
@@ -76,7 +76,7 @@ class AuthApiTest extends TestCase
     {
         $this->seed();
         $user = User::find(1);
-        $response = $this->actingAs($user)->getJson("/api/user");
+        $response = $this->actingAs($user)->getJson("/user");
         $response->assertStatus(200);
         $data = $response->json();
         $this->assertEquals($this->getUserData($user), $data);
@@ -86,7 +86,7 @@ class AuthApiTest extends TestCase
     {
         $this->seed();
         $user = User::find(1);
-        $response = $this->postJson("/api/forgot-password", [
+        $response = $this->postJson("/forgot-password", [
             'email' => $user->email,
         ]);
         $response->assertStatus(204);
@@ -99,7 +99,7 @@ class AuthApiTest extends TestCase
         $this->seed();
         $user = User::find(1);
         $token = Password::createToken($user);
-        $response = $this->postJson("/api/reset-password", [
+        $response = $this->postJson("/reset-password", [
             'token' => $token,
             'email' => $user->email,
             'password' => $plain_password,
