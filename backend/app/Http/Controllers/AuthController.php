@@ -68,11 +68,9 @@ class AuthController extends Controller
      */
     public function forgotPassword(Request $request)
     {
-        $request->validate(
-            [
-                'email' => 'required|email',
-            ]
-        );
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
