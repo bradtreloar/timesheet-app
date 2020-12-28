@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\TimesheetNotification;
 use App\Mail\TimesheetReceipt;
+use App\Mail\WelcomeMessage;
 use App\Models\Setting;
 use App\Models\Timesheet;
 use App\Models\User;
@@ -17,6 +18,30 @@ class MailTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
+
+    public function testWelcomeMessageSent()
+    {
+        Mail::fake();
+        $user = User::factory()->create();
+        Mail::assertSent(function (WelcomeMessage $mail) use ($user) {
+            return $mail->user->id === $user->id &&
+                   $mail->hasTo($user);
+        });
+    }
+
+    /**
+     * Tests that the timesheet submitted notification renders correctly.
+     *
+     * @return void
+     */
+    public function testWelcomeMessageRenders()
+    {
+        $this->seed();
+        $user = User::factory()->create();
+        $html_output = (new WelcomeMessage($user))->render();
+        $this->assertStringContainsString("Welcome", $html_output);
+        $this->assertStringContainsString("A user account has been created for you", $html_output);
+    }
 
     /**
      * Tests that the timesheet receipt is sent to the user

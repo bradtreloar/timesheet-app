@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Events\UserCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable
 {
@@ -43,5 +45,12 @@ class User extends Authenticatable
     public function timesheets()
     {
         return $this->hasMany(Timesheet::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function (User $user) {
+            Event::dispatch(new UserCreated($user));
+        });
     }
 }
