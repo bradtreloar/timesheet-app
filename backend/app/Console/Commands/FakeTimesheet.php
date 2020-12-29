@@ -42,6 +42,7 @@ class FakeTimesheet extends Command
                     'timesheet_id' => $timesheet->id,
                 ]);
             }
+            $timesheet->save();
             $stateMachine = StateMachine::get($timesheet, 'timesheetState');
             $stateMachine->apply('complete');
             $timesheet->save();
