@@ -72,6 +72,14 @@ class AuthApiTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function testLogout()
+    {
+        $this->seed();
+        $user = User::find(1);
+        $response = $this->actingAs($user)->postJson("/logout");
+        $response->assertStatus(204);
+    }
+
     public function testFetchCurrentUser()
     {
         $this->seed();
