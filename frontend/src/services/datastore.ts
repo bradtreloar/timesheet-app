@@ -42,16 +42,19 @@ export const login = async (email: string, password: string): Promise<User> => {
 };
 
 export const logout = async () => {
+  await client.get("/csrf-cookie");
   await client.post("/logout");
 };
 
 export const forgotPassword = async (email: string) => {
+  await client.get("/csrf-cookie");
   await client.post("/forgot-password", {
     email,
   });
 };
 
 export const setPassword = async (password: string) => {
+  await client.get("/csrf-cookie");
   await client.post("/set-password", {
     password,
   });
@@ -77,6 +80,7 @@ export const fetchUsers = async (): Promise<User[]> => {
 };
 
 export const createUser = async (user: User): Promise<User> => {
+  await client.get("/csrf-cookie");
   const userResource: UserResource = makeUserResource(user);
   const response: AxiosResponse<{
     data: UserResource;
@@ -88,6 +92,7 @@ export const createUser = async (user: User): Promise<User> => {
 };
 
 export const updateUser = async (user: User): Promise<User> => {
+  await client.get("/csrf-cookie");
   const userResource: UserResource = makeUserResource(user);
   const response: AxiosResponse<{
     data: UserResource;
@@ -99,6 +104,7 @@ export const updateUser = async (user: User): Promise<User> => {
 };
 
 export const deleteUser = async (user: User): Promise<User> => {
+  await client.get("/csrf-cookie");
   const userResource: UserResource = makeUserResource(user);
   await jsonAPIClient.delete(`/users/${user.id}`);
   return user;
@@ -131,6 +137,7 @@ export const createShifts = async (
   shifts: Shift[],
   timesheet: Timesheet
 ): Promise<Shift[]> => {
+  await client.get("/csrf-cookie");
   const shiftResources: ShiftResource[] = shifts.map((shift) =>
     makeShiftResource(shift, timesheet)
   );
@@ -146,6 +153,7 @@ export const createShifts = async (
 export const createTimesheet = async (
   timesheet: Timesheet
 ): Promise<Timesheet> => {
+  await client.get("/csrf-cookie");
   const timesheetResource: TimesheetResource = makeTimesheetResource(timesheet);
   const response: AxiosResponse<{
     data: TimesheetResource;
@@ -159,6 +167,7 @@ export const createTimesheet = async (
 export const deleteTimesheet = async (
   timesheet: Timesheet
 ): Promise<Timesheet> => {
+  await client.get("/csrf-cookie");
   await jsonAPIClient.delete(`/timesheets`);
   return timesheet;
 };
@@ -178,6 +187,7 @@ export const fetchSettings = async (): Promise<Setting[]> => {
 export const updateSettings = async (
   settings: Setting[]
 ): Promise<Setting[]> => {
+  await client.get("/csrf-cookie");
   const response: AxiosResponse<{
     data: SettingResource[];
   }> = await jsonAPIClient.put(`settings`, {
