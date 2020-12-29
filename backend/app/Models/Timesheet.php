@@ -16,6 +16,10 @@ class Timesheet extends Model
 
     const STATE_COMPLETED = 'timesheet.completed';
 
+    protected $fillable = [
+        'comment',
+    ];
+
     /**
      * The model's default values for attributes.
      *

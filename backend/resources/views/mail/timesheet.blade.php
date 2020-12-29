@@ -11,18 +11,18 @@
             <table style="width: 100%; border-collapse: collapse;">
                 <tbody style="text-align: left;vertical-align:top;">
                     <tr>
-                        <th style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;">
+                        <th style="padding:0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;white-space:nowrap;">
                             Employee
                         </th>
-                        <td style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;">
+                        <td style="padding:0.5rem;width:100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;white-space:nowrap;">
                             {{ $timesheet->user->name }}
                         </td>
                     </tr>
                     <tr>
-                        <th style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;">
+                        <th style="padding: 0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;">
                             Submitted
                         </th>
-                        <td style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;">
+                        <td style="padding: 0.5rem;width:100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;">
                             {{ $timesheet->created_at->format("j F Y") }}
                         </td>
                     </tr>
@@ -35,19 +35,19 @@
                 <table style="width: 100%; border-collapse: collapse; min-width: 480px; ">
                     <thead>
                         <tr>
-                            <th style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;">
+                            <th style="padding: 0.5rem;width: 100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;">
                                 Date
                             </th>
-                            <th style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;">
+                            <th style="padding: 0.5rem;width: 100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;">
                                 Start
                             </th>
-                            <th style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;" h>
+                            <th style="padding: 0.5rem;width: 100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;" h>
                                 End
                             </th>
-                            <th style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;" h>
+                            <th style="padding: 0.5rem;width: 100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;" h>
                                 Break
                             </th>
-                            <th style="padding: 0.5rem;width: 100%;border: 1px solid #cccccc; white-space: nowrap;" h>
+                            <th style="padding: 0.5rem;width: 100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;" h>
                                 Hours
                             </th>
                         </tr>
@@ -55,23 +55,39 @@
                     <tbody style="text-align: left;vertical-align:top;">
                         @foreach ($timesheet->shifts as $shift)
                             <tr>
-                                <td style="padding: 0.5rem;border: 1px solid #cccccc;">
+                                <td style="padding: 0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;">
                                     {{ $shift->start->format("D d-m-Y") }}
                                 </td>
-                                <td style="padding: 0.5rem;border: 1px solid #cccccc;white-space:nowrap">
+                                <td style="padding: 0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;white-space:nowrap">
                                     {{ $shift->start->format("h:i A") }}
                                 </td>
-                                <td style="padding: 0.5rem;border: 1px solid #cccccc;white-space:nowrap">
+                                <td style="padding: 0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;white-space:nowrap">
                                     {{ $shift->end->format("h:i A") }}
                                 </td>
-                                <td style="padding: 0.5rem;border: 1px solid #cccccc;white-space:nowrap">
+                                <td style="padding: 0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;white-space:nowrap">
                                     {{ $shift->break_duration }} min
                                 </td>
-                                <td style="padding: 0.5rem;border: 1px solid #cccccc;white-space:nowrap">
+                                <td style="padding: 0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;white-space:nowrap">
                                     {{ $shift->hours }} hours
                                 </td>
                             </tr>
                         @endforeach
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size:1.25rem;font-weight:bold;padding:1rem 0">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tbody style="text-align: left;vertical-align:top;">
+                        <tr>
+                            <th style="padding:0.5rem;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc; white-space: nowrap;">
+                                Comment
+                            </th>
+                            <td style="width:100%;padding: 0.5rem;width: 100%;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;">
+                                {{ $timesheet->comment ? $timesheet->comment : "<none>" }}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </td>

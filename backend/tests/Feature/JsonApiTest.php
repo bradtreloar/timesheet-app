@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class JsonApiTest extends TestCase
@@ -60,6 +61,9 @@ class JsonApiTest extends TestCase
     {
         return  [
             "type" => "timesheets",
+            "attributes" => [
+                "comment" => Str::random(),
+            ],
             "relationships" => [
                 "user" => [
                     "data" => [

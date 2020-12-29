@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Timesheet;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class TimesheetFactory extends Factory
 {
@@ -21,6 +22,8 @@ class TimesheetFactory extends Factory
      */
     public function definition()
     {
-        return [];
+        return [
+            'comment' => Str::random(40),
+        ];
     }
 }
