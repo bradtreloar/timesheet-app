@@ -97,10 +97,11 @@ class MailTest extends TestCase
         $html_output = (new TimesheetNotification($timesheet))->render();
         $this->assertStringContainsString("Timesheet Submitted", $html_output);
         $this->assertStringContainsString($user->name, $html_output);
-        $this->assertStringContainsString($timesheet->created_at->toString(), $html_output);
+        $this->assertStringContainsString($timesheet->created_at->format("j F Y"), $html_output);
         foreach ($timesheet->shifts as $shift) {
-            $this->assertStringContainsString($shift->start->toString(), $html_output);
-            $this->assertStringContainsString($shift->end->toString(), $html_output);
+            $this->assertStringContainsString($shift->start->format("D d-m-Y"), $html_output);
+            $this->assertStringContainsString($shift->start->format("h:i A"), $html_output);
+            $this->assertStringContainsString($shift->end->format("h:i A"), $html_output);
             $this->assertStringContainsString($shift->break_duration, $html_output);
             $this->assertStringContainsString($shift->hours, $html_output);
         }
