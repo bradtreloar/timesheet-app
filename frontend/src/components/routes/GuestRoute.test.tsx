@@ -37,7 +37,7 @@ beforeEach(() => {
 });
 
 test("renders guest route when not authenticated", async () => {
-  mockClient.onGet("/api/user").reply(204);
+  mockClient.onGet("/user").reply(204);
 
   await act(async () => {
     render(<Fixture initialEntries={["/login"]} />);
@@ -48,7 +48,7 @@ test("renders guest route when not authenticated", async () => {
 
 test("redirects to / when authenticated", async () => {
   const mockUser = randomUser();
-  mockClient.onGet("/api/user").reply(200, makeUserData(mockUser));
+  mockClient.onGet("/user").reply(200, makeUserData(mockUser));
   localStorage.setItem("user", JSON.stringify(mockUser));
 
   await act(async () => {
@@ -60,7 +60,7 @@ test("redirects to / when authenticated", async () => {
 
 test("redirects to referer path when authenticated", async () => {
   const mockUser = randomUser();
-  mockClient.onGet("/api/user").reply(200, makeUserData(mockUser));
+  mockClient.onGet("/user").reply(200, makeUserData(mockUser));
   localStorage.setItem("user", JSON.stringify(mockUser));
 
   await act(async () => {

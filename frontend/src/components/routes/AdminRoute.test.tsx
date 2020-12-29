@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 test("redirects to /login when not authenticated", async () => {
-  mockClient.onGet("/api/user").reply(204);
+  mockClient.onGet("/user").reply(204);
   await act(async () => {
     render(<Fixture />);
   });
@@ -39,7 +39,7 @@ test("redirects to /login when not authenticated", async () => {
 
 test("renders admin route when authenticated as admin", async () => {
   const testUser = randomUser(true);
-  mockClient.onGet("/api/user").reply(200, makeUserData(testUser));
+  mockClient.onGet("/user").reply(200, makeUserData(testUser));
   localStorage.setItem("user", JSON.stringify(testUser));
   await act(async () => {
     render(<Fixture />);
@@ -49,7 +49,7 @@ test("renders admin route when authenticated as admin", async () => {
 
 test("renders access denied route when authenticated but not admin", async () => {
   const testUser = randomUser();
-  mockClient.onGet("/api/user").reply(200, makeUserData(testUser));
+  mockClient.onGet("/user").reply(200, makeUserData(testUser));
   localStorage.setItem("user", JSON.stringify(testUser));
   await act(async () => {
     render(<Fixture />);

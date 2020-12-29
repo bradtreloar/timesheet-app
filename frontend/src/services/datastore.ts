@@ -33,8 +33,8 @@ export const jsonAPIClient = axios.create({
 });
 
 export const login = async (email: string, password: string): Promise<User> => {
-  await client.get("/api/csrf-cookie");
-  const response: AxiosResponse<UserData> = await client.post("/api/login", {
+  await client.get("/csrf-cookie");
+  const response: AxiosResponse<UserData> = await client.post("/login", {
     email,
     password,
   });
@@ -42,23 +42,23 @@ export const login = async (email: string, password: string): Promise<User> => {
 };
 
 export const logout = async () => {
-  await client.post("/api/logout");
+  await client.post("/logout");
 };
 
 export const forgotPassword = async (email: string) => {
-  await client.post("/api/forgot-password", {
+  await client.post("/forgot-password", {
     email,
   });
 };
 
 export const setPassword = async (password: string) => {
-  await client.post("/api/set-password", {
+  await client.post("/set-password", {
     password,
   });
 };
 
 export const fetchCurrentUser = async (): Promise<User | null> => {
-  const response: AxiosResponse<UserData> = await client.get(`/api/user`);
+  const response: AxiosResponse<UserData> = await client.get(`/user`);
   if (response.status === 204) {
     // No current user.
     return null;
