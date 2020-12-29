@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { AuthProvider, useAuth } from "./auth";
 import { client } from "services/datastore";
 import { randomPassword, randomUser } from "fixtures/random";
+import randomstring from "randomstring";
 import MockAdapter from "axios-mock-adapter";
 import { makeUserData } from "services/adaptors";
 
@@ -156,6 +157,79 @@ describe("unauthenticated user", () => {
     });
 
     screen.getByText(/User is logged in/);
+  });
+
+  test("requests password reset", async () => {
+    mockClient.onPost("/forgot-password").reply(204);
+
+    const Fixture: React.FC = () => {
+      const { forgotPassword } = useAuth();
+      const [message, setMessage] = useState("");
+    
+      return (
+        <>
+          {message && <div>{message}</div>}
+          <button
+            onClick={async () => {
+              await forgotPassword(mockUser.email);
+              setMessage("Request Submitted");
+            }}
+          >
+            Reset Password
+          </button>
+        </>
+      );
+    };
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <Fixture />;
+        </AuthProvider>
+      );
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText(/reset password/i));
+    });
+    screen.getByText(/request submitted/i);
+  });
+
+  test("resets password using token", async () => {
+    mockClient.onPost("/reset-password").reply(204);
+
+    const Fixture: React.FC = () => {
+      const { resetPassword } = useAuth();
+      const [message, setMessage] = useState("");
+      const testToken = randomstring.generate(50);
+    
+      return (
+        <>
+          {message && <div>{message}</div>}
+          <button
+            onClick={async () => {
+              await resetPassword(mockUser.email, testToken, mockPassword);
+              setMessage("password was reset");
+            }}
+          >
+            Save Password
+          </button>
+        </>
+      );
+    };
+
+    await act(async () => {
+      render(
+        <AuthProvider>
+          <Fixture />;
+        </AuthProvider>
+      );
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText(/save password/i));
+    });
+    screen.getByText(/password was reset/i);
   });
 });
 

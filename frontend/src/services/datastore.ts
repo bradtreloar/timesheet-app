@@ -60,6 +60,15 @@ export const setPassword = async (password: string) => {
   });
 };
 
+export const resetPassword = async (email: string, token: string, password: string) => {
+  await client.get("/csrf-cookie");
+  await client.post("/reset-password", {
+    email,
+    token,
+    password,
+  });
+};
+
 export const fetchCurrentUser = async (): Promise<User | null> => {
   const response: AxiosResponse<UserData> = await client.get(`/user`);
   if (response.status === 204) {
