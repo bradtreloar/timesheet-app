@@ -3,6 +3,8 @@
 namespace App\Mail;
 
 use App\Models\Timesheet;
+use App\Services\TimesheetPDF;
+use App\Services\TimesheetPDFWriter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -15,6 +17,11 @@ class TimesheetNotification extends Mailable
      * @var Timesheet
      */
     public $timesheet;
+
+    /**
+     * @var TimesheetPDFWriter
+     */
+    public $timesheetPDFWriter;
 
     /**
      * Create a new message instance.
@@ -36,6 +43,7 @@ class TimesheetNotification extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.timesheet');
+        $attachment_path = TimesheetPDF::create($this->timesheet);
+        return $this->view('mail.timesheet')->attach($attachment_path);
     }
 }

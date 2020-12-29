@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Timesheet;
+use App\Services\TimesheetPDF;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -36,6 +37,7 @@ class TimesheetReceipt extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.timesheet');
+        $attachment_path = TimesheetPDF::create($this->timesheet);
+        return $this->view('mail.timesheet')->attach($attachment_path);
     }
 }

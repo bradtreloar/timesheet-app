@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Storage;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +26,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Delete temporary files older than a day.
+        $schedule->call(function () {
+            $storage = Storage::disk('temporary');
+            $now = Carbon::now();
+            foreach ($storage->files() as $file) {
+                $lastModified = new Carbon($storage->lastModified($file));
+                if ($lastModified->diffInDays($now) > 0) {
+                    $storage->delete($file);
+                }
+            }
+        })->daily();
     }
 
     /**

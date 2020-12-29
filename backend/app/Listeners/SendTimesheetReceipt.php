@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\TimesheetCompleted;
 use App\Mail\TimesheetReceipt;
+use App\Services\TimesheetPDFWriter;
 use Illuminate\Support\Facades\Mail;
 
 class SendTimesheetReceipt
