@@ -24,16 +24,6 @@ class CreateUser extends Command
     protected $description = 'Create a new user.';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
@@ -42,12 +32,32 @@ class CreateUser extends Command
     {
         $plain_password = $this->argument("password");
 
+        $default_shifts = [];
+        for ($i = 0; $i < 7; $i++) {
+            $default_shifts[] = [
+                "isActive" => true,
+                "start" => [
+                    "hours" => 9,
+                    "minutes" => 0,
+                ],
+                "end" => [
+                    "hours" => 17,
+                    "minutes" => 0,
+                ],
+                "breakDuration" => [
+                    "hours" => 0,
+                    "minutes" => 30,
+                ],
+            ];
+        }
+
         try {
             $user = new User([
                 "name" => $this->argument("name"),
                 "email" => $this->argument("email"),
                 "password" => Hash::make($plain_password),
                 'is_admin' => $this->option("admin"),
+                'default_shifts' => json_encode($default_shifts),
             ]);
             $user->markEmailAsVerified();
             $user->save();
