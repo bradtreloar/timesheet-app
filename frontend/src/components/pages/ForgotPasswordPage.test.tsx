@@ -47,7 +47,7 @@ test("handles ForgotPasswordForm submission", async () => {
 test("displays error when login fails", async () => {
   jest
     .spyOn(datastore, "forgotPassword")
-    .mockRejectedValue(new Error("unable to reset password"));
+    .mockRejectedValue(new Error("Unable to request password reset"));
 
   await act(async () => {
     render(<Fixture />);
@@ -57,5 +57,5 @@ test("displays error when login fails", async () => {
   await act(async () => {
     userEvent.click(screen.getByTestId("password-reset-form-submit"));
   });
-  screen.getByText(/unable to reset password/i);
+  screen.getByText(/Unable to request password reset/i);
 });

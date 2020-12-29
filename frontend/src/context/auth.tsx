@@ -96,7 +96,7 @@ const AuthProvider: React.FC = ({ children }) => {
     try {
       await datastore.forgotPassword(email);
     } catch (error) {
-      throw new Error(`Unable to reset password.`);
+      throw new Error(`Unable to request password reset.`);
     }
   };
 
