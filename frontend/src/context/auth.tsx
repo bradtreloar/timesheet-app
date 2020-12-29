@@ -11,7 +11,7 @@ interface AuthContextState {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
   setPassword: (password: string) => Promise<void>;
 }
 
@@ -92,9 +92,9 @@ const AuthProvider: React.FC = ({ children }) => {
   /**
    * Requests a password reset.
    */
-  const resetPassword = async (email: string) => {
+  const forgotPassword = async (email: string) => {
     try {
-      await datastore.resetPassword(email);
+      await datastore.forgotPassword(email);
     } catch (error) {
       throw new Error(`Unable to reset password.`);
     }
@@ -133,7 +133,7 @@ const AuthProvider: React.FC = ({ children }) => {
     user,
     login,
     logout,
-    resetPassword,
+    forgotPassword,
     setPassword,
   };
 

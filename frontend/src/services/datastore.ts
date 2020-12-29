@@ -45,8 +45,8 @@ export const logout = async () => {
   await client.post("/api/logout");
 };
 
-export const resetPassword = async (email: string) => {
-  await client.post("/api/reset-password", {
+export const forgotPassword = async (email: string) => {
+  await client.post("/api/forgot-password", {
     email,
   });
 };

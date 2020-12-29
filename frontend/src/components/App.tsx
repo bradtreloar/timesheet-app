@@ -8,7 +8,7 @@ import NotFoundPage from "components/pages/NotFoundPage";
 import store from "store";
 import { fetchTimesheets } from "store/timesheets";
 import { User } from "types";
-import PasswordResetPage from "./pages/PasswordResetPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import PasswordPage from "./pages/PasswordPage";
 import TimesheetConfirmPage from "./pages/TimesheetConfirmPage";
 import TimesheetFormPage from "./pages/TimesheetFormPage";
@@ -68,8 +68,8 @@ const App: React.FC = () => {
       <GuestRoute exact path="/login">
         <LoginPage />
       </GuestRoute>
-      <GuestRoute exact path="/reset-password">
-        <PasswordResetPage />
+      <GuestRoute exact path="/forgot-password">
+        <ForgotPasswordPage />
       </GuestRoute>
       <Route>
         <NotFoundPage />

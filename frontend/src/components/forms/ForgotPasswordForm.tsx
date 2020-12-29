@@ -5,11 +5,11 @@ import Form from "react-bootstrap/Form";
 import useForm from "hooks/useForm";
 import { Alert, Button } from "react-bootstrap";
 
-interface PasswordResetFormValues {
+interface ForgotPasswordFormValues {
   email: string;
 }
 
-const initialValues: PasswordResetFormValues = {
+const initialValues: ForgotPasswordFormValues = {
   email: "",
 };
 
@@ -26,12 +26,12 @@ const validate = (values: any) => {
   return errors;
 };
 
-interface PasswordResetFormProps {
-  onSubmit: (values: PasswordResetFormValues) => void;
+interface ForgotPasswordFormProps {
+  onSubmit: (values: ForgotPasswordFormValues) => void;
   className?: string;
 }
 
-const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
+const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   onSubmit,
   className,
 }) => {
@@ -75,4 +75,4 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
   );
 };
 
-export default PasswordResetForm;
+export default ForgotPasswordForm;

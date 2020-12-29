@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { AuthProvider } from "context/auth";
 import { MemoryRouter } from "react-router-dom";
 import { randomUser } from "fixtures/random";
-import PasswordResetPage from "./PasswordResetPage";
+import ForgotPasswordPage from "./ForgotPasswordPage";
 import * as datastore from "services/datastore";
 
 jest.mock("services/datastore");
@@ -15,7 +15,7 @@ const Fixture: React.FC = () => {
   return (
     <AuthProvider>
       <MemoryRouter>
-        <PasswordResetPage />
+        <ForgotPasswordPage />
       </MemoryRouter>
     </AuthProvider>
   );
@@ -30,8 +30,8 @@ test("renders password reset page", async () => {
   screen.getByLabelText(/email Address/i);
 });
 
-test("handles PasswordResetForm submission", async () => {
-  jest.spyOn(datastore, "resetPassword").mockResolvedValue();
+test("handles ForgotPasswordForm submission", async () => {
+  jest.spyOn(datastore, "forgotPassword").mockResolvedValue();
 
   await act(async () => {
     render(<Fixture />);
@@ -41,12 +41,12 @@ test("handles PasswordResetForm submission", async () => {
   await act(async () => {
     userEvent.click(screen.getByTestId("password-reset-form-submit"));
   });
-  expect(datastore.resetPassword).toHaveBeenCalledWith(testUser.email);
+  expect(datastore.forgotPassword).toHaveBeenCalledWith(testUser.email);
 });
 
 test("displays error when login fails", async () => {
   jest
-    .spyOn(datastore, "resetPassword")
+    .spyOn(datastore, "forgotPassword")
     .mockRejectedValue(new Error("unable to reset password"));
 
   await act(async () => {

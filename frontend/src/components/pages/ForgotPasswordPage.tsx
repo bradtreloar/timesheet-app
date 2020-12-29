@@ -4,17 +4,17 @@ import PageTitle from "components/PageTitle";
 import { useAuth } from "context/auth";
 import DefaultLayout from "components/layouts/DefaultLayout";
 import useFormController from "hooks/useFormController";
-import PasswordResetForm from "components/forms/PasswordResetForm";
+import ForgotPasswordForm from "components/forms/ForgotPasswordForm";
 import { useHistory } from "react-router";
 
-const PasswordResetPage = () => {
-  const { resetPassword } = useAuth();
+const ForgotPasswordPage = () => {
+  const { forgotPassword } = useAuth();
   const history = useHistory();
 
   const { formError, formPending, handleSubmit } = useFormController<{
     email: string;
   }>(async ({ email }) => {
-    await resetPassword(email);
+    await forgotPassword(email);
     history.push("/");
   });
 
@@ -23,7 +23,7 @@ const PasswordResetPage = () => {
       <PageTitle>Reset Password</PageTitle>
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
-        <PasswordResetForm
+        <ForgotPasswordForm
           className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
         />
@@ -32,4 +32,4 @@ const PasswordResetPage = () => {
   );
 };
 
-export default PasswordResetPage;
+export default ForgotPasswordPage;

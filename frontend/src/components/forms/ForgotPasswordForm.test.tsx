@@ -2,19 +2,19 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
-import PasswordResetForm from "./PasswordResetForm";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 import { randomUser } from "fixtures/random";
 import { noop } from "lodash";
 
 const testEmail = randomUser().email;
 
 test("Form renders", () => {
-  render(<PasswordResetForm onSubmit={noop} />);
+  render(<ForgotPasswordForm onSubmit={noop} />);
 });
 
 test("Form submission succeeds", (done) => {
   render(
-    <PasswordResetForm
+    <ForgotPasswordForm
       onSubmit={({ email }) => {
         expect(email).toBe(testEmail);
         done();
@@ -28,7 +28,7 @@ test("Form submission succeeds", (done) => {
 
 test("Empty form submission fails", async () => {
   render(
-    <PasswordResetForm
+    <ForgotPasswordForm
       onSubmit={() => {
         throw new Error("onSubmit should not be called.");
       }}
@@ -43,7 +43,7 @@ test("Reject invalid form input", () => {
   const invalidEmail = testEmail.replace("@", "_");
 
   render(
-    <PasswordResetForm
+    <ForgotPasswordForm
       onSubmit={() => {
         throw new Error("onSubmit should not be called.");
       }}

@@ -31,7 +31,7 @@ test("renders password page", async () => {
   screen.getByLabelText(/re-enter new password/i);
 });
 
-test("handles PasswordResetForm submission", async () => {
+test("handles ForgotPasswordForm submission", async () => {
   jest.spyOn(datastore, "setPassword").mockResolvedValue();
 
   await act(async () => {
