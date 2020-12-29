@@ -46,6 +46,6 @@ return [
 
 
     // Change route prefix
-    'prefix' => 'api',
+    'prefix' => '',
 
 ];
