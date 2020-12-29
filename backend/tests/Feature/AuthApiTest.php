@@ -114,4 +114,20 @@ class AuthApiTest extends TestCase
         ]);
         $response->assertStatus(204);
     }
+
+    public function testSetPassword()
+    {
+        $plain_password = $this->faker()->password();
+        $password_hash = Hash::make($plain_password);
+        $this->seed();
+        $user = User::find(1);
+        $old_user_password = $user->password;
+        $token = Password::createToken($user);
+        $response = $this->actingAs($user)->postJson("/set-password", [
+            'password' => $plain_password,
+        ]);
+        $response->assertStatus(204);
+        $user = User::find(1);
+        $this->assertNotEquals($old_user_password, $user->password);
+    }
 }

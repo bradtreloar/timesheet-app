@@ -28,6 +28,9 @@ Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
+Route::post('set-password', [AuthController::class, 'setPassword'])
+    ->middleware('auth:api');
+
 JsonApi::register('default')
     ->middleware('auth:api')
     ->routes(

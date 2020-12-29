@@ -122,4 +122,20 @@ class AuthController extends Controller
             throw new BadRequestException();
         }
     }
+
+    /**
+     * Handle an password change by the current user.
+     */
+    public function setPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = $request->user();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return new NoContentResponse();
+    }
 }
