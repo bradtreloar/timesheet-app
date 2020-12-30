@@ -15,8 +15,8 @@ class CreateShiftsTable extends Migration
     {
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
-            $table->dateTimeTz('start');
-            $table->dateTimeTz('end');
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->integer('break_duration');
             $table->bigInteger('timesheet_id');
             $table->timestamps();
