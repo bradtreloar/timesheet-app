@@ -64,19 +64,24 @@ const process = (values: any): { shifts: Shift[] } => {
   range(7).forEach((index) => {
     if (values[`shift.${index}.isActive`]) {
       const shiftDate = addDays(weekStartDate, index);
+      const startDateTime = new Time(
+        values[`shift.${index}.startTime.hours`],
+        values[`shift.${index}.startTime.minutes`]
+      ).toDateTime(shiftDate);
+      const startISO = startDateTime.toISO();
       const shift = {
         start: new Time(
           values[`shift.${index}.startTime.hours`],
           values[`shift.${index}.startTime.minutes`]
         )
-          .toDate(shiftDate)
-          .toISOString(),
+          .toDateTime(shiftDate)
+          .toISO(),
         end: new Time(
           values[`shift.${index}.endTime.hours`],
           values[`shift.${index}.endTime.minutes`]
         )
-          .toDate(shiftDate)
-          .toISOString(),
+          .toDateTime(shiftDate)
+          .toISO(),
         breakDuration: new Time(
           values[`shift.${index}.breakDuration.hours`],
           values[`shift.${index}.breakDuration.minutes`]

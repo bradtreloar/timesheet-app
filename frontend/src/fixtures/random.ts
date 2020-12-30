@@ -3,6 +3,7 @@ import randomstring from "randomstring";
 import { addDays, addHours, Time } from "services/date";
 import faker from "faker";
 import { random as randomNumber, range } from "lodash";
+import { DateTime } from "luxon";
 
 const randomID = () => randomstring.generate();
 
@@ -75,34 +76,33 @@ export const randomShiftTimes = (): ShiftTimes => {
  *
  * @param date
  */
-export const randomShiftDates = (date: Date) => {
-  date.setHours(0, 0, 0, 0);
+export const randomShiftDates = (datetime: DateTime) => {
   const shiftDuration = Math.floor(Math.random() * 12);
-  const startHours = Math.floor(Math.random() * 12);
-  const start = addHours(date, startHours);
-  const end = addHours(date, startHours + shiftDuration);
+  const startHour = Math.floor(Math.random() * 12);
+  const start = datetime.plus({ hours: startHour });
+  const end = start.plus({ hours: shiftDuration });
   return [start, end];
 };
 
-export const randomShift = (weekStartDate: Date, dateOffset: number): Shift => {
-  const [start, end] = randomShiftDates(addDays(weekStartDate, dateOffset));
+export const randomShift = (dateTime: DateTime): Shift => {
+  const [start, end] = randomShiftDates(dateTime);
   return {
-    start: start.toISOString(),
-    end: end.toISOString(),
+    start: start.toISO(),
+    end: end.toISO(),
     breakDuration: randomMinutes(30, 60),
   };
 };
 
 export const randomTimesheet = (user: User): Timesheet => {
-  const weekStartDate = new Date(Date.now());
+  const weekStartDateTime = DateTime.fromObject({ hour: 0, minute: 0 });
   return {
     id: randomID(),
     userID: user.id as string,
     shifts: range(7).map(
-      (dateOffset): Shift => randomShift(weekStartDate, dateOffset)
+      (dateOffset): Shift => randomShift(weekStartDateTime.plus({ days: dateOffset }))
     ),
-    created: new Date().toISOString(),
-    changed: new Date().toISOString(),
+    created: DateTime.local().toISO(),
+    changed: DateTime.local().toISO(),
   };
 };
 
@@ -118,15 +118,15 @@ export const randomSettings = (
     id: randomID(),
     name: "timesheetRecipients",
     value: settings?.timesheetRecipients || faker.internet.email(),
-    created: new Date().toISOString(),
-    changed: new Date().toISOString(),
+    created: DateTime.local().toISO(),
+    changed: DateTime.local().toISO(),
   },
   {
     id: randomID(),
     name: "firstDayOfWeek",
     value: settings?.firstDayOfWeek || randomInt(0, 6).toString(),
-    created: new Date().toISOString(),
-    changed: new Date().toISOString(),
+    created: DateTime.local().toISO(),
+    changed: DateTime.local().toISO(),
   },
 ];
 

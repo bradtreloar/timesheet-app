@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Shift, ShiftTimes, Timesheet } from "types";
 
 /**
@@ -288,6 +289,23 @@ export class Time {
     const hours = this.hours || 0;
     const minutes = this.minutes || 0;
     return addMinutes(addHours(date, hours), minutes);
+  }
+
+  /**
+   * Create a DateTime object with this time and the given date.
+   *
+   * @param date
+   */
+  toDateTime(date: Date) {
+    return DateTime.fromObject({
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+      hour: this.hours || 0,
+      minute: this.minutes || 0,
+      second: 0,
+      millisecond: 0,
+    });
   }
 
   /**
