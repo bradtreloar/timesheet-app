@@ -1,6 +1,10 @@
 import React, { useCallback } from "react";
-import { range } from "lodash";
-import { Time } from "services/date";
+import { isEmpty, isEqual, range } from "lodash";
+import {
+  getShiftHoursFromTimes,
+  InvalidTimeException,
+  Time,
+} from "services/date";
 import { Shift, ShiftTimes } from "types";
 import useForm, { FormErrors } from "hooks/useForm";
 import WeekSelect from "components/inputs/WeekSelect";
@@ -20,6 +24,19 @@ export const shiftTimesInputNames = shiftTimesNames.reduce((names, name) => {
 }, [] as string[]);
 
 export const shiftInputNames = ["isActive", ...shiftTimesInputNames] as const;
+
+const getShiftTimesFromValues = (values: any, index: number) => {
+  return {
+    isActive: values[`shift.${index}.isActive`],
+    ...shiftTimesNames.reduce((times, name) => {
+      times[name] = {
+        hours: values[`shift.${index}.${name}.hours`],
+        minutes: values[`shift.${index}.${name}.minutes`],
+      };
+      return times;
+    }, {} as any),
+  } as ShiftTimes;
+};
 
 /**
  * Prepares the values for the form's initial state.
@@ -63,24 +80,25 @@ const process = (values: any): { shifts: Shift[] } => {
   const weekStartDateTime = values.weekStartDateTime as DateTime;
   const shifts: Shift[] = [];
   range(7).forEach((index) => {
-    if (values[`shift.${index}.isActive`]) {
+    const shiftTimes = getShiftTimesFromValues(values, index);
+    if (shiftTimes.isActive) {
       const shiftDate = weekStartDateTime.plus({ days: index });
       const shift = {
         start: shiftDate
           .set({
-            hour: values[`shift.${index}.startTime.hours`],
-            minute: values[`shift.${index}.startTime.minutes`],
+            hour: parseInt(shiftTimes.startTime.hours),
+            minute: parseInt(shiftTimes.startTime.minutes),
           })
           .toISO(),
         end: shiftDate
           .set({
-            hour: values[`shift.${index}.endTime.hours`],
-            minute: values[`shift.${index}.endTime.minutes`],
+            hour: parseInt(shiftTimes.endTime.hours),
+            minute: parseInt(shiftTimes.endTime.minutes),
           })
           .toISO(),
         breakDuration: new Time(
-          values[`shift.${index}.breakDuration.hours`],
-          values[`shift.${index}.breakDuration.minutes`]
+          shiftTimes.breakDuration.hours,
+          shiftTimes.breakDuration.minutes
         ).toMinutes(),
       };
       shifts.push(shift);
@@ -137,6 +155,30 @@ const validate = (values: any) => {
     });
   });
 
+  if (isEmpty(errors)) {
+    range(7).forEach((index) => {
+      const shiftTimes = getShiftTimesFromValues(values, index);
+      if (shiftTimes.isActive) {
+        const startTime = Time.fromObject(shiftTimes.startTime);
+        const endTime = Time.fromObject(shiftTimes.endTime);
+        const breakDuration = Time.fromObject(shiftTimes.breakDuration);
+
+        if (endTime.toMinutes() <= startTime.toMinutes()) {
+          errors[`shift.${index}.endTime`] = `Must be later than start`;
+        } else if (
+          endTime.toMinutes() -
+            startTime.toMinutes() -
+            breakDuration.toMinutes() <=
+          0
+        ) {
+          errors[
+            `shift.${index}.breakDuration`
+          ] = `Must be less than total shift`;
+        }
+      }
+    });
+  }
+
   if (!hasActiveShifts) {
     errors[`form`] = `At least one shift is required.`;
   }
@@ -170,6 +212,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     handleChange,
     handleBlur,
     handleSubmit,
+    visibleErrors,
   } = useForm(
     initialValues,
     (values) => {
@@ -197,8 +240,11 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   };
 
   const timeInput = (name: string, label: string) => {
+    const timeError = errors[`${name}`];
     const hoursError = errors[`${name}.hours`];
     const minutesError = errors[`${name}.minutes`];
+    const visibleHoursError = visibleErrors[`${name}.hours`];
+    const visibleMinutesError = visibleErrors[`${name}.minutes`];
 
     return (
       <div aria-label={label}>
@@ -212,10 +258,17 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
           onBlur={handleBlur}
           onChange={handleChange}
         />
-        {(hoursError || minutesError) && (
+        {(timeError || visibleHoursError || visibleMinutesError) && (
           <div className="invalid-feedback">
-            {hoursError && <div>{hoursError}</div>}
-            {minutesError && <div>{minutesError}</div>}
+            {timeError && (
+              <div>{timeError}</div>
+            )}
+            {visibleHoursError && (
+              <div>{errors[`${name}.hours`]}</div>
+            )}
+            {visibleMinutesError && (
+              <div>{errors[`${name}.minutes`]}</div>
+            )}
           </div>
         )}
       </div>
@@ -225,8 +278,17 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   const shiftInputs = range(7).map((index) => {
     const name = `shift.${index}`;
     const shiftDate = values.weekStartDateTime.plus({ days: index });
+    const shiftTimes = getShiftTimesFromValues(values, index);
+    let shiftHours;
+    try {
+      shiftHours = getShiftHoursFromTimes(shiftTimes);
+    } catch (error) {
+      if (!(error instanceof InvalidTimeException)) {
+        throw error;
+      }
+    }
     const label = shiftDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
-    const isActive = values[`${name}.isActive`] as boolean;
+    const isActive = shiftTimes.isActive;
 
     return (
       <div key={index} aria-label="Shift">
@@ -253,6 +315,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               {timeInput(`${name}.endTime`, "End time")}
               {timeInput(`${name}.breakDuration`, "Break Duration")}
             </div>
+            <div>{shiftHours} hours</div>
           </>
         )}
       </div>
