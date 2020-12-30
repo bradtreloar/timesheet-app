@@ -1,11 +1,12 @@
 import { act, render, screen } from "@testing-library/react";
 import { AuthProvider } from "context/auth";
 import { randomSettings, randomTimesheets, randomUser } from "fixtures/random";
+import { DateTime } from "luxon";
 import React from "react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route } from "react-router";
 import * as datastore from "services/datastore";
-import { formattedDate, getTimesheetTotalHours } from "services/date";
+import { getTimesheetTotalHours } from "services/date";
 import store from "store";
 import { setSettings } from "store/settings";
 import { setTimesheets } from "store/timesheets";
@@ -44,8 +45,11 @@ test("renders timesheet index page", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent(/timesheets/i);
   testTimesheets.forEach((timesheet) => {
-    const created = new Date(timesheet.created as string);
-    screen.getAllByText(formattedDate(created));
+    screen.getAllByText(
+      DateTime.fromISO(timesheet.created as string).toLocaleString(
+        DateTime.DATE_SHORT
+      )
+    );
     screen.getAllByText(getTimesheetTotalHours(timesheet));
   });
 });

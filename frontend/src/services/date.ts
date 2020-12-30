@@ -2,96 +2,6 @@ import { DateTime } from "luxon";
 import { Shift, ShiftTimes, Timesheet } from "types";
 
 /**
- * Add week to a Date.
- *
- * @param date
- */
-export const addWeek = (date: Date) => {
-  return addDays(date, 7);
-};
-
-/**
- * Subtract week from a Date.
- *
- * @param date
- */
-export const subtractWeek = (date: Date) => {
-  return addDays(date, -7);
-};
-
-/**
- * Add days to a Date.
- *
- * @param date
- * @param days
- */
-export const addDays = (date: Date, days: number) => {
-  var newDate = new Date(date);
-  newDate.setDate(newDate.getDate() + days);
-  return newDate;
-};
-
-/**
- * Add hours to a Date
- *
- * @param date
- * @param hours
- */
-export const addHours = (date: Date, hours: number) => {
-  var newDate = new Date(date);
-  newDate.setHours(newDate.getHours() + hours);
-  return newDate;
-};
-
-/**
- * Add hours to a Date
- *
- * @param date
- * @param hours
- */
-export const addMinutes = (date: Date, minutes: number) => {
-  var newDate = new Date(date);
-  newDate.setMinutes(newDate.getMinutes() + minutes);
-  return newDate;
-};
-
-/**
- * Gets the start of the week that the date belongs to.
- *
- * @param date   The date to count back from.
- * @param firstDayOfWeek   The first day of the week, where 0 = Sunday.
- * @return date  The date of the start of the week.
- */
-export const startOfWeek = (date: Date, firstDayOfWeek: number) => {
-  const day = date.getDay();
-  const newDate = addDays(date, firstDayOfWeek - day);
-  newDate.setHours(0, 0, 0, 0);
-  return newDate;
-};
-
-/**
- * Gets the end of the week that the date belongs to.
- *
- * @param date   The date to count forward from.
- * @param firstDayOfWeek   The first day of the week, where 0 = Sunday.
- * @return date  The date of the end of the week.
- */
-export const endOfWeek = (date: Date, firstDayOfWeek: number) => {
-  const day = date.getDay();
-  const newDate = addDays(date, firstDayOfWeek - day + 7);
-  newDate.setHours(0, 0, 0, 0);
-  return newDate;
-};
-
-/**
- * Gets the Australian English day name.
- *
- * @param date
- */
-export const getDayName = (date: Date) =>
-  date.toLocaleDateString("en-AU", { weekday: "long" });
-
-/**
  * Gets the Australian English day name.
  *
  * @param number the day of the week, where Sunday is 0.
@@ -106,45 +16,6 @@ export const getWeekdayName = (number: number) =>
     "Friday",
     "Saturday",
   ][number];
-
-/**
- * Gets the Australian English month name.
- *
- * @param date
- */
-function getMonthName(date: Date) {
-  return date.toLocaleDateString("en-AU", { month: "long" });
-}
-
-/**
- * Converts date to string in format DD-MM-YYYY
- *
- * @param date  The date to format
- *
- * @return string  The formatted date.
- */
-export const formattedDate = (date: Date) => {
-  const year = date.getFullYear().toString().padStart(4, "0");
-  const month = date.getMonth().toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${day}-${month}-${year}`;
-};
-
-/**
- * Converts date to string in format DD-MM-YYYY
- *
- * @param date  The date to format
- *
- * @return string  The formatted date.
- */
-export const longFormatDate = (date: Date) => {
-  const year = date.getFullYear().toString().padStart(4, "0");
-  const monthName = getMonthName(date);
-  const day = date.getDate().toString().padStart(2, "0");
-  const dayName = getDayName(date);
-
-  return `${dayName} ${day} ${monthName} ${year}`;
-};
 
 /**
  * A class for storing a time with only hours and minutes.
@@ -278,17 +149,6 @@ export class Time {
    */
   toArray() {
     return [this.hours, this.minutes];
-  }
-
-  /**
-   * Create a date with this time and the given date.
-   *
-   * @param date
-   */
-  toDate(date: Date) {
-    const hours = this.hours || 0;
-    const minutes = this.minutes || 0;
-    return addMinutes(addHours(date, hours), minutes);
   }
 
   /**

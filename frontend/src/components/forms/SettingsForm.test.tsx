@@ -47,7 +47,6 @@ describe("handles inputs", () => {
 });
 
 test("handles form submission", (done) => {
-  // testSettings.timesheetRecipients = "";
   render(
     <SettingsForm
       defaultValues={testSettings}

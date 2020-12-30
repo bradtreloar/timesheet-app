@@ -7,6 +7,7 @@ import { enterShiftTimes, eraseShiftTimes } from "fixtures/userInput";
 import { expectTimesEqual, expectValidShift } from "fixtures/expect";
 import { noop, range } from "lodash";
 import { ShiftTimes } from "types";
+import { DateTime } from "luxon";
 
 export const EMPTY_SHIFT_TIMES = {
   isActive: false,
@@ -15,13 +16,13 @@ export const EMPTY_SHIFT_TIMES = {
   breakDuration: { hours: "", minutes: "" },
 } as ShiftTimes;
 
-const testWeekStartDate = new Date();
+const testWeekStartDateTime = DateTime.local();
 
 test("renders timesheet form", () => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      defaultWeekStartDate={testWeekStartDate}
+      defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmit={noop}
     />
@@ -44,7 +45,7 @@ test("handles toggling shift", () => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      defaultWeekStartDate={testWeekStartDate}
+      defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmit={noop}
     />
@@ -67,7 +68,7 @@ test("handles erasing times", () => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      defaultWeekStartDate={testWeekStartDate}
+      defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmit={noop}
     />
@@ -83,7 +84,7 @@ test("handles entering times", () => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
-      defaultWeekStartDate={testWeekStartDate}
+      defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmit={noop}
     />
@@ -105,7 +106,7 @@ describe("form submission", () => {
     const testShifts = randomShiftTimesArray();
     render(
       <TimesheetForm
-        defaultWeekStartDate={testWeekStartDate}
+        defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
         onSubmit={({ shifts }) => {
           expect(shifts.length).toEqual(testShifts.length);
@@ -123,7 +124,7 @@ describe("form submission", () => {
     testShifts.push(EMPTY_SHIFT_TIMES);
     render(
       <TimesheetForm
-        defaultWeekStartDate={testWeekStartDate}
+        defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
         onSubmit={({ shifts }) => {
           expect(shifts.length).toEqual(testShifts.length - 1);
@@ -139,7 +140,7 @@ describe("form submission", () => {
     const testShifts = range(7).map(() => EMPTY_SHIFT_TIMES);
     render(
       <TimesheetForm
-        defaultWeekStartDate={testWeekStartDate}
+        defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
         onSubmit={() => {
           throw new Error(`onSubmit should not be called with no shifts.`);
@@ -158,7 +159,7 @@ describe("form submission", () => {
     };
     render(
       <TimesheetForm
-        defaultWeekStartDate={testWeekStartDate}
+        defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
         onSubmit={() => {
           throw new Error(

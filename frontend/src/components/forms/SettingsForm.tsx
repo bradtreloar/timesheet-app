@@ -2,8 +2,8 @@ import React from "react";
 import { Settings } from "types";
 import { Button, Form } from "react-bootstrap";
 import { range } from "lodash";
-import { getWeekdayName } from "services/date";
 import useForm from "hooks/useForm";
+import { getWeekdayName } from "services/date";
 
 interface SettingsFormProps {
   defaultValues: Settings;
@@ -18,8 +18,8 @@ const validate = (values: Settings) => {
   const firstDayOfWeekInt = parseInt(firstDayOfWeek);
   if (
     isNaN(firstDayOfWeekInt) ||
-    firstDayOfWeekInt < 0 ||
-    firstDayOfWeekInt > 6
+    firstDayOfWeekInt < 1 ||
+    firstDayOfWeekInt > 7
   ) {
     errors.firstDayOfWeek = `Selection is not valid`;
   }

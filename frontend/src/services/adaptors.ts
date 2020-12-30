@@ -34,8 +34,8 @@ export const parseShift = (resource: ShiftResource): Shift => {
     id: id as string,
     created: created as string,
     changed: changed as string,
-    start: new Date(start).toISOString(),
-    end: new Date(end).toISOString(),
+    start,
+    end,
     breakDuration,
   };
 };
@@ -208,8 +208,8 @@ export const getShiftFromTimes = (
   }
 
   return {
-    start: Time.fromObject(startTime).toDate(date).toISOString(),
-    end: Time.fromObject(endTime).toDate(date).toISOString(),
+    start: Time.fromObject(startTime).toDateTime(date).toISO(),
+    end: Time.fromObject(endTime).toDateTime(date).toISO(),
     breakDuration: Time.fromObject(breakDuration).toMinutes(),
   };
 };

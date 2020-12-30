@@ -1,25 +1,18 @@
+import { DateTime } from "luxon";
 import React from "react";
-import {
-  addDays,
-  addWeek,
-  longFormatDate,
-  subtractWeek,
-} from "services/date";
 
 interface WeekSelectProps {
-  value: Date;
-  onChange: (value: Date) => void;
+  value: DateTime;
+  onChange: (value: DateTime) => void;
 }
 
 const WeekSelect: React.FC<WeekSelectProps> = ({ value, onChange }) => {
-  const weekStartDate = value;
-  const weekEndDate = addDays(weekStartDate, 6);
-  const label = `${longFormatDate(weekStartDate)} to ${longFormatDate(
-    weekEndDate
-  )}`;
+  const fromLabel = value.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+  const toLabel = value.plus({ days: 6 }).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+  const label = `${fromLabel} to ${toLabel}`;
 
   function handleChange(forward: boolean) {
-    onChange(forward ? addWeek(value) : subtractWeek(value));
+    onChange(forward ? value.plus({ weeks: 1 }) : value.minus({ weeks: 1 }));
   }
 
   return (

@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
 import { range } from "lodash";
-import { addDays, longFormatDate, Time } from "services/date";
+import { Time } from "services/date";
 import { Shift, ShiftTimes } from "types";
 import useForm, { FormErrors } from "hooks/useForm";
 import WeekSelect from "components/inputs/WeekSelect";
 import TimeInput from "components/inputs/TimeInput";
+import { DateTime } from "luxon";
 
 export const shiftTimesNames = [
   "startTime",
@@ -23,7 +24,7 @@ export const shiftInputNames = ["isActive", ...shiftTimesInputNames] as const;
 /**
  * Prepares the values for the form's initial state.
  *
- * @param defaultWeekStartDate
+ * @param defaultWeekStartDateTime
  *   The start date of the default week to be selected.
  * @param defaultShifts
  *   The start time, end time, and break duration for each shift, or null for
@@ -32,10 +33,10 @@ export const shiftInputNames = ["isActive", ...shiftTimesInputNames] as const;
  *   An object containing the default value for each form input.
  */
 const buildInitialValues = (
-  defaultWeekStartDate: Date,
+  defaultWeekStartDateTime: DateTime,
   defaultShifts: ShiftTimes[]
 ) => ({
-  weekStartDate: defaultWeekStartDate,
+  weekStartDateTime: defaultWeekStartDateTime,
   ...range(7).reduce((values, index) => {
     const dv = defaultShifts[index];
     const name = `shift.${index}`;
@@ -59,28 +60,23 @@ const buildInitialValues = (
  *   A array of Shift objects.
  */
 const process = (values: any): { shifts: Shift[] } => {
-  const weekStartDate = values.weekStartDate;
+  const weekStartDateTime = values.weekStartDateTime as DateTime;
   const shifts: Shift[] = [];
   range(7).forEach((index) => {
     if (values[`shift.${index}.isActive`]) {
-      const shiftDate = addDays(weekStartDate, index);
-      const startDateTime = new Time(
-        values[`shift.${index}.startTime.hours`],
-        values[`shift.${index}.startTime.minutes`]
-      ).toDateTime(shiftDate);
-      const startISO = startDateTime.toISO();
+      const shiftDate = weekStartDateTime.plus({ days: index });
       const shift = {
-        start: new Time(
-          values[`shift.${index}.startTime.hours`],
-          values[`shift.${index}.startTime.minutes`]
-        )
-          .toDateTime(shiftDate)
+        start: shiftDate
+          .set({
+            hour: values[`shift.${index}.startTime.hours`],
+            minute: values[`shift.${index}.startTime.minutes`],
+          })
           .toISO(),
-        end: new Time(
-          values[`shift.${index}.endTime.hours`],
-          values[`shift.${index}.endTime.minutes`]
-        )
-          .toDateTime(shiftDate)
+        end: shiftDate
+          .set({
+            hour: values[`shift.${index}.endTime.hours`],
+            minute: values[`shift.${index}.endTime.minutes`],
+          })
           .toISO(),
         breakDuration: new Time(
           values[`shift.${index}.breakDuration.hours`],
@@ -149,21 +145,21 @@ const validate = (values: any) => {
 };
 
 interface TimesheetFormProps {
-  defaultWeekStartDate: Date;
+  defaultWeekStartDateTime: DateTime;
   defaultShifts: ShiftTimes[];
   onSubmit: (values: { shifts: Shift[] }) => void;
   className?: string;
 }
 
 const TimesheetForm: React.FC<TimesheetFormProps> = ({
-  defaultWeekStartDate,
+  defaultWeekStartDateTime,
   defaultShifts,
   onSubmit,
   className,
 }) => {
   const initialValues = useCallback(
-    () => buildInitialValues(defaultWeekStartDate, defaultShifts),
-    [defaultWeekStartDate, defaultShifts]
+    () => buildInitialValues(defaultWeekStartDateTime, defaultShifts),
+    [defaultWeekStartDateTime, defaultShifts]
   );
 
   const {
@@ -228,8 +224,8 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
 
   const shiftInputs = range(7).map((index) => {
     const name = `shift.${index}`;
-    const shiftDate = addDays(values.weekStartDate, index);
-    const label = longFormatDate(shiftDate);
+    const shiftDate = values.weekStartDateTime.plus({ days: index });
+    const label = shiftDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
     const isActive = values[`${name}.isActive`] as boolean;
 
     return (
@@ -266,12 +262,12 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className={className}>
       <WeekSelect
-        value={values.weekStartDate}
-        onChange={(value: Date) => {
+        value={values.weekStartDateTime}
+        onChange={(value) => {
           handleChange({
             target: {
               type: "weekSelect",
-              name: "weekStartDate",
+              name: "weekStartDateTime",
               value,
             },
           });

@@ -1,6 +1,6 @@
 import { Setting, Settings, Shift, ShiftTimes, Timesheet, User } from "types";
 import randomstring from "randomstring";
-import { addDays, addHours, Time } from "services/date";
+import { Time } from "services/date";
 import faker from "faker";
 import { random as randomNumber, range } from "lodash";
 import { DateTime } from "luxon";

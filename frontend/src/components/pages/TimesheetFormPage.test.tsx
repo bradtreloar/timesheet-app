@@ -15,6 +15,7 @@ import store from "store";
 import { setSettings } from "store/settings";
 import { Shift } from "types";
 import { getTimesFromShift } from "services/adaptors";
+import { DateTime } from "luxon";
 
 jest.mock("services/datastore");
 const testUser = randomUser();
@@ -25,7 +26,7 @@ testUser.defaultShifts = testShifts.map((shift) => getTimesFromShift(shift));
 // Make the first day of the week coincide with the date of the first shift
 // in testTimesheet.
 const testSettings = randomSettings({
-  firstDayOfWeek: new Date(testShifts[0].start).getDay().toString(),
+  firstDayOfWeek: DateTime.fromISO(testShifts[0].start).weekday.toString(),
 });
 
 const Fixture: React.FC = () => {

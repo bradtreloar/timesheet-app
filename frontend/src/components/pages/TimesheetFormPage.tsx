@@ -6,13 +6,13 @@ import PageTitle from "components/PageTitle";
 import TimesheetForm from "components/forms/TimesheetForm";
 import { useAuth } from "context/auth";
 import useFormController from "hooks/useFormController";
-import { addDays } from "services/date";
 import DefaultLayout from "components/layouts/DefaultLayout";
 import store from "store";
 import { selectSettings } from "store/settings";
 import { addTimesheet, selectTimesheets } from "store/timesheets";
 import { Shift, Timesheet } from "types";
 import { useHistory } from "react-router";
+import { DateTime } from "luxon";
 
 const TimesheetFormPage = () => {
   const { user } = useAuth();
@@ -39,15 +39,15 @@ const TimesheetFormPage = () => {
     [settings]
   );
 
-  const defaultWeekStartDate = useMemo(() => {
+  const defaultWeekStartDateTime = useMemo(() => {
     if (firstDayOfWeek !== undefined && isInteger(parseInt(firstDayOfWeek))) {
-      const date = new Date();
-      const weekStartDate = addDays(
-        date,
-        parseInt(firstDayOfWeek) - date.getDay()
-      );
-      weekStartDate.setHours(0, 0, 0, 0);
-      return weekStartDate;
+      return DateTime.local().set({
+        weekday: parseInt(firstDayOfWeek),
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      });
     }
   }, [firstDayOfWeek]);
 
@@ -55,7 +55,7 @@ const TimesheetFormPage = () => {
     throw new Error(`User is not logged in.`);
   }
 
-  if (!defaultWeekStartDate) {
+  if (!defaultWeekStartDateTime) {
     throw new Error(`Unable to get the default start date for the timesheet.`);
   }
 
@@ -68,7 +68,7 @@ const TimesheetFormPage = () => {
         <TimesheetForm
           className={classnames(formPending && "is-pending")}
           defaultShifts={user.defaultShifts}
-          defaultWeekStartDate={defaultWeekStartDate}
+          defaultWeekStartDateTime={defaultWeekStartDateTime}
           onSubmit={handleSubmit}
         />
       </div>

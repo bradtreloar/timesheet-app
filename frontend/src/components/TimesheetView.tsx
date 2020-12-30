@@ -1,5 +1,6 @@
+import { DateTime } from "luxon";
 import React, { useMemo } from "react";
-import { formattedDate, getShiftHours, Time } from "services/date";
+import { getShiftHours, Time } from "services/date";
 import { Timesheet } from "types";
 
 interface TimesheetViewProps {
@@ -15,11 +16,11 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
         const { start, end, breakDuration } = shift;
         const totalHours = getShiftHours(shift);
 
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-        const label = formattedDate(startDate);
-        const startTime = Time.fromDate(startDate).toString();
-        const endTime = Time.fromDate(endDate).toString();
+        const startDateTime = DateTime.fromISO(start);
+        const endDateTime = DateTime.fromISO(end);
+        const label = startDateTime.toLocaleString();
+        const startTime = startDateTime.toLocaleString(DateTime.DATE_SHORT);
+        const endTime = endDateTime.toLocaleString(DateTime.TIME_SIMPLE);
         const breakTime = Time.fromMinutes(breakDuration).toString();
 
         return (

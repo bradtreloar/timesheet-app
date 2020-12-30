@@ -1,7 +1,7 @@
+import { DateTime } from "luxon";
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  formattedDate,
   getShiftHours,
   getTimesheetTotalHours,
 } from "services/date";
@@ -13,7 +13,7 @@ interface TimesheetTableProps {
 
 const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
   const rows = timesheets.map((timesheet, index) => {
-    const created = formattedDate(new Date(timesheet.created as string));
+    const created = DateTime.fromISO(timesheet.created as string).toLocaleString(DateTime.DATE_SHORT);
     const totalHours = getTimesheetTotalHours(timesheet);
     const pathname = `/timesheet/${timesheet.id}`;
 

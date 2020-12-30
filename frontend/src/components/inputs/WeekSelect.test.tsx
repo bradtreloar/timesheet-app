@@ -2,26 +2,27 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import WeekSelect from "./WeekSelect";
-import { addWeek, longFormatDate, subtractWeek } from "services/date";
 import { noop } from "lodash";
+import { DateTime } from "luxon";
+
+const testDateTime = DateTime.local();
 
 test("renders week select label", () => {
-  const testDate = new Date();
-  const label = longFormatDate(testDate);
+  const fromLabel = testDateTime.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+  const toLabel = testDateTime.plus({ days: 6 }).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
+  const label = `${fromLabel} to ${toLabel}`;
 
-  render(<WeekSelect value={testDate} onChange={noop} />);
+  render(<WeekSelect value={testDateTime} onChange={noop} />);
 
   screen.getByText(new RegExp(label));
 });
 
 test("handles move one week forward", (done) => {
-  const testDate = new Date();
-
   render(
     <WeekSelect
-      value={testDate}
+      value={testDateTime}
       onChange={(value) => {
-        expect(value).toEqual(addWeek(testDate));
+        expect(value).toEqual(testDateTime.plus({ weeks: 1 }));
         done();
       }}
     />
@@ -31,13 +32,11 @@ test("handles move one week forward", (done) => {
 });
 
 test("handles move one week backward", (done) => {
-  const testDate = new Date();
-
   render(
     <WeekSelect
-      value={testDate}
+      value={testDateTime}
       onChange={(value) => {
-        expect(value).toEqual(subtractWeek(testDate));
+        expect(value).toEqual(testDateTime.minus({ weeks: 1 }));
         done();
       }}
     />

@@ -2,8 +2,9 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import TimesheetTable from "./TimesheetTable";
 import { randomTimesheets, randomUser } from "fixtures/random";
-import { formattedDate, getTimesheetTotalHours } from "services/date";
+import { getTimesheetTotalHours } from "services/date";
 import { MemoryRouter } from "react-router";
+import { DateTime } from "luxon";
 
 test("renders timesheet list", () => {
   const testUser = randomUser();
@@ -15,8 +16,7 @@ test("renders timesheet list", () => {
   );
 
   testTimesheets.forEach((timesheet) => {
-    const created = new Date(timesheet.created as string);
-    screen.getAllByText(formattedDate(created));
+    screen.getAllByText(DateTime.fromISO(timesheet.created as string).toLocaleString(DateTime.DATE_SHORT));
     screen.getAllByText(getTimesheetTotalHours(timesheet));
   });
 });
