@@ -218,22 +218,9 @@ export class InvalidTimeException extends Error {
  * @param shiftTimes
  */
 export const getShiftHoursFromTimes = (shiftTimes: ShiftTimes) => {
-  const startTime = new Time(
-    shiftTimes.startTime.hours,
-    shiftTimes.startTime.minutes
-  );
-  const endTime = new Time(
-    shiftTimes.endTime.hours,
-    shiftTimes.endTime.minutes
-  );
-  const breakDuration = new Time(
-    shiftTimes.breakDuration.hours,
-    shiftTimes.breakDuration.minutes
-  );
-
-  if (startTime.isNull() || endTime.isNull() || breakDuration.isNull()) {
-    return null;
-  }
+  const startTime = Time.fromObject(shiftTimes.startTime);
+  const endTime = Time.fromObject(shiftTimes.endTime);
+  const breakDuration = Time.fromObject(shiftTimes.breakDuration);
 
   const shiftMinutes =
     endTime.toMinutes() - startTime.toMinutes() - breakDuration.toMinutes();
