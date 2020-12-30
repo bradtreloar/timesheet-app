@@ -114,7 +114,6 @@ export const updateUser = async (user: User): Promise<User> => {
 
 export const deleteUser = async (user: User): Promise<User> => {
   await client.get("/csrf-cookie");
-  const userResource: UserResource = makeUserResource(user);
   await jsonAPIClient.delete(`/users/${user.id}`);
   return user;
 };
