@@ -24,7 +24,7 @@ export const client = axios.create({
 });
 
 export const jsonAPIClient = axios.create({
-  baseURL: `${HOST}/api`,
+  baseURL: `${HOST}`,
   withCredentials: true,
   headers: {
     Accept: "application/vnd.api+json",
