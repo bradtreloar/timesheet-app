@@ -25,7 +25,7 @@ export const shiftTimesInputNames = shiftTimesNames.reduce((names, name) => {
 
 export const shiftInputNames = ["isActive", ...shiftTimesInputNames] as const;
 
-const getShiftTimesFromValues = (values: any, index: number) => {
+const getShiftTimesFromValues = (values: any, index: number): ShiftTimes => {
   return {
     isActive: values[`shift.${index}.isActive`],
     ...shiftTimesNames.reduce((times, name) => {
@@ -138,7 +138,7 @@ const validate = (values: any) => {
       } else {
         const hourInt = parseInt(hour);
         if (isNaN(hourInt) || hourInt < 0 || hourInt >= 24) {
-          errors[`${prefix}.hour`] = `Hours must be a number between 0 and 23`;
+          errors[`${prefix}.hour`] = `Hour must be a number between 0 and 23`;
         }
       }
 
@@ -243,8 +243,8 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const timeError = errors[`${name}`];
     const hourError = errors[`${name}.hour`];
     const minuteError = errors[`${name}.minute`];
-    const visibleHoursError = visibleErrors[`${name}.hour`];
-    const visibleMinutesError = visibleErrors[`${name}.minute`];
+    const visibleHourError = visibleErrors[`${name}.hour`];
+    const visibleMinuteError = visibleErrors[`${name}.minute`];
 
     return (
       <div aria-label={label}>
@@ -258,15 +258,15 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
           onBlur={handleBlur}
           onChange={handleChange}
         />
-        {(timeError || visibleHoursError || visibleMinutesError) && (
+        {(timeError || visibleHourError || visibleMinuteError) && (
           <div className="invalid-feedback">
             {timeError && (
               <div>{timeError}</div>
             )}
-            {visibleHoursError && (
+            {visibleHourError && (
               <div>{errors[`${name}.hour`]}</div>
             )}
-            {visibleMinutesError && (
+            {visibleMinuteError && (
               <div>{errors[`${name}.minute`]}</div>
             )}
           </div>
