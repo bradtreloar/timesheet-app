@@ -44,7 +44,7 @@ test("handles ForgotPasswordForm submission", async () => {
   expect(datastore.forgotPassword).toHaveBeenCalledWith(testUser.email);
 });
 
-test("displays error when login fails", async () => {
+test("displays error when request fails", async () => {
   jest
     .spyOn(datastore, "forgotPassword")
     .mockRejectedValue(new Error("Unable to request password reset"));
