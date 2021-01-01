@@ -39,5 +39,5 @@ test("renders timesheet view page", async () => {
     render(<Fixture />);
   });
 
-  expect(screen.getByRole("heading")).toHaveTextContent(/timesheet/i);
+  expect(screen.getAllByRole("heading")[0]).toHaveTextContent(/timesheet/i);
 });

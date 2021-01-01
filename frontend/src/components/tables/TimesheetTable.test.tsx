@@ -16,7 +16,11 @@ test("renders timesheet list", () => {
   );
 
   testTimesheets.forEach((timesheet) => {
-    screen.getAllByText(DateTime.fromISO(timesheet.created as string).toLocaleString(DateTime.DATE_SHORT));
-    screen.getAllByText(getTimesheetTotalHours(timesheet));
+    screen.getAllByText(
+      DateTime.fromISO(timesheet.created as string).toLocaleString(
+        DateTime.DATE_SHORT
+      )
+    );
+    screen.getAllByText(new RegExp(getTimesheetTotalHours(timesheet)));
   });
 });

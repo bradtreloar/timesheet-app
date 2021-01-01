@@ -50,6 +50,6 @@ test("renders timesheet index page", async () => {
         DateTime.DATE_SHORT
       )
     );
-    screen.getAllByText(getTimesheetTotalHours(timesheet));
+    screen.getAllByText(new RegExp(getTimesheetTotalHours(timesheet)));
   });
 });
