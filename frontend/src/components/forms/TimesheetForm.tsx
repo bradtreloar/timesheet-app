@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { forOwn, isEmpty, isEqual, range } from "lodash";
+import { isEmpty, range } from "lodash";
 import {
   getShiftHoursFromTimes,
   InvalidTimeException,
@@ -264,10 +264,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               <div>{timeError}</div>
             )}
             {visibleHourError && (
-              <div>{errors[`${name}.hour`]}</div>
+              <div>{hourError}</div>
             )}
             {visibleMinuteError && (
-              <div>{errors[`${name}.minute`]}</div>
+              <div>{minuteError}</div>
             )}
           </div>
         )}

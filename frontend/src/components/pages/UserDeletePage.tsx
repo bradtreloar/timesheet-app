@@ -1,6 +1,6 @@
 import React from "react";
 import PageTitle from "components/PageTitle";
-import { Button, Form } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { deleteUser, selectUsers } from "store/users";
@@ -11,7 +11,7 @@ import { useMessages } from "context/messages";
 
 const UserDeletePage = () => {
   const { id } = useParams<{ id?: string }>();
-  const { users, status: userStoreStatus } = useSelector(selectUsers);
+  const { users } = useSelector(selectUsers);
   const history = useHistory();
   const { setMessage } = useMessages();
 

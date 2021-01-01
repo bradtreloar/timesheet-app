@@ -1,15 +1,12 @@
 import React from "react";
 import PageTitle from "components/PageTitle";
 import DefaultLayout from "components/layouts/DefaultLayout";
-import { useAuth } from "context/auth";
-import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import UserTable from "components/tables/UserTable";
 import { useSelector } from "react-redux";
 import { selectUsers } from "store/users";
 
 const UserIndexPage = () => {
-  const { user, logout } = useAuth();
   const { users, status: userStoreStatus } = useSelector(
     selectUsers
   );
