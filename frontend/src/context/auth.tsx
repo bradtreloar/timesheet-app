@@ -97,6 +97,12 @@ const AuthProvider: React.FC = ({ children }) => {
     try {
       await datastore.forgotPassword(email);
     } catch (error) {
+      if (error.response?.status === 422) {
+        throw new Error(`Unable to find a user with that email address.`);
+      }
+      if (error.response?.status === 429) {
+        throw new Error(`Too many requests.`);
+      }
       throw new Error(`Unable to request password reset.`);
     }
   };
