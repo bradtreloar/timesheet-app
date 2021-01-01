@@ -1,8 +1,8 @@
 import React from "react";
 
 export type TimeInputValue = {
-  hours: string;
-  minutes: string;
+  hour: string;
+  minute: string;
 };
 
 interface TimeInputProps {
@@ -20,25 +20,25 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   onBlur,
   onChange,
 }) => {
-  const { hours, minutes } = value;
+  const { hour, minute } = value;
 
   return (
     <span id={id} onBlur={onBlur}>
       <input
         aria-label="Hours"
-        name={name && `${name}.hours`}
+        name={name && `${name}.hour`}
         type="text"
         pattern="[0-2]{0,1}[0-9]{0,1}"
-        value={hours}
+        value={hour}
         onChange={onChange}
       />
       <span className="mx-1">:</span>
       <input
         aria-label="Minutes"
-        name={name && `${name}.minutes`}
+        name={name && `${name}.minute`}
         type="text"
         pattern="[0-5]{0,1}[0-9]{0,1}"
-        value={minutes}
+        value={minute}
         onChange={onChange}
       />
     </span>

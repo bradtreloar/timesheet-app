@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { isEmpty, isEqual, range } from "lodash";
+import { forOwn, isEmpty, isEqual, range } from "lodash";
 import {
   getShiftHoursFromTimes,
   InvalidTimeException,
@@ -18,8 +18,8 @@ export const shiftTimesNames = [
 ] as const;
 
 export const shiftTimesInputNames = shiftTimesNames.reduce((names, name) => {
-  names.push(`${name}.hours`);
-  names.push(`${name}.minutes`);
+  names.push(`${name}.hour`);
+  names.push(`${name}.minute`);
   return names;
 }, [] as string[]);
 
@@ -30,8 +30,8 @@ const getShiftTimesFromValues = (values: any, index: number) => {
     isActive: values[`shift.${index}.isActive`],
     ...shiftTimesNames.reduce((times, name) => {
       times[name] = {
-        hours: values[`shift.${index}.${name}.hours`],
-        minutes: values[`shift.${index}.${name}.minutes`],
+        hour: values[`shift.${index}.${name}.hour`],
+        minute: values[`shift.${index}.${name}.minute`],
       };
       return times;
     }, {} as any),
@@ -58,12 +58,12 @@ const buildInitialValues = (
     const dv = defaultShifts[index];
     const name = `shift.${index}`;
     values[`${name}.isActive`] = dv.isActive;
-    values[`${name}.startTime.hours`] = dv.startTime.hours;
-    values[`${name}.startTime.minutes`] = dv.startTime.minutes;
-    values[`${name}.endTime.hours`] = dv.endTime.hours;
-    values[`${name}.endTime.minutes`] = dv.endTime.minutes;
-    values[`${name}.breakDuration.hours`] = dv.breakDuration.hours;
-    values[`${name}.breakDuration.minutes`] = dv.breakDuration.minutes;
+    values[`${name}.startTime.hour`] = dv.startTime.hour;
+    values[`${name}.startTime.minute`] = dv.startTime.minute;
+    values[`${name}.endTime.hour`] = dv.endTime.hour;
+    values[`${name}.endTime.minute`] = dv.endTime.minute;
+    values[`${name}.breakDuration.hour`] = dv.breakDuration.hour;
+    values[`${name}.breakDuration.minute`] = dv.breakDuration.minute;
     return values;
   }, {} as any),
 });
@@ -86,19 +86,19 @@ const process = (values: any): { shifts: Shift[] } => {
       const shift = {
         start: shiftDate
           .set({
-            hour: parseInt(shiftTimes.startTime.hours),
-            minute: parseInt(shiftTimes.startTime.minutes),
+            hour: parseInt(shiftTimes.startTime.hour),
+            minute: parseInt(shiftTimes.startTime.minute),
           })
           .toISO(),
         end: shiftDate
           .set({
-            hour: parseInt(shiftTimes.endTime.hours),
-            minute: parseInt(shiftTimes.endTime.minutes),
+            hour: parseInt(shiftTimes.endTime.hour),
+            minute: parseInt(shiftTimes.endTime.minute),
           })
           .toISO(),
         breakDuration: new Time(
-          shiftTimes.breakDuration.hours,
-          shiftTimes.breakDuration.minutes
+          shiftTimes.breakDuration.hour,
+          shiftTimes.breakDuration.minute
         ).toMinutes(),
       };
       shifts.push(shift);
@@ -130,25 +130,25 @@ const validate = (values: any) => {
 
     shiftTimesNames.forEach((name) => {
       const prefix = `shift.${index}.${name}`;
-      const hours = values[`${prefix}.hours`];
-      const minutes = values[`${prefix}.minutes`];
+      const hour = values[`${prefix}.hour`];
+      const minute = values[`${prefix}.minute`];
 
-      if (hours === "") {
-        errors[`${prefix}.hours`] = `Hours required`;
+      if (hour === "") {
+        errors[`${prefix}.hour`] = `Hour required`;
       } else {
-        const hoursInt = parseInt(hours);
-        if (isNaN(hoursInt) || hoursInt < 0 || hoursInt >= 24) {
-          errors[`${prefix}.hours`] = `Hours must be a number between 0 and 23`;
+        const hourInt = parseInt(hour);
+        if (isNaN(hourInt) || hourInt < 0 || hourInt >= 24) {
+          errors[`${prefix}.hour`] = `Hours must be a number between 0 and 23`;
         }
       }
 
-      if (minutes === "") {
-        errors[`${prefix}.minutes`] = `Minutes required`;
+      if (minute === "") {
+        errors[`${prefix}.minute`] = `Minute required`;
       } else {
-        const minutesInt = parseInt(minutes);
-        if (isNaN(minutesInt) || minutesInt < 0 || minutesInt >= 60) {
+        const minuteInt = parseInt(minute);
+        if (isNaN(minuteInt) || minuteInt < 0 || minuteInt >= 60) {
           errors[
-            `${prefix}.hours`
+            `${prefix}.hour`
           ] = `Minutes must be a number between 0 and 59`;
         }
       }
@@ -241,10 +241,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
 
   const timeInput = (name: string, label: string) => {
     const timeError = errors[`${name}`];
-    const hoursError = errors[`${name}.hours`];
-    const minutesError = errors[`${name}.minutes`];
-    const visibleHoursError = visibleErrors[`${name}.hours`];
-    const visibleMinutesError = visibleErrors[`${name}.minutes`];
+    const hourError = errors[`${name}.hour`];
+    const minuteError = errors[`${name}.minute`];
+    const visibleHoursError = visibleErrors[`${name}.hour`];
+    const visibleMinutesError = visibleErrors[`${name}.minute`];
 
     return (
       <div aria-label={label}>
@@ -252,8 +252,8 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         <TimeInput
           name={name}
           value={{
-            hours: values[`${name}.hours`],
-            minutes: values[`${name}.minutes`],
+            hour: values[`${name}.hour`],
+            minute: values[`${name}.minute`],
           }}
           onBlur={handleBlur}
           onChange={handleChange}
@@ -264,10 +264,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               <div>{timeError}</div>
             )}
             {visibleHoursError && (
-              <div>{errors[`${name}.hours`]}</div>
+              <div>{errors[`${name}.hour`]}</div>
             )}
             {visibleMinutesError && (
-              <div>{errors[`${name}.minutes`]}</div>
+              <div>{errors[`${name}.minute`]}</div>
             )}
           </div>
         )}

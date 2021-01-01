@@ -26,16 +26,16 @@ export type Shift = {
 export type ShiftTimes = {
   isActive: boolean;
   startTime: {
-    hours: string;
-    minutes: string;
+    hour: string;
+    minute: string;
   };
   endTime: {
-    hours: string;
-    minutes: string;
+    hour: string;
+    minute: string;
   };
   breakDuration: {
-    hours: string;
-    minutes: string;
+    hour: string;
+    minute: string;
   };
 };
 

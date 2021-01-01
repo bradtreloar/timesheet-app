@@ -30,15 +30,15 @@ export const enterShiftTimes = (
   for (let { label, value } of timeInputs(shiftTimes)) {
     const timeInput = within(shiftInput).getByLabelText(label);
     if (value !== null) {
-      if (value.hours !== null) {
-        const hoursInput = within(timeInput).getByLabelText(/hours/i);
-        const hoursValue = value.hours.toString();
-        userEvent.type(hoursInput, hoursValue);
+      if (value.hour !== null) {
+        const hourInput = within(timeInput).getByLabelText(/hour/i);
+        const hourValue = value.hour.toString();
+        userEvent.type(hourInput, hourValue);
       }
-      if (value.minutes !== null) {
-        const minutesInput = within(timeInput).getByLabelText(/minutes/i);
-        const minutesValue = value.minutes.toString();
-        userEvent.type(minutesInput, minutesValue);
+      if (value.minute !== null) {
+        const minuteInput = within(timeInput).getByLabelText(/minute/i);
+        const minuteValue = value.minute.toString();
+        userEvent.type(minuteInput, minuteValue);
       }
     }
   }
@@ -49,9 +49,9 @@ export const eraseShiftTimes = (shiftInput: HTMLElement) => {
 
   for (let label of inputLabels) {
     const timeInput = within(shiftInput).getByLabelText(label);
-    const hoursInput = within(timeInput).getByLabelText(/hours/i);
-    const minutesInput = within(timeInput).getByLabelText(/minutes/i);
-    userEvent.clear(hoursInput);
-    userEvent.clear(minutesInput);
+    const hourInput = within(timeInput).getByLabelText(/hour/i);
+    const minuteInput = within(timeInput).getByLabelText(/minute/i);
+    userEvent.clear(hourInput);
+    userEvent.clear(minuteInput);
   }
 };

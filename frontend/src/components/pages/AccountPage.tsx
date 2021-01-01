@@ -20,16 +20,16 @@ const createEmptyDefaultShifts = (): ShiftTimes[] =>
   range(7).map(() => ({
     isActive: false,
     startTime: {
-      hours: "",
-      minutes: "",
+      hour: "",
+      minute: "",
     },
     endTime: {
-      hours: "",
-      minutes: "",
+      hour: "",
+      minute: "",
     },
     breakDuration: {
-      hours: "",
-      minutes: "",
+      hour: "",
+      minute: "",
     },
   }));
 

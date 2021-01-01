@@ -223,16 +223,16 @@ export const getTimesFromShift = (shift: Shift): ShiftTimes => {
   return {
     isActive: true,
     startTime: {
-      hours: start.getHours().toString(),
-      minutes: start.getMinutes().toString(),
+      hour: start.getHours().toString(),
+      minute: start.getMinutes().toString(),
     },
     endTime: {
-      hours: end.getHours().toString(),
-      minutes: end.getMinutes().toString(),
+      hour: end.getHours().toString(),
+      minute: end.getMinutes().toString(),
     },
     breakDuration: {
-      hours: breakHours.toString(),
-      minutes: breakMinutes.toString(),
+      hour: breakHours.toString(),
+      minute: breakMinutes.toString(),
     },
   };
 };

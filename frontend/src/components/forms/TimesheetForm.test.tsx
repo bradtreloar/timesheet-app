@@ -11,9 +11,9 @@ import { DateTime } from "luxon";
 
 export const EMPTY_SHIFT_TIMES = {
   isActive: false,
-  startTime: { hours: "", minutes: "" },
-  endTime: { hours: "", minutes: "" },
-  breakDuration: { hours: "", minutes: "" },
+  startTime: { hour: "", minute: "" },
+  endTime: { hour: "", minute: "" },
+  breakDuration: { hour: "", minute: "" },
 } as ShiftTimes;
 
 const testWeekStartDateTime = DateTime.local();
@@ -32,11 +32,11 @@ test("renders timesheet form", () => {
   shiftInputs.forEach((shiftInput, index) => {
     const testShiftTimes = testShifts[index];
     const startTimeInput = within(shiftInput).getByLabelText(/start time/i);
-    expect(within(startTimeInput).getByLabelText(/hours/i)).toHaveValue(
-      testShiftTimes.startTime.hours
+    expect(within(startTimeInput).getByLabelText(/hour/i)).toHaveValue(
+      testShiftTimes.startTime.hour
     );
-    expect(within(startTimeInput).getByLabelText(/minutes/i)).toHaveValue(
-      testShiftTimes.startTime.minutes
+    expect(within(startTimeInput).getByLabelText(/minute/i)).toHaveValue(
+      testShiftTimes.startTime.minute
     );
   });
 });
@@ -59,7 +59,7 @@ test("handles toggling shift", () => {
   within(shiftInput).getByLabelText(/start time/i);
   expect(
     within(within(shiftInput).getByLabelText(/start time/i))
-      .getByLabelText(/hours/i)
+      .getByLabelText(/hour/i)
       .getAttribute("value")
   ).toEqual("");
 });
@@ -154,8 +154,8 @@ describe("form submission", () => {
   test("with incomplete shift", () => {
     const testShifts: ShiftTimes[] = randomShiftTimesArray();
     testShifts[0].breakDuration = {
-      hours: "",
-      minutes: "",
+      hour: "",
+      minute: "",
     };
     render(
       <TimesheetForm

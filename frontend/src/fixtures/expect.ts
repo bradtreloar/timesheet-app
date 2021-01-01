@@ -23,13 +23,13 @@ export const expectTimesEqual = (
   for (let { label, value } of timeInputs(shiftTimes)) {
     const timeInput = within(shiftInput).getByLabelText(label);
     expect(
-      within(timeInput).getByLabelText(/hours/i).getAttribute("value")
-    ).toEqual(value.hours);
+      within(timeInput).getByLabelText(/hour/i).getAttribute("value")
+    ).toEqual(value.hour);
     expect(
       within(timeInput)
-        .getByLabelText(/minutes/i)
+        .getByLabelText(/minute/i)
         .getAttribute("value")
-    ).toEqual(value.minutes);
+    ).toEqual(value.minute);
   }
 };
 

@@ -33,9 +33,9 @@ export const randomMinutes = (min: number, max: number) => {
 export const randomTime = (min: string, max: string) => {
   const [minHours, minMinutes] = Time.fromString(min).toArray();
   const [maxHours, maxMinutes] = Time.fromString(max).toArray();
-  const hours = randomInt(minHours as number, maxHours as number);
-  const minutes = randomInt(minMinutes as number, maxMinutes as number);
-  return new Time(hours, minutes);
+  const hour = randomInt(minHours as number, maxHours as number);
+  const minute = randomInt(minMinutes as number, maxMinutes as number);
+  return new Time(hour, minute);
 };
 
 export const randomShiftTimesArray = (): ShiftTimes[] =>
@@ -56,16 +56,16 @@ export const randomShiftTimes = (): ShiftTimes => {
   return {
     isActive: true,
     startTime: {
-      hours: startHours.toString(),
-      minutes: startMinutes.toString(),
+      hour: startHours.toString(),
+      minute: startMinutes.toString(),
     },
     endTime: {
-      hours: endHours.toString(),
-      minutes: endMinutes.toString(),
+      hour: endHours.toString(),
+      minute: endMinutes.toString(),
     },
     breakDuration: {
-      hours: "0",
-      minutes: breakMinutes.toString(),
+      hour: "0",
+      minute: breakMinutes.toString(),
     },
   };
 };
@@ -77,7 +77,7 @@ export const randomShiftTimes = (): ShiftTimes => {
  * @param date
  */
 export const randomShiftDates = (datetime: DateTime) => {
-  const shiftDuration = Math.floor(Math.random() * 12);
+  const shiftDuration = Math.floor(Math.random() * 9) + 3;
   const startHour = Math.floor(Math.random() * 12);
   const start = datetime.plus({ hours: startHour });
   const end = start.plus({ hours: shiftDuration });
@@ -132,5 +132,5 @@ export const randomSettings = (
 
 export const randomSettingsObject = (): Settings => ({
   timesheetRecipients: faker.internet.email(),
-  firstDayOfWeek: randomInt(0, 6).toString(),
+  firstDayOfWeek: randomInt(1, 7).toString(),
 });

@@ -18,19 +18,19 @@ export const getWeekdayName = (number: number) =>
   ][number];
 
 /**
- * A class for storing a time with only hours and minutes.
+ * A class for storing a time with only hours and minute.
  */
 export class Time {
-  hours: number | null;
-  minutes: number | null;
+  hour: number | null;
+  minute: number | null;
 
   /**
-   * @param hours    The hours value for the time
-   * @param minutes  The minutes value for the time
+   * @param hour    The hour value for the time
+   * @param minute  The minute value for the time
    */
-  constructor(hours: number | string | null, minutes: number | string | null) {
-    this.hours = Time.parseValue(hours);
-    this.minutes = Time.parseValue(minutes);
+  constructor(hour: number | string | null, minute: number | string | null) {
+    this.hour = Time.parseValue(hour);
+    this.minute = Time.parseValue(minute);
     this.validate();
   }
 
@@ -50,23 +50,23 @@ export class Time {
   }
 
   validate() {
-    if (this.hours !== null) {
-      if (isNaN(this.hours)) {
-        throw new InvalidTimeException(`hours contains an invalid value`);
+    if (this.hour !== null) {
+      if (isNaN(this.hour)) {
+        throw new InvalidTimeException(`hour contains an invalid value`);
       }
 
-      if (this.hours < 0 || this.hours >= 24) {
-        throw new InvalidTimeException(`hours must be between 0 and 23`);
+      if (this.hour < 0 || this.hour >= 24) {
+        throw new InvalidTimeException(`hour must be between 0 and 23`);
       }
     }
 
-    if (this.minutes !== null) {
-      if (isNaN(this.minutes)) {
-        throw new InvalidTimeException(`minutes contains an invalid value`);
+    if (this.minute !== null) {
+      if (isNaN(this.minute)) {
+        throw new InvalidTimeException(`minute contains an invalid value`);
       }
 
-      if (this.minutes < 0 || this.minutes >= 60) {
-        throw new InvalidTimeException(`minutes must be between 0 and 59`);
+      if (this.minute < 0 || this.minute >= 60) {
+        throw new InvalidTimeException(`minute must be between 0 and 59`);
       }
     }
   }
@@ -95,27 +95,27 @@ export class Time {
       throw new InvalidTimeException(`${value} is not formatted as HH:MM`);
     }
 
-    const hours = parseInt(components[0]);
-    const minutes = parseInt(components[1]);
+    const hour = parseInt(components[0]);
+    const minute = parseInt(components[1]);
 
-    return new Time(hours, minutes);
+    return new Time(hour, minute);
   }
 
   /**
    * Creates a Time object from a plain object.
    *
-   * @param value  The object input value, with hours and minutes properties.
+   * @param value  The object input value, with hour and minute properties.
    *
    * @return  The Time object.
    */
-  static fromObject(value: { hours: string; minutes: string }) {
-    const hours = parseInt(value.hours);
-    const minutes = parseInt(value.minutes);
-    return new Time(hours, minutes);
+  static fromObject(value: { hour: string; minute: string }) {
+    const hour = parseInt(value.hour);
+    const minute = parseInt(value.minute);
+    return new Time(hour, minute);
   }
 
   /**
-   * Creates a Time object from an arbitrary number of minutes.
+   * Creates a Time object from an arbitrary number of minute.
    */
   static fromMinutes(totalMinutes: number) {
     const totalHours = Math.floor(totalMinutes / 60);
@@ -126,7 +126,7 @@ export class Time {
    * Checks if the time is null.
    */
   isNull() {
-    return this.hours === null && this.minutes === null;
+    return this.hour === null && this.minute === null;
   }
 
   /**
@@ -135,20 +135,20 @@ export class Time {
    * @return  The formatted time string.
    */
   toString() {
-    const hours = this.hours ? this.hours.toString().padStart(2, "0") : "00";
-    const minutes = this.minutes
-      ? this.minutes.toString().padStart(2, "0")
+    const hour = this.hour ? this.hour.toString().padStart(2, "0") : "00";
+    const minute = this.minute
+      ? this.minute.toString().padStart(2, "0")
       : "00";
-    return `${hours}:${minutes}`;
+    return `${hour}:${minute}`;
   }
 
   /**
    * Returns the time as a array of numbers
    *
-   * @return  An array containing the hours and minutes values.
+   * @return  An array containing the hour and minute values.
    */
   toArray() {
-    return [this.hours, this.minutes];
+    return [this.hour, this.minute];
   }
 
   /**
@@ -161,19 +161,19 @@ export class Time {
       year: date.getFullYear(),
       month: date.getMonth() + 1,
       day: date.getDate(),
-      hour: this.hours || 0,
-      minute: this.minutes || 0,
+      hour: this.hour || 0,
+      minute: this.minute || 0,
       second: 0,
       millisecond: 0,
     });
   }
 
   /**
-   * Get this time in minutes.
+   * Get this time in minute.
    */
   toMinutes() {
-    const thisHours = this.hours || 0;
-    const thisMinutes = this.minutes || 0;
+    const thisHours = this.hour || 0;
+    const thisMinutes = this.minute || 0;
     return thisHours * 60 + thisMinutes;
   }
 
@@ -181,8 +181,8 @@ export class Time {
    * Get this time in hours.
    */
   toHours() {
-    const thisHours = this.hours || 0;
-    const thisMinutes = this.minutes || 0;
+    const thisHours = this.hour || 0;
+    const thisMinutes = this.minute || 0;
     return thisHours + thisMinutes / 60;
   }
 
