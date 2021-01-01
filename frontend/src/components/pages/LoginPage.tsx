@@ -24,8 +24,8 @@ const LoginPage = () => {
           className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
         />
-        <div>
-          <Link to="reset-password">
+        <div className="my-3">
+          <Link to="forgot-password">
             Forgot your password? Click here to reset it.
           </Link>
         </div>
