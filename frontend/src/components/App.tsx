@@ -18,9 +18,12 @@ import UserIndexPage from "./pages/UserIndexPage";
 import UserFormPage from "./pages/UserFormPage";
 import UserDeletePage from "./pages/UserDeletePage";
 import TimesheetIndexPage from "./pages/TimesheetIndexPage";
+import TimesheetViewPage from "./pages/TimesheetViewPage";
+import { fetchUnrestrictedSettings } from "store/settings";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
+  store.dispatch(fetchUnrestrictedSettings());
 };
 
 const App: React.FC = () => {
@@ -46,6 +49,9 @@ const App: React.FC = () => {
       </ProtectedRoute>
       <ProtectedRoute exact path="/timesheet/confirmation">
         <TimesheetConfirmPage />
+      </ProtectedRoute>
+      <ProtectedRoute exact path="/timesheet/:id">
+        <TimesheetViewPage />
       </ProtectedRoute>
       <ProtectedRoute exact path="/account/password">
         <PasswordPage />
