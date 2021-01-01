@@ -16,7 +16,7 @@ const TimesheetIndexPage = () => {
       <PageTitle>Timesheets</PageTitle>
       <div className="container">
         <div className="my-3">
-          <Link className="btn btn-primary" to="/new-timesheet">
+          <Link className="btn btn-primary" to="/timesheet/new">
             Create new timesheet
           </Link>
         </div>
