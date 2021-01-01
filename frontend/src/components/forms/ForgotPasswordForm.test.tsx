@@ -54,3 +54,9 @@ test("Reject invalid form input", () => {
   userEvent.click(screen.getByText(/reset password/i));
   screen.getByText(/must be a valid email address/i);
 });
+
+test("Disable form controls in pending state", () => {
+  render(<ForgotPasswordForm pending onSubmit={noop} />);
+
+  screen.getByText(/sending request/i);
+});

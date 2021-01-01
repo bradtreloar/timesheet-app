@@ -24,7 +24,7 @@ const ForgotPasswordPage = () => {
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         <ForgotPasswordForm
-          className={classnames(formPending && "is-pending")}
+          pending={formPending}
           onSubmit={handleSubmit}
         />
       </div>

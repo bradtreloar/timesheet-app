@@ -29,11 +29,13 @@ const validate = (values: any) => {
 interface ForgotPasswordFormProps {
   onSubmit: (values: ForgotPasswordFormValues) => void;
   className?: string;
+  pending?: boolean;
 }
 
 const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   onSubmit,
   className,
+  pending,
 }) => {
   const {
     values,
@@ -53,6 +55,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
       <Form.Group controlId="email">
         <Form.Label>Your email address</Form.Label>
         <Form.Control
+          disabled={pending}
           type="email"
           name="email"
           isInvalid={visibleErrors.email}
@@ -65,11 +68,12 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         )}
       </Form.Group>
       <Button
+        disabled={pending}
         variant="primary"
         type="submit"
         data-testid="password-reset-form-submit"
       >
-        Reset password
+        {pending ? `Sending request` : `Reset password`}
       </Button>
     </Form>
   );
