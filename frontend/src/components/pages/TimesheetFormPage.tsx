@@ -13,6 +13,7 @@ import { addTimesheet, selectTimesheets } from "store/timesheets";
 import { Shift, Timesheet } from "types";
 import { useHistory } from "react-router";
 import { DateTime } from "luxon";
+import { Alert } from "react-bootstrap";
 
 const TimesheetFormPage = () => {
   const { user } = useAuth();
@@ -60,7 +61,14 @@ const TimesheetFormPage = () => {
   }
 
   if (!defaultWeekStartDateTime) {
-    throw new Error(`Unable to get the default start date for the timesheet.`);
+    return (
+      <DefaultLayout>
+        <PageTitle>New Timesheet</PageTitle>
+        <div className="container">
+          <Alert variant="danger">Unable to get the default start date for the timesheet.</Alert>
+        </div>
+      </DefaultLayout>
+    );
   }
 
   return (
