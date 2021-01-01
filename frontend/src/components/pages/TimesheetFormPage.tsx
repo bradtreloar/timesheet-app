@@ -27,8 +27,12 @@ const TimesheetFormPage = () => {
         userID: user.id,
         shifts: shifts,
       };
-      await store.dispatch(addTimesheet(timesheet));
-      history.push("/");
+      const action = await store.dispatch(addTimesheet(timesheet));
+      if (action.type === "timesheets/add/rejected") {
+        throw new Error(`Unable to create timesheet`);
+      } else {
+        history.push("/timesheet/confirmation");
+      }
     } else {
       throw new Error(`User is not valid`);
     }
