@@ -6,17 +6,19 @@ const Messages: React.FC = () => {
   const { messages, dismissMessage } = useMessages();
 
   return (
-    <div>
-      {messages.map((message, index) => (
-        <Alert
-          key={index}
-          variant={message.type}
-          dismissible
-          onClose={() => dismissMessage(message)}
-        >
-          {message.value}
-        </Alert>
-      ))}
+    <div className="container my-3">
+      <div>
+        {messages.map((message, index) => (
+          <Alert
+            key={index}
+            variant={message.type}
+            dismissible
+            onClose={() => dismissMessage(message)}
+          >
+            {message.value}
+          </Alert>
+        ))}
+      </div>
     </div>
   );
 };
