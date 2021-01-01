@@ -3,6 +3,7 @@ import { act, render, screen } from "@testing-library/react";
 import App from "./App";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider } from "../context/auth";
+import { MessagesProvider } from "context/messages";
 import { MemoryRouter } from "react-router-dom";
 import { randomPassword, randomUser } from "../fixtures/random";
 import * as datastore from "../services/datastore";
@@ -19,9 +20,11 @@ const AppFixture: React.FC<{
   return (
     <Provider store={store}>
       <AuthProvider>
-        <MemoryRouter initialEntries={routerEntries}>
-          <App />
-        </MemoryRouter>
+        <MessagesProvider>
+          <MemoryRouter initialEntries={routerEntries}>
+            <App />
+          </MemoryRouter>
+        </MessagesProvider>
       </AuthProvider>
     </Provider>
   );

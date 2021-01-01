@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { AuthProvider } from "context/auth";
+import { MessagesProvider } from "context/messages";
 import App from "components/App";
 import store from "store";
 import "./styles/common/bootstrap.scss";
@@ -12,9 +13,11 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <AuthProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <MessagesProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </MessagesProvider>
       </AuthProvider>
     </Provider>
   </React.StrictMode>,

@@ -6,6 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import { randomUser } from "fixtures/random";
 import ForgotPasswordPage from "./ForgotPasswordPage";
 import * as datastore from "services/datastore";
+import { MessagesProvider } from "context/messages";
 
 jest.mock("services/datastore");
 jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
@@ -14,9 +15,11 @@ const testUser = randomUser();
 const Fixture: React.FC = () => {
   return (
     <AuthProvider>
-      <MemoryRouter>
-        <ForgotPasswordPage />
-      </MemoryRouter>
+      <MessagesProvider>
+        <MemoryRouter>
+          <ForgotPasswordPage />
+        </MemoryRouter>
+      </MessagesProvider>
     </AuthProvider>
   );
 };

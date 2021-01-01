@@ -2,6 +2,7 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AuthProvider } from "context/auth";
+import { MessagesProvider } from "context/messages";
 import { MemoryRouter } from "react-router-dom";
 import { randomPassword, randomUser } from "fixtures/random";
 import LoginPage from "./LoginPage";
@@ -15,9 +16,11 @@ const testPassword = randomPassword();
 const Fixture: React.FC = () => {
   return (
     <AuthProvider>
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
+      <MessagesProvider>
+        <MemoryRouter>
+          <LoginPage />
+        </MemoryRouter>
+      </MessagesProvider>
     </AuthProvider>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import LoginForm from "components/forms/LoginForm";
+import Messages from "components/Messages";
 import PageTitle from "components/PageTitle";
 import { useAuth } from "context/auth";
 import DefaultLayout from "components/layouts/DefaultLayout";
@@ -18,6 +19,7 @@ const LoginPage = () => {
   return (
     <DefaultLayout>
       <PageTitle>Log in</PageTitle>
+      <Messages />
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         <LoginForm
