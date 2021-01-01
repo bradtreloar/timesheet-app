@@ -36,11 +36,11 @@ class CreateUser extends Command
         for ($i = 0; $i < 7; $i++) {
             $default_shifts[] = [
                 "isActive" => true,
-                "start" => [
+                "startTime" => [
                     "hours" => 9,
                     "minutes" => 0,
                 ],
-                "end" => [
+                "endTime" => [
                     "hours" => 17,
                     "minutes" => 0,
                 ],
