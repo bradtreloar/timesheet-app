@@ -16,7 +16,7 @@ const TimesheetViewPage: React.FC = () => {
 
   return timesheet ? (
     <DefaultLayout>
-      <PageTitle>Timesheet</PageTitle>
+      <PageTitle>Timesheet Details</PageTitle>
       <div className="container">
         <TimesheetView timesheet={timesheet} />
       </div>

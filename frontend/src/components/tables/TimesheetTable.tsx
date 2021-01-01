@@ -21,7 +21,7 @@ const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
         <td>
           <Link to={pathname}>{created}</Link>
         </td>
-        <td>{totalHours}</td>
+        <td className="text-right">{totalHours} hours</td>
       </tr>
     );
   });
@@ -31,7 +31,7 @@ const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
       <thead>
         <tr>
           <th>Date submitted</th>
-          <th>Total hours</th>
+          <th className="text-right">Total hours</th>
         </tr>
       </thead>
       <tbody>{rows}</tbody>
