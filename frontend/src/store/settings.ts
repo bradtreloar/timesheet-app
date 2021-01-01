@@ -13,6 +13,10 @@ const fetchSettings = createAsyncThunk("settings/fetch", async () => {
   return await datastore.fetchSettings();
 });
 
+const fetchUnrestrictedSettings = createAsyncThunk("settings/fetch", async () => {
+  return await datastore.fetchUnrestrictedSettings();
+});
+
 const updateSettings = createAsyncThunk(
   "settings/update",
   async (settings: Setting[]) => {
@@ -73,7 +77,7 @@ const settingsSlice = createSlice({
 
 const selectSettings = (state: RootState) => state.settings;
 
-export { fetchSettings, updateSettings };
+export { fetchSettings, fetchUnrestrictedSettings, updateSettings };
 export const { clear: clearSettings, set: setSettings } = settingsSlice.actions;
 export default settingsSlice.reducer;
 export { selectSettings };

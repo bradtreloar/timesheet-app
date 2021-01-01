@@ -4,6 +4,7 @@ import { randomSettings } from "fixtures/random";
 import {
   clearSettings,
   fetchSettings,
+  fetchUnrestrictedSettings,
   selectSettings,
   updateSettings,
 } from "./settings";
@@ -29,6 +30,16 @@ afterEach(() => {
 test("fetch settings", async () => {
   jest.spyOn(datastore, "fetchSettings").mockResolvedValue(testSettings);
   const action = await store.dispatch(fetchSettings());
+  expect(action.payload).toBe(testSettings);
+  expect(action.type).toBe("settings/fetch/fulfilled");
+  const { status, settings } = selectSettings(store.getState());
+  expect(status).toBe("fulfilled");
+  expect(settings).toStrictEqual(testSettings);
+});
+
+test("fetch unrestricted settings", async () => {
+  jest.spyOn(datastore, "fetchUnrestrictedSettings").mockResolvedValue(testSettings);
+  const action = await store.dispatch(fetchUnrestrictedSettings());
   expect(action.payload).toBe(testSettings);
   expect(action.type).toBe("settings/fetch/fulfilled");
   const { status, settings } = selectSettings(store.getState());

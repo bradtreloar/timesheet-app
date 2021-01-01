@@ -192,6 +192,22 @@ export const fetchSettings = async (): Promise<Setting[]> => {
   });
 };
 
+export const fetchUnrestrictedSettings = async (): Promise<Setting[]> => {
+  const response: AxiosResponse<{
+    data: SettingResource[];
+  }> = await jsonAPIClient.get(`settings`, {
+    params: {
+      "filter[is_restricted]": 0,
+    }
+  });
+  const { data } = response.data;
+  return data.map((resource: SettingResource) => {
+    const { id } = resource;
+    const { name, value, changed, created } = resource.attributes;
+    return { id, name, value, changed, created };
+  });
+};
+
 export const completeTimesheet = async (
   timesheet: Timesheet
 ): Promise<Timesheet> => {
