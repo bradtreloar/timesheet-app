@@ -101,6 +101,15 @@ class AuthApiTest extends TestCase
         Notification::assertSentTo($user, ResetPassword::class);
     }
 
+    public function testForgotPasswordWithInvalidEmail()
+    {
+        $response = $this->postJson("/forgot-password", [
+            'email' => $this->faker->email(),
+        ]);
+        $response->assertStatus(422);
+        Notification::assertNothingSent();
+    }
+
     public function testResetPassword()
     {
         $plain_password = $this->faker()->password();

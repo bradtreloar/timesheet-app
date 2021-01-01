@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class AuthController extends Controller
 {
@@ -80,6 +81,8 @@ class AuthController extends Controller
 
         if ($status == Password::RESET_LINK_SENT) {
             return new NoContentResponse();
+        } elseif ($status == Password::INVALID_USER) {
+            throw new UnprocessableEntityHttpException();
         } else {
             throw new BadRequestException();
         }
