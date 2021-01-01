@@ -1,5 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
-import { AuthProvider } from "context/auth";
+import { ProvidersFixture } from "fixtures/context";
 import { randomSettings, randomTimesheets, randomUser, randomUsers } from "fixtures/random";
 import React from "react";
 import { Provider } from "react-redux";
@@ -18,11 +18,11 @@ const testUsers = randomUsers(3);
 const Fixture: React.FC = () => {
   return (
     <Provider store={store}>
-      <AuthProvider>
+      <ProvidersFixture>
         <MemoryRouter>
           <UserIndexPage />
         </MemoryRouter>
-      </AuthProvider>
+      </ProvidersFixture>
     </Provider>
   );
 };

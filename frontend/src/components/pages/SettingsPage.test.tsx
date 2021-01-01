@@ -2,6 +2,7 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route } from "react-router-dom";
+import { ProvidersFixture } from "fixtures/context";
 import { randomSettings, randomTimesheet, randomUser } from "fixtures/random";
 import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
@@ -10,7 +11,6 @@ import { clearSettings, setSettings } from "store/settings";
 import { Shift } from "types";
 import { getTimesFromShift } from "services/adaptors";
 import SettingsPage from "./SettingsPage";
-import { AuthProvider } from "context/auth";
 
 jest.mock("services/datastore");
 const testUser = randomUser();
@@ -27,7 +27,7 @@ const testSettings = randomSettings({
 const Fixture: React.FC = () => {
   return (
     <Provider store={store}>
-      <AuthProvider>
+      <ProvidersFixture>
         <MemoryRouter>
           <Route exact path="/">
             <SettingsPage />
@@ -36,7 +36,7 @@ const Fixture: React.FC = () => {
             form submitted
           </Route>
         </MemoryRouter>
-      </AuthProvider>
+      </ProvidersFixture>
     </Provider>
   );
 };

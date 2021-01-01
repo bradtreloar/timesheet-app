@@ -1,7 +1,7 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "context/auth";
+import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter } from "react-router-dom";
 import { randomPassword } from "fixtures/random";
 import PasswordPage from "./PasswordPage";
@@ -13,11 +13,11 @@ const testPassword = randomPassword();
 
 const Fixture: React.FC = () => {
   return (
-    <AuthProvider>
+    <ProvidersFixture>
       <MemoryRouter>
         <PasswordPage />
       </MemoryRouter>
-    </AuthProvider>
+    </ProvidersFixture>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
-import { AuthProvider } from "context/auth";
+import { ProvidersFixture } from "fixtures/context";
 import NotFoundPage from "./NotFoundPage";
 import * as datastore from "services/datastore";
 import { MemoryRouter } from "react-router";
@@ -10,11 +10,11 @@ jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
 
 const Fixture: React.FC = () => {
   return (
-    <AuthProvider>
+    <ProvidersFixture>
       <MemoryRouter>
         <NotFoundPage />
       </MemoryRouter>
-    </AuthProvider>
+    </ProvidersFixture>
   );
 };
 

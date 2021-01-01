@@ -1,7 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "context/auth";
-import { MessagesProvider } from "context/messages";
+import { ProvidersFixture } from "fixtures/context";
 import {
   randomSettings,
   randomTimesheets,
@@ -26,15 +25,13 @@ const Fixture: React.FC<{
 }> = ({ children, initialEntries }) => {
   return (
     <Provider store={store}>
-      <AuthProvider>
-        <MessagesProvider>
-          <MemoryRouter initialEntries={initialEntries}>
-            <Route path="/user/:id/delete">
-              <UserDeletePage />
-            </Route>
-          </MemoryRouter>
-        </MessagesProvider>
-      </AuthProvider>
+      <ProvidersFixture>
+        <MemoryRouter initialEntries={initialEntries}>
+          <Route path="/user/:id/delete">
+            <UserDeletePage />
+          </Route>
+        </MemoryRouter>
+      </ProvidersFixture>
     </Provider>
   );
 };
@@ -61,7 +58,7 @@ test("handles clicking delete button", async () => {
   });
 
   await act(async () => {
-    screen.getAllByText(/delete user/i).forEach(element => {
+    screen.getAllByText(/delete user/i).forEach((element) => {
       if (element.getAttribute("type") === "button") {
         userEvent.click(element);
       }

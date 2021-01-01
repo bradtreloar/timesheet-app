@@ -1,6 +1,6 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
-import { AuthProvider } from "context/auth";
+import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter, Route } from "react-router-dom";
 import { randomTimesheet, randomUser } from "fixtures/random";
 import TimesheetViewPage from "./TimesheetViewPage";
@@ -17,13 +17,13 @@ const Fixture: React.FC = () => {
   const timesheetID = testTimesheet.id as string;
   return (
     <Provider store={store}>
-      <AuthProvider>
+      <ProvidersFixture>
         <MemoryRouter initialEntries={[`/timesheet/${timesheetID}`]}>
           <Route path="/timesheet/:id">
             <TimesheetViewPage />
           </Route>
         </MemoryRouter>
-      </AuthProvider>
+      </ProvidersFixture>
     </Provider>
   );
 };

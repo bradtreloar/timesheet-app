@@ -1,7 +1,7 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "context/auth";
+import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter, Route } from "react-router-dom";
 import {
   randomSettings,
@@ -32,7 +32,7 @@ const testSettings = randomSettings({
 const Fixture: React.FC = () => {
   return (
     <Provider store={store}>
-      <AuthProvider>
+      <ProvidersFixture>
         <MemoryRouter>
           <Route exact path="/">
             <TimesheetFormPage />
@@ -41,7 +41,7 @@ const Fixture: React.FC = () => {
             form submitted
           </Route>
         </MemoryRouter>
-      </AuthProvider>
+      </ProvidersFixture>
     </Provider>
   );
 };

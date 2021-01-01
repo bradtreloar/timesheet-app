@@ -1,5 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
-import { AuthProvider } from "context/auth";
+import { ProvidersFixture } from "fixtures/context";
 import { randomSettings, randomTimesheets, randomUser } from "fixtures/random";
 import { DateTime } from "luxon";
 import React from "react";
@@ -20,13 +20,13 @@ const testSettings = randomSettings();
 const Fixture: React.FC = () => {
   return (
     <Provider store={store}>
-      <AuthProvider>
+      <ProvidersFixture>
         <MemoryRouter>
           <Route exact path="/">
             <TimesheetIndexPage />
           </Route>
         </MemoryRouter>
-      </AuthProvider>
+      </ProvidersFixture>
     </Provider>
   );
 };

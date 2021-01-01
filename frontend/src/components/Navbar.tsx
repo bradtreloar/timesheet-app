@@ -5,6 +5,7 @@ import { useAuth } from "context/auth";
 import getMenu from "data/menus";
 import classNames from "classnames";
 import "./Navbar.scss";
+import { useMessages } from "context/messages";
 
 interface NavbarWrapperProps {
   className?: string;
@@ -49,11 +50,15 @@ const NavbarWrapper: React.FC<NavbarWrapperProps> = ({ className }) => {
 
 const UserMenu: React.FC = () => {
   const { user, logout } = useAuth();
+  const { setMessage } = useMessages();
 
   if (user) {
     return (
       <NavDropdown id="user-menu" title={user.name}>
-        <NavDropdown.Item data-testid="logout-button" onClick={logout}>
+        <NavDropdown.Item data-testid="logout-button" onClick={() => {
+          logout();
+          setMessage("success", `${user.name} has logged out.`);
+        }}>
           Log out
         </NavDropdown.Item>
       </NavDropdown>

@@ -1,7 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "context/auth";
-import { MessagesProvider } from "context/messages";
+import { ProvidersFixture } from "fixtures/context";
 import {
   randomSettings,
   randomTimesheets,
@@ -30,13 +29,9 @@ const Fixture: React.FC<{
 }> = ({ children, initialEntries }) => {
   return (
     <Provider store={store}>
-      <AuthProvider>
-        <MessagesProvider>
-          <MemoryRouter initialEntries={initialEntries}>
-            {children}
-          </MemoryRouter>
-        </MessagesProvider>
-      </AuthProvider>
+      <ProvidersFixture>
+        <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
+      </ProvidersFixture>
     </Provider>
   );
 };

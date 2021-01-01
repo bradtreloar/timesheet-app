@@ -1,12 +1,11 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AuthProvider } from "context/auth";
+import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter } from "react-router-dom";
 import { randomUser } from "fixtures/random";
 import ForgotPasswordPage from "./ForgotPasswordPage";
 import * as datastore from "services/datastore";
-import { MessagesProvider } from "context/messages";
 
 jest.mock("services/datastore");
 jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
@@ -14,13 +13,11 @@ const testUser = randomUser();
 
 const Fixture: React.FC = () => {
   return (
-    <AuthProvider>
-      <MessagesProvider>
-        <MemoryRouter>
-          <ForgotPasswordPage />
-        </MemoryRouter>
-      </MessagesProvider>
-    </AuthProvider>
+    <ProvidersFixture>
+      <MemoryRouter>
+        <ForgotPasswordPage />
+      </MemoryRouter>
+    </ProvidersFixture>
   );
 };
 
