@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Responses\NoContentResponse;
 use App\Http\Responses\UserDataResponse;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -83,6 +84,8 @@ class AuthController extends Controller
             return new NoContentResponse();
         } elseif ($status == Password::INVALID_USER) {
             throw new UnprocessableEntityHttpException();
+        } elseif ($status == Password::RESET_THROTTLED) {
+            throw new ThrottleRequestsException();
         } else {
             throw new BadRequestException();
         }
