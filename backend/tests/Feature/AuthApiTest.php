@@ -28,6 +28,7 @@ class AuthApiTest extends TestCase
             'email' => $user->email,
             'name' => $user->name,
             'is_admin' => $user->is_admin,
+            'default_shifts' => $user->default_shifts,
         ];
     }
 
