@@ -71,6 +71,7 @@ test("handles TimesheetForm submission", async () => {
   await act(async () => {
     userEvent.click(screen.getByText(/^submit$/i));
   });
+  await screen.findByText(/form submitted/i);
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
     userID: testTimesheet.userID,
     shifts: testTimesheet.shifts,
@@ -79,7 +80,7 @@ test("handles TimesheetForm submission", async () => {
 
 test("displays error when timesheet creation fails", async () => {
   const errorMessage = "unable to create timesheet";
-  jest.spyOn(datastore, "createTimesheet").mockRejectedValue(errorMessage);
+  jest.spyOn(datastore, "createTimesheet").mockRejectedValue(new Error(errorMessage));
 
   await act(async () => {
     render(<Fixture />);
@@ -89,9 +90,9 @@ test("displays error when timesheet creation fails", async () => {
   await act(async () => {
     userEvent.click(screen.getByText(/^submit$/i));
   });
+  await screen.findByText(errorMessage);
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
     userID: testTimesheet.userID,
     shifts: testTimesheet.shifts,
   });
-  screen.getByText(errorMessage);
 });

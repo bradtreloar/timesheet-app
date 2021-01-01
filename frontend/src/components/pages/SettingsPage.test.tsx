@@ -71,7 +71,7 @@ test("handles SettingsForm submission", async () => {
 
 test("displays error when settings update fails", async () => {
   const errorMessage = "unable to save settings";
-  jest.spyOn(datastore, "updateSettings").mockRejectedValue(errorMessage);
+  jest.spyOn(datastore, "updateSettings").mockRejectedValue(new Error(errorMessage));
 
   await act(async () => {
     render(<Fixture />);
