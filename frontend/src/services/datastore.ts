@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { Setting, Shift, Timesheet, User, UserData, UserResource } from "types";
 import { SettingResource, ShiftResource, TimesheetResource } from "types";
-import { HOST } from "settings";
+import { API_HOST } from "settings";
 import {
   parseTimesheet,
   makeTimesheetResource,
@@ -15,7 +15,7 @@ import {
 } from "./adaptors";
 
 export const client = axios.create({
-  baseURL: `${HOST}`,
+  baseURL: `${API_HOST}`,
   withCredentials: true,
   headers: {
     Accept: "application/json",
@@ -24,7 +24,7 @@ export const client = axios.create({
 });
 
 export const jsonAPIClient = axios.create({
-  baseURL: `${HOST}`,
+  baseURL: `${API_HOST}`,
   withCredentials: true,
   headers: {
     Accept: "application/vnd.api+json",
