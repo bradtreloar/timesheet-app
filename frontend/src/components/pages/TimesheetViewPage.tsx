@@ -3,7 +3,7 @@ import PageTitle from "components/PageTitle";
 import TimesheetView from "components/TimesheetView";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router";
+import { useParams } from "react-router";
 import { selectTimesheets } from "store/timesheets";
 import NotFoundPage from "./NotFoundPage";
 
