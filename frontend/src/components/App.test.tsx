@@ -4,7 +4,7 @@ import App from "./App";
 import userEvent from "@testing-library/user-event";
 import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter } from "react-router-dom";
-import { randomPassword, randomUser } from "../fixtures/random";
+import { randomPassword, randomTimesheets, randomUser } from "../fixtures/random";
 import * as datastore from "../services/datastore";
 import { Provider } from "react-redux";
 import store from "../store";
@@ -12,6 +12,7 @@ jest.mock("services/datastore");
 
 const mockUser = randomUser();
 const mockPassword = randomPassword();
+const testTimesheets = randomTimesheets(mockUser, 3);
 
 const AppFixture: React.FC<{
   routerEntries: string[];
@@ -30,6 +31,7 @@ const AppFixture: React.FC<{
 describe("unauthenticated user", () => {
   beforeEach(() => {
     jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
+    jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(testTimesheets);
   });
 
   test("triggers 404 page", async () => {
@@ -64,7 +66,7 @@ describe("unauthenticated user", () => {
     await act(async () => {
       userEvent.click(screen.getByTestId("login-form-submit"));
     });
-    expect(screen.getByRole("heading")).toHaveTextContent(/home page/i);
+    expect(screen.getByRole("heading")).toHaveTextContent(/timesheets/i);
   });
 
   test("receives error when login fails", async () => {
@@ -90,6 +92,7 @@ describe("authenticated user", () => {
     // Store a current user in state.
     localStorage.setItem("user", JSON.stringify(mockUser));
     jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(mockUser);
+    jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(testTimesheets);
   });
 
   test("views home page", async () => {
@@ -98,7 +101,7 @@ describe("authenticated user", () => {
     });
 
     expect(screen.queryByText(/404/)).toBeNull();
-    screen.getByText(/home page/i);
+    screen.getByText(/timesheets/i);
   });
 
   test("logs out", async () => {
@@ -107,7 +110,7 @@ describe("authenticated user", () => {
 
     render(<AppFixture routerEntries={["/"]} />);
 
-    expect(screen.getByRole("heading")).toHaveTextContent(/home page/i);
+    expect(screen.getByRole("heading")).toHaveTextContent(/timesheets/i);
     userEvent.click(screen.getByText(mockUser.name));
     await act(async () => {
       userEvent.click(screen.getByTestId("logout-button"));

@@ -18,6 +18,7 @@ import HomePage from "./pages/HomePage";
 import UserIndexPage from "./pages/UserIndexPage";
 import UserFormPage from "./pages/UserFormPage";
 import UserDeletePage from "./pages/UserDeletePage";
+import TimesheetIndexPage from "./pages/TimesheetIndexPage";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
@@ -39,7 +40,7 @@ const App: React.FC = () => {
   return (
     <Switch>
       <ProtectedRoute exact path="/">
-        <HomePage />
+        <TimesheetIndexPage />
       </ProtectedRoute>
       <ProtectedRoute exact path="/timesheet/new">
         <TimesheetFormPage />
