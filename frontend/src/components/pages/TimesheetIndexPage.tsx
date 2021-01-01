@@ -1,15 +1,12 @@
 import React from "react";
 import PageTitle from "components/PageTitle";
 import DefaultLayout from "components/layouts/DefaultLayout";
-import { useAuth } from "context/auth";
-import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import TimesheetTable from "components/tables/TimesheetTable";
 import { useSelector } from "react-redux";
 import { selectTimesheets } from "store/timesheets";
 
 const TimesheetIndexPage = () => {
-  const { user, logout } = useAuth();
   const { timesheets, status: timesheetStoreStatus } = useSelector(
     selectTimesheets
   );

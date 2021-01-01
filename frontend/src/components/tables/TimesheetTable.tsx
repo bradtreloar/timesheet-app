@@ -2,7 +2,6 @@ import { DateTime } from "luxon";
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  getShiftHours,
   getTimesheetTotalHours,
 } from "services/date";
 import { Timesheet } from "types";

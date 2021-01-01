@@ -14,7 +14,6 @@ import TimesheetConfirmPage from "./pages/TimesheetConfirmPage";
 import TimesheetFormPage from "./pages/TimesheetFormPage";
 import AdminRoute from "./routes/AdminRoute";
 import SettingsPage from "./pages/SettingsPage";
-import HomePage from "./pages/HomePage";
 import UserIndexPage from "./pages/UserIndexPage";
 import UserFormPage from "./pages/UserFormPage";
 import UserDeletePage from "./pages/UserDeletePage";
