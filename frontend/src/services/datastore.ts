@@ -192,6 +192,14 @@ export const fetchSettings = async (): Promise<Setting[]> => {
   });
 };
 
+export const completeTimesheet = async (
+  timesheet: Timesheet
+): Promise<Timesheet> => {
+  await client.get("/csrf-cookie");
+  await client.post(`/timesheets/${timesheet.id}/complete`);
+  return timesheet;
+};
+
 export const updateSettings = async (
   settings: Setting[]
 ): Promise<Setting[]> => {

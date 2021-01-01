@@ -13,6 +13,7 @@ import {
   randomTimesheets,
   randomUser,
 } from "fixtures/random";
+import { Shift } from "types";
 jest.mock("services/datastore");
 
 beforeEach(() => {
@@ -64,6 +65,8 @@ test("add timesheet", async () => {
     expect(timesheet).toBe(mockNewTimesheet);
     return Promise.resolve(mockTimesheet);
   });
+  jest.spyOn(datastore, "createShifts").mockResolvedValue(mockTimesheet.shifts as Shift[]);
+  jest.spyOn(datastore, "completeTimesheet").mockResolvedValue(mockTimesheet);
   const action = await store.dispatch(addTimesheet(mockNewTimesheet));
   expect(action.payload).toStrictEqual(mockTimesheet);
   expect(action.type).toBe("timesheets/add/fulfilled");

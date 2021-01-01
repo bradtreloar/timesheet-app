@@ -19,7 +19,12 @@ const fetchTimesheets = createAsyncThunk(
 const addTimesheet = createAsyncThunk(
   "timesheets/add",
   async (timesheet: Timesheet) => {
-    return await datastore.createTimesheet(timesheet);
+    const createdTimesheet = await datastore.createTimesheet(timesheet);
+    if (timesheet.shifts !== undefined) {
+      const createdShifts = await datastore.createShifts(timesheet.shifts, timesheet);
+      createdTimesheet.shifts = createdShifts;
+    }
+    return await datastore.completeTimesheet(timesheet);
   }
 );
 
