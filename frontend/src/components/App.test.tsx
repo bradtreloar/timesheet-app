@@ -105,7 +105,7 @@ describe("authenticated user", () => {
     });
 
     expect(screen.queryByText(/404/)).toBeNull();
-    screen.getByText(/timesheets/i);
+    expect(screen.getByRole("heading")).toHaveTextContent(/timesheets/i);
   });
 
   test("logs out", async () => {
