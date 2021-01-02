@@ -54,7 +54,7 @@ export const parseTimesheet = (
     created: created as string,
     changed: changed as string,
     shifts: [],
-    comment
+    comment,
   };
 };
 
@@ -143,7 +143,7 @@ export const makeTimesheetResource = (
   const resource: TimesheetResource = {
     type: "timesheets",
     attributes: {
-      comment
+      comment,
     },
     relationships: {
       user: {
