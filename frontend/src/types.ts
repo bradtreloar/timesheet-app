@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export type User = {
   id?: string;
   name: string;
@@ -134,4 +136,5 @@ export type Message = {
   id: string;
   value: string;
   type: MessageType;
+  created: DateTime;
 };
