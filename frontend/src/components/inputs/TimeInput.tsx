@@ -33,7 +33,6 @@ export const TimeInput: React.FC<TimeInputProps> = ({
     if (isInteger(value)) {
       return parseInt(value) <= maxValue;
     }
-
     return true;
   }
 
