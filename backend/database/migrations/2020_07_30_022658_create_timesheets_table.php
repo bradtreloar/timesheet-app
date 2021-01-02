@@ -17,7 +17,7 @@ class CreateTimesheetsTable extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->string('state');
-            $table->string('comment');
+            $table->string('comment', 255)->nullable();
             $table->timestamps();
         });
     }
