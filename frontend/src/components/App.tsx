@@ -20,6 +20,7 @@ import UserDeletePage from "./pages/UserDeletePage";
 import TimesheetIndexPage from "./pages/TimesheetIndexPage";
 import TimesheetViewPage from "./pages/TimesheetViewPage";
 import { fetchUnrestrictedSettings } from "store/settings";
+import LoadingPage from "./pages/LoadingPage";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
@@ -28,7 +29,7 @@ const initialiseStore = async (user: User) => {
 
 const App: React.FC = () => {
   const [initialised, setInitialised] = React.useState(false);
-  const { user } = useAuth();
+  const { user, userInitialised } = useAuth();
 
   React.useEffect(() => {
     if (user && !initialised) {
@@ -39,7 +40,7 @@ const App: React.FC = () => {
     }
   }, [user, initialised, setInitialised]);
 
-  return (
+  return userInitialised ? (
     <Switch>
       <ProtectedRoute exact path="/">
         <TimesheetIndexPage />
@@ -81,6 +82,8 @@ const App: React.FC = () => {
         <NotFoundPage />
       </Route>
     </Switch>
+  ) : (
+    <LoadingPage />
   );
 };
 
