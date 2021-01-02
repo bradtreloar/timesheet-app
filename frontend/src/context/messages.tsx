@@ -4,8 +4,8 @@ import { Message, MessageType } from "types";
 import { DateTime } from "luxon";
 
 /**
- * The minimum time that a message should be displayed before it can be
- * automatically dismissed.
+ * The minimum time in seconds that a message should be displayed before it can
+ * be automatically dismissed.
  */
 const MESSAGE_MINIMUM_DURATION = 3;
 
