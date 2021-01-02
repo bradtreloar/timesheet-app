@@ -7,6 +7,7 @@ use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -104,6 +105,27 @@ class JsonApiTest extends TestCase
         ];
     }
 
+    /**
+     * Create user data from a user object
+     */
+    protected function userDataFromUser(User $user) {
+        $user_data = [
+            "type" => "users",
+            "attributes" => [
+                "name" => $user->name,
+                "email" => $user->email,
+                "is_admin" => $user->is_admin,
+                "default_shifts" => $user->default_shifts,
+            ],
+        ];
+
+        if ($user->exists) {
+            $user_data['id'] = (string) $user->id;
+        }
+
+        return $user_data;
+    }
+
     public function testCreateUser()
     {
         $this->seed();
@@ -111,16 +133,7 @@ class JsonApiTest extends TestCase
         $user = User::factory()->make();
 
         $request_data = [
-            "data" => [
-                "type" => "users",
-                "attributes" => [
-                    "name" => $user->name,
-                    "email" => $user->email,
-                    "password" => $user->password,
-                    "is_admin" => $user->is_admin,
-                    "default_shifts" => $user->default_shifts,
-                ],
-            ],
+            "data" => $this->userDataFromUser($user),
         ];
 
         $response = $this->actingAs($user)
@@ -134,6 +147,53 @@ class JsonApiTest extends TestCase
         ]);
 
         $this->assertDatabaseCount('users', 3);
+    }
+
+    public function testUpdateUser()
+    {
+        $this->seed();
+        $user = User::find(1);
+        $name = $this->faker->name();
+        $user->name = $name;
+
+        $request_data = [
+            "data" => $this->userDataFromUser($user),
+        ];
+
+        $response = $this->actingAs($user)
+            ->jsonApi("PATCH", "/users/{$user->id}", $request_data);
+        $response->assertStatus(200);
+        $response->assertJson($request_data);
+
+        $updated_user = User::find(1);
+        $this->assertEquals($name, $updated_user->name);
+    }
+
+    public function testIgnoreChangeUserPassword()
+    {
+        $this->seed();
+        $user = User::find(1);
+        $old_password = $user->password;
+        $new_password = Hash::make(Str::random(40));
+
+        $user_data = $this->userDataFromUser($user);
+        $user_data['attributes']['password'] = $new_password;
+        $request_data = [
+            "data" => $user_data,
+        ];
+
+        $response = $this->actingAs($user)
+            ->jsonApi("PATCH", "/users/{$user->id}", $request_data);
+        $response->assertStatus(200);
+        $updated_user = User::find(1);
+        $this->assertEquals($old_password, $updated_user->password);
+        $response->assertJsonMissing([
+            "data" => [
+                "attributes" => [
+                    "password" => $new_password,
+                ],
+            ]
+        ]);
     }
 
     public function testFetchUnrestrictedSettings()
