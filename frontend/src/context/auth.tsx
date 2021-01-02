@@ -1,4 +1,4 @@
-import React, { useContext, createContext } from "react";
+import React, { useContext, createContext, useCallback } from "react";
 import { User } from "types";
 import * as datastore from "services/datastore";
 import { isEqual } from "lodash";
@@ -10,7 +10,7 @@ interface AuthContextState {
   isAdmin: boolean;
   userInitialised: boolean;
   user: User | null;
-  refreshUser: () => void;
+  refreshUser: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
@@ -57,13 +57,13 @@ const AuthProvider: React.FC = ({ children }) => {
   /**
    * Refreshes the user from the server.
    */
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
     const currentUser = await datastore.fetchCurrentUser();
     // Update the user if the logged in user differs from the stored user.
     if (!isEqual(user, currentUser)) {
       setUser(currentUser);
     }
-  };
+  }, [user, setUser]);
 
   /**
    * Authenticates the user.
@@ -156,11 +156,11 @@ const AuthProvider: React.FC = ({ children }) => {
   React.useEffect(() => {
     if (!userInitialised) {
       (async () => {
-        refreshUser();
+        await refreshUser();
         setUserInitialised(true);
       })();
     }
-  }, [userInitialised, user]);
+  }, [userInitialised, refreshUser]);
 
   const value = {
     isAuthenticated,
