@@ -8,6 +8,7 @@ type Status = "idle" | "pending" | "fulfilled" | "rejected";
 interface AuthContextState {
   isAuthenticated: boolean;
   isAdmin: boolean;
+  userInitialised: boolean;
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -36,7 +37,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const initialUser: User | null = storedUserData
     ? JSON.parse(storedUserData)
     : null;
-  const [isStale, setIsStale] = React.useState(true);
+  const [userInitialised, setUserInitialised] = React.useState(false);
   const [user, setUser] = React.useState(initialUser);
   const isAuthenticated = user !== null;
   const isAdmin = user !== null && user.isAdmin;
@@ -64,7 +65,7 @@ const AuthProvider: React.FC = ({ children }) => {
         if (status === 422) {
           throw new Error(`Unrecognized email or password.`);
         } else if (status === 403) {
-          setIsStale(true);
+          setUserInitialised(false);
           throw new Error(`User is already logged in.`);
         } else {
           console.error(error);
@@ -85,7 +86,7 @@ const AuthProvider: React.FC = ({ children }) => {
       setUser(null);
     } catch (error) {
       if (error.response?.status === 403) {
-        setIsStale(true);
+        setUserInitialised(false);
       }
     }
   };
@@ -133,21 +134,22 @@ const AuthProvider: React.FC = ({ children }) => {
    * Refreshes the user from the server.
    */
   React.useEffect(() => {
-    if (isStale) {
+    if (!userInitialised) {
       (async () => {
         const currentUser = await datastore.fetchCurrentUser();
         // Update the user if the logged in user differs from the stored user.
         if (!isEqual(user, currentUser)) {
           setUser(currentUser);
         }
-        setIsStale(false);
+        setUserInitialised(true);
       })();
     }
-  }, [isStale, user]);
+  }, [userInitialised, user]);
 
   const value = {
     isAuthenticated,
     isAdmin,
+    userInitialised,
     user,
     login,
     logout,
