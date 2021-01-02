@@ -5,7 +5,7 @@ import { useMessages } from "context/messages";
 const Messages: React.FC = () => {
   const { messages, dismissMessage } = useMessages();
 
-  return (
+  return messages.length > 0 ? (
     <div className="container my-3">
       <div>
         {messages.map((message, index) => (
@@ -20,7 +20,7 @@ const Messages: React.FC = () => {
         ))}
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Messages;
