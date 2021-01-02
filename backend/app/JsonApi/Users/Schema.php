@@ -32,6 +32,10 @@ class Schema extends SchemaProvider
         return [
             'created' => $resource->created_at->toISO8601String(),
             'changed' => $resource->updated_at->toISO8601String(),
+            'email' => $resource->email,
+            'name' => $resource->name,
+            'is_admin' => $resource->is_admin,
+            'default_shifts' => $resource->default_shifts,
         ];
     }
 
