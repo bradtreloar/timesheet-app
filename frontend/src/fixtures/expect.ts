@@ -3,15 +3,15 @@ import { Shift, ShiftTimes } from "types";
 
 const timeInputs = (shiftTimes: ShiftTimes) => [
   {
-    label: /start time/i,
+    label: /start/i,
     value: shiftTimes.startTime,
   },
   {
-    label: /end time/i,
+    label: /end/i,
     value: shiftTimes.endTime,
   },
   {
-    label: /break duration/i,
+    label: /break/i,
     value: shiftTimes.breakDuration,
   },
 ];

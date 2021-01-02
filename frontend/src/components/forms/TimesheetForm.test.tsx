@@ -31,7 +31,7 @@ test("renders timesheet form", () => {
   const shiftInputs = screen.getAllByLabelText(/^shift$/i);
   shiftInputs.forEach((shiftInput, index) => {
     const testShiftTimes = testShifts[index];
-    const startTimeInput = within(shiftInput).getByLabelText(/start time/i);
+    const startTimeInput = within(shiftInput).getByLabelText(/start/i);
     expect(within(startTimeInput).getByLabelText(/hour/i)).toHaveValue(
       testShiftTimes.startTime.hour
     );
@@ -52,13 +52,13 @@ test("handles toggling shift", () => {
   );
 
   const shiftInput = screen.getAllByLabelText(/^shift$/i)[0];
-  within(shiftInput).getByLabelText(/start time/i);
+  within(shiftInput).getByLabelText(/start/i);
   userEvent.click(within(shiftInput).getByTestId("shift-toggle"));
-  expect(within(shiftInput).queryByLabelText(/start time/i)).toBeNull();
+  expect(within(shiftInput).queryByLabelText(/start/i)).toBeNull();
   userEvent.click(within(shiftInput).getByTestId("shift-toggle"));
-  within(shiftInput).getByLabelText(/start time/i);
+  within(shiftInput).getByLabelText(/start/i);
   expect(
-    within(within(shiftInput).getByLabelText(/start time/i))
+    within(within(shiftInput).getByLabelText(/start/i))
       .getByLabelText(/hour/i)
       .getAttribute("value")
   ).toEqual("");

@@ -10,15 +10,15 @@ export const submitLoginForm = (email: string, password: string) => {
 
 const timeInputs = (shiftTimes: ShiftTimes) => [
   {
-    label: /start time/i,
+    label: /start/i,
     value: shiftTimes.startTime,
   },
   {
-    label: /end time/i,
+    label: /end/i,
     value: shiftTimes.endTime,
   },
   {
-    label: /break duration/i,
+    label: /break/i,
     value: shiftTimes.breakDuration,
   },
 ];
@@ -45,7 +45,7 @@ export const enterShiftTimes = (
 };
 
 export const eraseShiftTimes = (shiftInput: HTMLElement) => {
-  const inputLabels = [/start time/i, /end time/i, /break duration/i];
+  const inputLabels = [/start/i, /end/i, /break/i];
 
   for (let label of inputLabels) {
     const timeInput = within(shiftInput).getByLabelText(label);

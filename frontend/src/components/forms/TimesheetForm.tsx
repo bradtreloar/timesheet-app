@@ -250,14 +250,13 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
 
     return (
       <div className="mr-md-3 mb-2 mb-md-0 flex-grow-1">
-        <div className="input-group">
+        <div className="input-group" aria-label={label}>
           <div className="input-group-prepend flex-grow-1">
             <div className="input-group-text w-100">
               <small className="text-uppercase">{label}</small>
             </div>
           </div>
           <TimeInput
-            aria-label={label}
             className="form-control w-auto flex-grow-0"
             name={name}
             value={{
