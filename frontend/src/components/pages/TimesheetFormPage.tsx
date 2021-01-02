@@ -22,11 +22,13 @@ const TimesheetFormPage = () => {
   const { error } = useSelector(selectTimesheets);
   const { formError, formPending, handleSubmit } = useFormController<{
     shifts: Shift[];
-  }>(async ({ shifts }) => {
+    comment: string;
+  }>(async ({ shifts, comment }) => {
     if (user?.id) {
       const timesheet: Timesheet = {
         userID: user.id,
         shifts: shifts,
+        comment,
       };
       const action = await store.dispatch(addTimesheet(timesheet));
       if (action.type === "timesheets/add/rejected") {

@@ -11,7 +11,7 @@ import WeekSelect from "components/inputs/WeekSelect";
 import TimeInput from "components/inputs/TimeInput";
 import { DateTime } from "luxon";
 import "./TimesheetForm.scss";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 
 export const shiftTimesNames = [
   "startTime",
@@ -56,6 +56,7 @@ const buildInitialValues = (
   defaultShifts: ShiftTimes[]
 ) => ({
   weekStartDateTime: defaultWeekStartDateTime,
+  comment: "",
   ...range(7).reduce((values, index) => {
     const dv = defaultShifts[index];
     const name = `shift.${index}`;
@@ -78,8 +79,9 @@ const buildInitialValues = (
  * @returns
  *   A array of Shift objects.
  */
-const process = (values: any): { shifts: Shift[] } => {
+const process = (values: any): { shifts: Shift[]; comment: string } => {
   const weekStartDateTime = values.weekStartDateTime as DateTime;
+  const comment = values.comment;
   const shifts: Shift[] = [];
   range(7).forEach((index) => {
     const shiftTimes = getShiftTimesFromValues(values, index);
@@ -107,7 +109,7 @@ const process = (values: any): { shifts: Shift[] } => {
     }
   });
 
-  return { shifts };
+  return { shifts, comment };
 };
 
 /**
@@ -191,7 +193,7 @@ const validate = (values: any) => {
 interface TimesheetFormProps {
   defaultWeekStartDateTime: DateTime;
   defaultShifts: ShiftTimes[];
-  onSubmit: (values: { shifts: Shift[] }) => void;
+  onSubmit: (values: { shifts: Shift[]; comment: string }) => void;
   className?: string;
 }
 
@@ -295,34 +297,36 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
 
     return (
       <div key={index} className="border p-1 my-1 bg-light">
-      <div className="d-lg-flex" aria-label="Shift">
-        <label className="d-flex align-items-center m-0 flex-grow-1 pl-2 py-1 py-lg-2 mr-lg-3">
-          <input
-            data-testid="shift-toggle"
-            name={`${name}.isActive`}
-            type="checkbox"
-            checked={isActive}
-            onChange={(event) => {
-              if (!event.target.checked) {
-                clearShiftValues(name);
-              } else {
-                handleChange(event);
-              }
-            }}
-          />
-          <span className="ml-3">{label}</span>
-        </label>
-        {isActive && (
-          <div className="d-md-flex align-items-center mt-1 mt-lg-0">
-            {timeInput(`${name}.startTime`, "Start")}
-            {timeInput(`${name}.endTime`, "End")}
-            {timeInput(`${name}.breakDuration`, "Break")}
-            <div className="shift-hours">
-              <div className="form-control w-100">{shiftHours ? `${shiftHours} hours` : `\u00A0`}</div>
+        <div className="d-lg-flex" aria-label="Shift">
+          <label className="d-flex align-items-center m-0 flex-grow-1 pl-2 py-1 py-lg-2 mr-lg-3">
+            <input
+              data-testid="shift-toggle"
+              name={`${name}.isActive`}
+              type="checkbox"
+              checked={isActive}
+              onChange={(event) => {
+                if (!event.target.checked) {
+                  clearShiftValues(name);
+                } else {
+                  handleChange(event);
+                }
+              }}
+            />
+            <span className="ml-3">{label}</span>
+          </label>
+          {isActive && (
+            <div className="d-md-flex align-items-center mt-1 mt-lg-0">
+              {timeInput(`${name}.startTime`, "Start")}
+              {timeInput(`${name}.endTime`, "End")}
+              {timeInput(`${name}.breakDuration`, "Break")}
+              <div className="shift-hours">
+                <div className="form-control w-100">
+                  {shiftHours ? `${shiftHours} hours` : `\u00A0`}
+                </div>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
       </div>
     );
   });
@@ -346,7 +350,16 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         />
       </div>
       <div>{shiftInputs}</div>
-      <div className="my-3">
+      <Form.Group controlId="comment">
+        <Form.Label>Comment</Form.Label>
+        <Form.Control
+          as="textarea"
+          name="comment"
+          onChange={handleChange}
+          rows={3}
+        />
+      </Form.Group>
+      <div className="my-3 text-right">
         <Button type="submit">Submit</Button>
       </div>
     </form>

@@ -20,6 +20,7 @@ import { DateTime } from "luxon";
 jest.mock("services/datastore");
 const testUser = randomUser();
 const testTimesheet = randomTimesheet(testUser);
+testTimesheet.comment = "";
 const testShifts = testTimesheet.shifts as Shift[];
 // Make the user's default shift times coincide with the test timesheet's times.
 testUser.defaultShifts = testShifts.map((shift) => getTimesFromShift(shift));
@@ -77,6 +78,7 @@ test("handles TimesheetForm submission", async () => {
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
     userID: testTimesheet.userID,
     shifts: testTimesheet.shifts,
+    comment: testTimesheet.comment,
   });
 });
 
@@ -96,5 +98,6 @@ test("displays error when timesheet creation fails", async () => {
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
     userID: testTimesheet.userID,
     shifts: testTimesheet.shifts,
+    comment: testTimesheet.comment,
   });
 });

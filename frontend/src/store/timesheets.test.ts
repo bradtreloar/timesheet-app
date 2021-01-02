@@ -59,8 +59,8 @@ test("handle failure to fetch timesheets", async () => {
 test("add timesheet", async () => {
   const mockUser = randomUser();
   const mockTimesheet = randomTimesheet(mockUser);
-  const { userID } = mockTimesheet;
-  const mockNewTimesheet = { userID };
+  const { userID, comment } = mockTimesheet;
+  const mockNewTimesheet = { userID, comment };
   jest.spyOn(datastore, "createTimesheet").mockImplementation((timesheet) => {
     expect(timesheet).toBe(mockNewTimesheet);
     return Promise.resolve(mockTimesheet);
@@ -78,8 +78,8 @@ test("add timesheet", async () => {
 test("handle failure to add timesheet", async () => {
   const mockUser = randomUser();
   const mockTimesheet = randomTimesheet(mockUser);
-  const { userID } = mockTimesheet;
-  const mockNewTimesheet = { userID };
+  const { userID, comment } = mockTimesheet;
+  const mockNewTimesheet = { userID, comment };
   jest.spyOn(datastore, "createTimesheet").mockRejectedValue(undefined);
   fetchTimesheets(mockUser);
   const action = await store.dispatch(addTimesheet(mockNewTimesheet));

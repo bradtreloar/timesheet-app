@@ -103,6 +103,7 @@ export const randomTimesheet = (user: User): Timesheet => {
     ),
     created: DateTime.local().toISO(),
     changed: DateTime.local().toISO(),
+    comment: randomstring.generate(60),
   };
 };
 

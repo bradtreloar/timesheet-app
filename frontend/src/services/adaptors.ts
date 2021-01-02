@@ -46,7 +46,7 @@ export const parseTimesheet = (
 ): Timesheet => {
   const {
     id,
-    attributes: { created, changed },
+    attributes: { created, changed, comment },
   } = resource;
   return {
     id: id,
@@ -54,6 +54,7 @@ export const parseTimesheet = (
     created: created as string,
     changed: changed as string,
     shifts: [],
+    comment
   };
 };
 
@@ -138,10 +139,12 @@ export const makeShiftResource = (
 export const makeTimesheetResource = (
   timesheet: Timesheet
 ): TimesheetResource => {
-  const { id, userID, changed, created } = timesheet;
+  const { id, userID, changed, created, comment } = timesheet;
   const resource: TimesheetResource = {
     type: "timesheets",
-    attributes: {},
+    attributes: {
+      comment
+    },
     relationships: {
       user: {
         data: {
@@ -155,10 +158,8 @@ export const makeTimesheetResource = (
     resource.id = id;
   }
   if (changed && created) {
-    resource.attributes = {
-      changed,
-      created,
-    };
+    resource.attributes.changed = changed;
+    resource.attributes.created = created;
   }
   return resource;
 };

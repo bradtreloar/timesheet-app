@@ -14,6 +14,7 @@ export type Timesheet = {
   changed?: string;
   userID: string;
   shifts?: Shift[];
+  comment: string;
 };
 
 export type Shift = {
@@ -97,6 +98,7 @@ export interface TimesheetResource {
   attributes: {
     created?: string;
     changed?: string;
+    comment: string;
   };
   relationships: {
     user: RelatedResource<"users">;
