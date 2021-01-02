@@ -138,5 +138,6 @@ export type Message = {
   id: string;
   value: string;
   type: MessageType;
+  tags: string[];
   created: DateTime;
 };

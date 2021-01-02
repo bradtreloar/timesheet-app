@@ -11,8 +11,9 @@ const MESSAGE_MINIMUM_DURATION = 3;
 
 interface MessagesContextValue {
   messages: Message[];
-  setMessage: (type: MessageType, value: string) => void;
-  dismissMessage: (viewedMessage: Message) => void;
+  setMessage: (type: MessageType, value: string, tags?: string[]) => void;
+  dismissMessage: (message: Message) => void;
+  dismissMessagesByTag: (tag: string) => void;
   expireMessages: () => void;
 }
 
@@ -48,7 +49,7 @@ export const useMessages = () => {
 const MessagesProvider: React.FC = ({ children }) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const setMessage = (type: MessageType, value: string) => {
+  const setMessage = (type: MessageType, value: string, tags?: string[]) => {
     setMessages([
       ...messages,
       {
@@ -56,12 +57,23 @@ const MessagesProvider: React.FC = ({ children }) => {
         value,
         type,
         created: DateTime.local(),
+        tags: tags || [],
       },
     ]);
   };
 
-  const dismissMessage = (viewedMessage: Message) => {
-    setMessages(messages.filter(({ id }) => id !== viewedMessage.id));
+  const dismissMessage = (message: Message) => {
+    setMessages(messages.filter(({ id }) => id !== message.id));
+  };
+
+  const dismissMessagesByTag = (tag: string) => {
+    const dismissedMessages = messages.filter(({ tags }) => tags.includes(tag));
+    if (dismissedMessages.length > 0) {
+      const remainingMessages = messages.filter(({ id }) =>
+        undefined === dismissedMessages.find((message) => message.id === id)
+      );
+      setMessages(remainingMessages);
+    }
   };
 
   const expireMessages = () => {
@@ -81,6 +93,7 @@ const MessagesProvider: React.FC = ({ children }) => {
     messages,
     setMessage,
     dismissMessage,
+    dismissMessagesByTag,
     expireMessages,
   };
 
