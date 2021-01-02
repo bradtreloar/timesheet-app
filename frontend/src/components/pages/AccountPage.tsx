@@ -22,8 +22,8 @@ const AccountPage: React.FC = () => {
       const updatedUser = Object.assign({}, user, values);
       const action = await store.dispatch(updateUser(updatedUser));
       if (action.type === "users/update/fulfilled") {
-        setMessage("success", `Account settings updated.`);
-        refreshUser();
+        setMessage("success", `Account settings updated.`, ["account"]);
+        await refreshUser();
       }
     }
   );
