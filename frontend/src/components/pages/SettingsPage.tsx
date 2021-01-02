@@ -9,9 +9,12 @@ import { Settings } from "types";
 import store from "store";
 import SettingsForm from "components/forms/SettingsForm";
 import { Alert } from "react-bootstrap";
+import { useMessages } from "context/messages";
+import Messages from "components/Messages";
 
 const SettingsPage = () => {
   const { settings, error: settingsStoreError } = useSelector(selectSettings);
+  const { setMessage } = useMessages();
 
   const settingsObject = useMemo(() => {
     return settings.reduce((settings, { name, value }) => {
@@ -27,13 +30,17 @@ const SettingsPage = () => {
         return value ? Object.assign({}, setting, { value }) : setting;
       });
 
-      await store.dispatch(updateSettings(updatedSettings));
+      const action = await store.dispatch(updateSettings(updatedSettings));
+      if (action.type === "settings/update/fulfilled") {
+        setMessage("success", "Settings updated successfully.");
+      }
     }
   );
 
   return (
     <DefaultLayout>
       <PageTitle>Settings</PageTitle>
+      <Messages />
       <div className="container">
         {settingsStoreError && (
           <Alert variant="danger">{settingsStoreError}</Alert>
