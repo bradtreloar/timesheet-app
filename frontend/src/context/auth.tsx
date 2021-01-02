@@ -10,11 +10,16 @@ interface AuthContextState {
   isAdmin: boolean;
   userInitialised: boolean;
   user: User | null;
+  refreshUser: () => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   setPassword: (password: string) => Promise<void>;
-  resetPassword: (email: string, token: string, password: string) => Promise<void>;
+  resetPassword: (
+    email: string,
+    token: string,
+    password: string
+  ) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
@@ -43,11 +48,22 @@ const AuthProvider: React.FC = ({ children }) => {
   const isAdmin = user !== null && user.isAdmin;
 
   /**
-   * Persist the user's information.
+   * Persist the user's information locally.
    */
   React.useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
+
+  /**
+   * Refreshes the user from the server.
+   */
+  const refreshUser = async () => {
+    const currentUser = await datastore.fetchCurrentUser();
+    // Update the user if the logged in user differs from the stored user.
+    if (!isEqual(user, currentUser)) {
+      setUser(currentUser);
+    }
+  };
 
   /**
    * Authenticates the user.
@@ -122,7 +138,11 @@ const AuthProvider: React.FC = ({ children }) => {
   /**
    * Sets a new password using a token.
    */
-  const resetPassword = async (email: string, token: string, password: string) => {
+  const resetPassword = async (
+    email: string,
+    token: string,
+    password: string
+  ) => {
     try {
       await datastore.resetPassword(email, token, password);
     } catch (error) {
@@ -131,16 +151,12 @@ const AuthProvider: React.FC = ({ children }) => {
   };
 
   /**
-   * Refreshes the user from the server.
+   * Refreshes the user if uninitialised.
    */
   React.useEffect(() => {
     if (!userInitialised) {
       (async () => {
-        const currentUser = await datastore.fetchCurrentUser();
-        // Update the user if the logged in user differs from the stored user.
-        if (!isEqual(user, currentUser)) {
-          setUser(currentUser);
-        }
+        refreshUser();
         setUserInitialised(true);
       })();
     }
@@ -151,6 +167,7 @@ const AuthProvider: React.FC = ({ children }) => {
     isAdmin,
     userInitialised,
     user,
+    refreshUser,
     login,
     logout,
     forgotPassword,
