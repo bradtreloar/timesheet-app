@@ -10,6 +10,8 @@ import useForm, { FormErrors } from "hooks/useForm";
 import WeekSelect from "components/inputs/WeekSelect";
 import TimeInput from "components/inputs/TimeInput";
 import { DateTime } from "luxon";
+import "./TimesheetForm.scss";
+import { Button } from "react-bootstrap";
 
 export const shiftTimesNames = [
   "startTime",
@@ -247,30 +249,32 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const visibleMinuteError = visibleErrors[`${name}.minute`];
 
     return (
-      <div aria-label={label}>
-        <span className="sr-only">{label}</span>
-        <TimeInput
-          name={name}
-          value={{
-            hour: values[`${name}.hour`],
-            minute: values[`${name}.minute`],
-          }}
-          onBlur={handleBlur}
-          onChange={handleChange}
-        />
-        {(timeError || visibleHourError || visibleMinuteError) && (
-          <div className="invalid-feedback">
-            {timeError && (
-              <div>{timeError}</div>
-            )}
-            {visibleHourError && (
-              <div>{hourError}</div>
-            )}
-            {visibleMinuteError && (
-              <div>{minuteError}</div>
-            )}
+      <div className="mr-md-3 mb-2 mb-md-0 flex-grow-1">
+        <div className="input-group">
+          <div className="input-group-prepend flex-grow-1">
+            <div className="input-group-text w-100">
+              <small className="text-uppercase">{label}</small>
+            </div>
           </div>
-        )}
+          <TimeInput
+            aria-label={label}
+            className="form-control w-auto flex-grow-0"
+            name={name}
+            value={{
+              hour: values[`${name}.hour`],
+              minute: values[`${name}.minute`],
+            }}
+            onBlur={handleBlur}
+            onChange={handleChange}
+          />
+          {(timeError || visibleHourError || visibleMinuteError) && (
+            <div className="invalid-feedback">
+              {timeError && <div>{timeError}</div>}
+              {visibleHourError && <div>{hourError}</div>}
+              {visibleMinuteError && <div>{minuteError}</div>}
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -291,8 +295,9 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const isActive = shiftTimes.isActive;
 
     return (
-      <div key={index} aria-label="Shift">
-        <label>
+      <div key={index} className="border p-1 my-1 bg-light">
+      <div className="d-lg-flex" aria-label="Shift">
+        <label className="d-flex align-items-center m-0 flex-grow-1 pl-2 py-1 py-lg-2 mr-lg-3">
           <input
             data-testid="shift-toggle"
             name={`${name}.isActive`}
@@ -306,40 +311,44 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               }
             }}
           />
-          <span>{label}</span>
+          <span className="ml-3">{label}</span>
         </label>
         {isActive && (
-          <>
-            <div>
-              {timeInput(`${name}.startTime`, "Start time")}
-              {timeInput(`${name}.endTime`, "End time")}
-              {timeInput(`${name}.breakDuration`, "Break Duration")}
+          <div className="d-md-flex align-items-center mt-1 mt-lg-0">
+            {timeInput(`${name}.startTime`, "Start")}
+            {timeInput(`${name}.endTime`, "End")}
+            {timeInput(`${name}.breakDuration`, "Break")}
+            <div className="shift-hours">
+              <div className="form-control w-100">{shiftHours ? `${shiftHours} hours` : `\u00A0`}</div>
             </div>
-            <div>{shiftHours} hours</div>
-          </>
+          </div>
         )}
+      </div>
       </div>
     );
   });
 
   return (
     <form onSubmit={handleSubmit} className={className}>
-      <WeekSelect
-        value={values.weekStartDateTime}
-        onChange={(value) => {
-          handleChange({
-            target: {
-              type: "weekSelect",
-              name: "weekStartDateTime",
-              value,
-            },
-          });
-        }}
-      />
       {errors.form && <div className="alert alert-danger">{errors.form}</div>}
+      <div className="my-3">
+        <WeekSelect
+          className="w-100"
+          value={values.weekStartDateTime}
+          onChange={(value) => {
+            handleChange({
+              target: {
+                type: "weekSelect",
+                name: "weekStartDateTime",
+                value,
+              },
+            });
+          }}
+        />
+      </div>
       <div>{shiftInputs}</div>
-      <div>
-        <button type="submit">Submit</button>
+      <div className="my-3">
+        <Button type="submit">Submit</Button>
       </div>
     </form>
   );
