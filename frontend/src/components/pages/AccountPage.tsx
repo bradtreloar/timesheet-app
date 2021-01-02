@@ -1,42 +1,20 @@
-import React, { useMemo } from "react";
+import React from "react";
 import classnames from "classnames";
-import { useSelector } from "react-redux";
 import PageTitle from "components/PageTitle";
 import DefaultLayout from "components/layouts/DefaultLayout";
 import useFormController from "hooks/useFormController";
 import { Alert } from "react-bootstrap";
 import { updateUser } from "store/users";
-import { useHistory, useParams } from "react-router";
 import NotFoundPage from "./NotFoundPage";
 import { useMessages } from "context/messages";
 import store from "store";
-import { ShiftTimes } from "types";
-import { range } from "lodash";
 import { useAuth } from "context/auth";
 import AccountForm, { AccountFormValues } from "components/forms/AccountForm";
 import { Link } from "react-router-dom";
 
-const createEmptyDefaultShifts = (): ShiftTimes[] =>
-  range(7).map(() => ({
-    isActive: false,
-    startTime: {
-      hour: "",
-      minute: "",
-    },
-    endTime: {
-      hour: "",
-      minute: "",
-    },
-    breakDuration: {
-      hour: "",
-      minute: "",
-    },
-  }));
-
 const AccountPage: React.FC = () => {
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
   const { setMessage } = useMessages();
-  const history = useHistory();
 
   const { formError, formPending, handleSubmit } = useFormController(
     async (values: AccountFormValues) => {
