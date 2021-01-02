@@ -109,7 +109,7 @@ export const updateUser = async (user: User): Promise<User> => {
   const userResource: UserResource = makeUserResource(user);
   const response: AxiosResponse<{
     data: UserResource;
-  }> = await jsonAPIClient.put(`/users/${user.id}`, {
+  }> = await jsonAPIClient.patch(`/users/${user.id}`, {
     data: userResource,
   });
   const { data } = response.data;
@@ -229,7 +229,7 @@ export const updateSettings = async (
   await client.get("/csrf-cookie");
   const response: AxiosResponse<{
     data: SettingResource[];
-  }> = await jsonAPIClient.put(`settings`, {
+  }> = await jsonAPIClient.patch(`settings`, {
     data: settings.map((setting) => makeSettingResource(setting)),
   });
   const { data } = response.data;
