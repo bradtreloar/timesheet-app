@@ -11,6 +11,7 @@ import { clearSettings, setSettings } from "store/settings";
 import { Shift } from "types";
 import { getTimesFromShift } from "services/adaptors";
 import SettingsPage from "./SettingsPage";
+import { DateTime } from "luxon";
 
 jest.mock("services/datastore");
 const testUser = randomUser();
@@ -21,7 +22,7 @@ testUser.defaultShifts = testShifts.map((shift) => getTimesFromShift(shift));
 // Make the first day of the week coincide with the date of the first shift
 // in testTimesheet.
 const testSettings = randomSettings({
-  firstDayOfWeek: new Date(testShifts[0].start).getDay().toString(),
+  firstDayOfWeek: DateTime.fromISO(testShifts[0].start).weekday.toString()
 });
 
 const Fixture: React.FC = () => {
@@ -31,9 +32,6 @@ const Fixture: React.FC = () => {
         <MemoryRouter>
           <Route exact path="/">
             <SettingsPage />
-          </Route>
-          <Route exact path="/timesheet/confirmation">
-            form submitted
           </Route>
         </MemoryRouter>
       </ProvidersFixture>
@@ -67,6 +65,7 @@ test("handles SettingsForm submission", async () => {
     userEvent.click(screen.getByText(/^save settings$/i));
   });
   expect(datastore.updateSettings).toHaveBeenCalledWith(testSettings);
+  await screen.findByText(/settings updated/i);
 });
 
 test("displays error when settings update fails", async () => {
@@ -80,6 +79,6 @@ test("displays error when settings update fails", async () => {
   await act(async () => {
     userEvent.click(screen.getByText(/^save settings$/i));
   });
-  expect(datastore.updateSettings).toHaveBeenCalledWith(testSettings);
   screen.getByText(errorMessage);
+  expect(datastore.updateSettings).toHaveBeenCalledWith(testSettings);
 });

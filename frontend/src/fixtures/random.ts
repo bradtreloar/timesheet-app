@@ -125,7 +125,7 @@ export const randomSettings = (
   {
     id: randomID(),
     name: "firstDayOfWeek",
-    value: settings?.firstDayOfWeek || randomInt(0, 6).toString(),
+    value: settings?.firstDayOfWeek || randomInt(1, 7).toString(),
     created: DateTime.local().toISO(),
     changed: DateTime.local().toISO(),
   },
