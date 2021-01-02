@@ -69,7 +69,7 @@ interface RelatedResourceArray<T> {
 }
 
 export interface UserData {
-  id?: string;
+  id?: string | number;
   name: string;
   email: string;
   is_admin: boolean;

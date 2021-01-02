@@ -75,7 +75,7 @@ export const parseUserFromResource = (resource: UserResource): User => {
 export const parseUser = (data: UserData): User => {
   const { id, name, email, is_admin, default_shifts } = data;
   return {
-    id,
+    id: (id as number).toString(),
     name,
     email,
     isAdmin: is_admin,
