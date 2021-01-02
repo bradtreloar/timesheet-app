@@ -6,12 +6,14 @@ import { Button } from "react-bootstrap";
 interface WeekSelectProps {
   value: DateTime;
   onChange: (value: DateTime) => void;
+  disabled?: boolean;
   className?: string;
 }
 
 const WeekSelect: React.FC<WeekSelectProps> = ({
   value,
   onChange,
+  disabled,
   className,
 }) => {
   const fromLabel = value.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
@@ -39,6 +41,7 @@ const WeekSelect: React.FC<WeekSelectProps> = ({
         onClick={() => {
           handleChange(false);
         }}
+        disabled={disabled}
       >
         Prev
       </Button>
@@ -54,6 +57,7 @@ const WeekSelect: React.FC<WeekSelectProps> = ({
         onClick={() => {
           handleChange(true);
         }}
+        disabled={disabled}
       >
         Next
       </Button>

@@ -8,6 +8,7 @@ import { getWeekdayName } from "services/date";
 interface SettingsFormProps {
   defaultValues: Settings;
   onSubmit: (values: Settings) => void;
+  pending?: boolean;
   className?: string;
 }
 
@@ -38,6 +39,7 @@ const validate = (values: Settings) => {
 const SettingsForm: React.FC<SettingsFormProps> = ({
   defaultValues,
   onSubmit,
+  pending,
   className,
 }) => {
   const {
@@ -61,7 +63,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           placeholder="e.g. timesheet@example.com, admin@example.com"
           onBlur={handleBlur}
           onChange={handleChange}
-          required
+          disabled={pending}
         />
         <Form.Text className="text-muted">
           Enter a comma-separated list of email addresses to receive timesheets.
@@ -84,6 +86,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           isInvalid={visibleErrors.firstDayOfWeek}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         >
           {range(7).map((index) => {
             return (
@@ -97,7 +100,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           Select which day should appear first on the timesheet form.
         </Form.Text>
       </Form.Group>
-      <Button type="submit">Save settings</Button>
+      <Button variant="primary" type="submit" disabled={pending}>
+        {pending ? `Saving settings` : `Save settings`}
+      </Button>
     </Form>
   );
 };

@@ -80,6 +80,7 @@ const UserFormPage: React.FC = () => {
               : null
           }
           onSubmit={handleSubmit}
+          pending={formPending}
         />
       </div>
     </DefaultLayout>

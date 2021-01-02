@@ -64,12 +64,14 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.email && (
-          <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.email}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
       <Button
-        disabled={pending}
         variant="primary"
+        disabled={pending}
         type="submit"
         data-testid="password-reset-form-submit"
       >

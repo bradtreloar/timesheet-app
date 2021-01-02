@@ -25,6 +25,7 @@ const LoginPage = () => {
         <LoginForm
           className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
+          pending={formPending}
         />
         <div className="my-3">
           <Link to="forgot-password">

@@ -14,6 +14,7 @@ interface TimeInputProps {
   value: TimeInputValue;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -23,6 +24,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   value,
   onBlur,
   onChange,
+  disabled,
   className,
 }) => {
   const { hour, minute } = value;
@@ -74,6 +76,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
               onChange(event);
             }
           }}
+          disabled={disabled}
         />
         <span className="mx-1">:</span>
         <input
@@ -90,6 +93,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
               onChange(event);
             }
           }}
+          disabled={disabled}
         />
       </div>
     </div>

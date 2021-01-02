@@ -45,6 +45,7 @@ const AccountPage: React.FC = () => {
             email: user.email,
           }}
           onSubmit={handleSubmit}
+          pending={formPending}
         />
         <div className="my-3">
           <Link to="/account/password">Change password</Link>

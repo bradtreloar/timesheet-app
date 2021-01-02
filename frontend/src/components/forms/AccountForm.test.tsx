@@ -68,3 +68,11 @@ test("Reject invalid form input", () => {
   userEvent.click(screen.getByText(/save/i));
   screen.getByText(/must be a valid email address/i);
 });
+
+test("Disable form controls in pending state", () => {
+  render(
+    <AccountForm pending defaultValues={testDefaultValues} onSubmit={noop} />
+  );
+
+  screen.getByText(/saving/i);
+});

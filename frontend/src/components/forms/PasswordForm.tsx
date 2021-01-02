@@ -41,10 +41,11 @@ const validate = (values: PasswordFormValues) => {
 
 interface PasswordFormProps {
   onSubmit: (values: PasswordFormValues) => void;
+  pending?: boolean;
   className?: string;
 }
 
-const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
+const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, pending, className }) => {
   const {
     values,
     errors,
@@ -74,6 +75,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
           value={values.password}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         />
         {(visibleErrors.password) && (
           <Form.Control.Feedback type="invalid">
@@ -99,6 +101,7 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
           value={values.password2}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         />
         {visibleErrors.password2 && (
           <Form.Control.Feedback type="invalid">
@@ -110,8 +113,9 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
         variant="primary"
         type="submit"
         data-testid="password-form-submit"
+        disabled={pending}
       >
-        Save password
+        {pending ? `Saving password` : `Save password`}
       </Button>
     </Form>
   );

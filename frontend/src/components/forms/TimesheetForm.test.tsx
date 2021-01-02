@@ -146,7 +146,9 @@ describe("form submission", () => {
         defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
         onSubmitTimesheet={() => {
-          throw new Error(`onSubmitTimesheet should not be called with no shifts.`);
+          throw new Error(
+            `onSubmitTimesheet should not be called with no shifts.`
+          );
         }}
       />
     );
@@ -175,4 +177,18 @@ describe("form submission", () => {
     userEvent.click(screen.getByText(/^submit$/i));
     expect(screen.getAllByText(/required/i)).toHaveLength(2);
   });
+});
+
+test("Disable form controls in pending state", () => {
+  const testShifts: ShiftTimes[] = randomShiftTimesArray();
+  render(
+    <TimesheetForm
+      defaultWeekStartDateTime={testWeekStartDateTime}
+      defaultShifts={testShifts}
+      onSubmitTimesheet={noop}
+      pending
+    />
+  );
+
+  screen.getByText(/submitting/i);
 });

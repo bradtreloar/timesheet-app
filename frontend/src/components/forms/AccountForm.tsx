@@ -30,12 +30,14 @@ const validate = (values: AccountFormValues) => {
 interface AccountFormProps {
   defaultValues: AccountFormValues;
   onSubmit: (values: AccountFormValues) => void;
+  pending?: boolean;
   className?: string;
 }
 
 const AccountForm: React.FC<AccountFormProps> = ({
   defaultValues,
   onSubmit,
+  pending,
   className,
 }) => {
   const {
@@ -56,6 +58,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
       <Form.Group controlId="name">
         <Form.Label>Name</Form.Label>
         <Form.Control
+          disabled={pending}
           type="text"
           name="name"
           isInvalid={visibleErrors.name}
@@ -64,12 +67,15 @@ const AccountForm: React.FC<AccountFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.name && (
-          <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.name}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group controlId="email">
         <Form.Label>Email address</Form.Label>
         <Form.Control
+          disabled={pending}
           type="email"
           name="email"
           isInvalid={visibleErrors.email}
@@ -78,11 +84,13 @@ const AccountForm: React.FC<AccountFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.email && (
-          <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.email}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Save
+      <Button variant="primary" type="submit" disabled={pending}>
+        {pending ? `Saving` : `Save`}
       </Button>
     </Form>
   );

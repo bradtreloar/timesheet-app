@@ -79,7 +79,9 @@ const buildInitialValues = (
  * @returns
  *   A array of Shift objects.
  */
-const processTimesheet = (values: any): { shifts: Shift[]; comment: string } => {
+const processTimesheet = (
+  values: any
+): { shifts: Shift[]; comment: string } => {
   const weekStartDateTime = values.weekStartDateTime as DateTime;
   const comment = values.comment;
   const shifts: Shift[] = [];
@@ -194,6 +196,7 @@ interface TimesheetFormProps {
   defaultWeekStartDateTime: DateTime;
   defaultShifts: ShiftTimes[];
   onSubmitTimesheet: (values: { shifts: Shift[]; comment: string }) => void;
+  pending: boolean;
   className?: string;
 }
 
@@ -201,6 +204,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   defaultWeekStartDateTime,
   defaultShifts,
   onSubmitTimesheet,
+  pending,
   className,
 }) => {
   const initialValues = useCallback(
@@ -269,6 +273,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
             }}
             onBlur={handleBlur}
             onChange={handleChange}
+            disabled={pending}
           />
           {(timeError || visibleHourError || visibleMinuteError) && (
             <div className="invalid-feedback">
@@ -349,6 +354,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               },
             });
           }}
+          disabled={pending}
         />
       </div>
       <div>{shiftInputs}</div>
@@ -357,10 +363,13 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         <Form.Control
           name="comment"
           onChange={handleChange}
+          disabled={pending}
         />
       </Form.Group>
       <div className="my-3 text-right">
-        <Button type="submit">Submit</Button>
+        <Button variant="primary" type="submit" disabled={pending}>
+          {pending ? `Submitting` : `Submit`}
+        </Button>
       </div>
     </form>
   );

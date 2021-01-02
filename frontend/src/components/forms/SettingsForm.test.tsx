@@ -73,3 +73,11 @@ describe("validates inputs", () => {
     userEvent.click(screen.getByText(/save settings/i));
   });
 });
+
+test("Disable form controls in pending state", () => {
+  render(
+    <SettingsForm pending defaultValues={testSettings} onSubmit={noop} />
+  );
+
+  screen.getByText(/saving settings/i);
+});

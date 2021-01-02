@@ -50,6 +50,7 @@ const SettingsPage = () => {
           className={classnames(formPending && "is-pending")}
           defaultValues={settingsObject}
           onSubmit={handleSubmit}
+          pending={formPending}
         />
       </div>
     </DefaultLayout>

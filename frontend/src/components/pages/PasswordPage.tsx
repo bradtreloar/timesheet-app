@@ -31,6 +31,7 @@ const PasswordPage = () => {
         <PasswordForm
           className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
+          pending={formPending}
         />
       </div>
     </DefaultLayout>

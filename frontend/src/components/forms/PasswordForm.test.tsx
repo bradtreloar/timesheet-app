@@ -55,3 +55,9 @@ test("Reject invalid form input", () => {
   userEvent.click(screen.getByText(/save password/i));
   screen.getByText(/required/i);
 });
+
+test("Disable form controls in pending state", () => {
+  render(<PasswordForm pending onSubmit={noop} />);
+
+  screen.getByText(/saving password/i);
+});

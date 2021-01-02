@@ -4,6 +4,7 @@ import { screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import LoginForm from "./LoginForm";
 import { randomPassword, randomUser } from "fixtures/random";
+import { noop } from "lodash";
 
 test("Form submission succeeds", (done) => {
   const mockEmail = randomUser().email;
@@ -60,4 +61,10 @@ test("Invalid email address detected", () => {
   userEvent.type(screen.getByLabelText(/password/i), mockPassword);
   screen.getByText(/must be a valid email address/i);
   userEvent.click(screen.getByText(/log in/i));
+});
+
+test("Disable form controls in pending state", () => {
+  render(<LoginForm pending onSubmit={noop} />);
+
+  screen.getByText(/logging in/i);
 });

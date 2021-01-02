@@ -35,9 +35,14 @@ const initialValues: LoginFormValues = {
 interface LoginFormProps {
   onSubmit: (values: LoginFormValues) => void;
   className?: string;
+  pending?: boolean;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, className }) => {
+const LoginForm: React.FC<LoginFormProps> = ({
+  onSubmit,
+  pending,
+  className,
+}) => {
   const {
     values,
     errors,
@@ -62,6 +67,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, className }) => {
           value={values.email}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         />
         {visibleErrors.email && (
           <Form.Control.Feedback type="invalid">
@@ -78,6 +84,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, className }) => {
           value={values.password}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         />
         {visibleErrors.password && (
           <Form.Control.Feedback type="invalid">
@@ -89,9 +96,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, className }) => {
         variant="primary"
         type="submit"
         data-testid="login-form-submit"
-        disabled={!isEmpty(errors)}
+        disabled={pending || !isEmpty(errors)}
       >
-        Log in
+        {pending ? `Logging in` : `Log in`}
       </Button>
     </Form>
   );

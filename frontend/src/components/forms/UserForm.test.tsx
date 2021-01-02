@@ -58,6 +58,14 @@ describe("New User", () => {
     userEvent.click(screen.getByLabelText(/administrator/i));
     userEvent.click(screen.getByText(/create/i));
   });
+
+  test("Disable form controls in pending state", () => {
+    render(
+      <UserForm pending defaultValues={null} onSubmit={noop} />
+    );
+  
+    screen.getByText(/creating/i);
+  });
 });
 
 describe("Existing User", () => {
@@ -112,5 +120,13 @@ describe("Existing User", () => {
     userEvent.type(screen.getByLabelText(/email address/i), invalidEmail);
     userEvent.click(screen.getByText(/save/i));
     screen.getByText(/must be a valid email address/i);
+  });
+
+  test("Disable form controls in pending state", () => {
+    render(
+      <UserForm pending defaultValues={testDefaultValues} onSubmit={noop} />
+    );
+  
+    screen.getByText(/saving/i);
   });
 });

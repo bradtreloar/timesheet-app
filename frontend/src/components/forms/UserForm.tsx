@@ -31,12 +31,14 @@ const validate = (values: UserFormValues) => {
 interface UserFormProps {
   defaultValues: UserFormValues | null;
   onSubmit: (values: UserFormValues) => void;
+  pending?: boolean;
   className?: string;
 }
 
 const UserForm: React.FC<UserFormProps> = ({
   defaultValues,
   onSubmit,
+  pending,
   className,
 }) => {
   const isNewUser = defaultValues === null;
@@ -68,9 +70,12 @@ const UserForm: React.FC<UserFormProps> = ({
           value={values.name}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         />
         {visibleErrors.name && (
-          <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.name}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group controlId="email">
@@ -82,9 +87,12 @@ const UserForm: React.FC<UserFormProps> = ({
           value={values.email}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         />
         {visibleErrors.email && (
-          <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.email}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group controlId="isAdmin">
@@ -96,13 +104,22 @@ const UserForm: React.FC<UserFormProps> = ({
           checked={values.isAdmin}
           onBlur={handleBlur}
           onChange={handleChange}
+          disabled={pending}
         />
         {visibleErrors.isAdmin && (
-          <Form.Control.Feedback type="invalid">{errors.isAdmin}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.isAdmin}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
-      <Button variant="primary" type="submit">
-        {isNewUser ? `Create user` : `Save`}
+      <Button variant="primary" type="submit" disabled={pending}>
+        {isNewUser
+          ? pending
+            ? `Creating user`
+            : `Create user`
+          : pending
+          ? `Saving`
+          : `Save`}
       </Button>
     </Form>
   );
