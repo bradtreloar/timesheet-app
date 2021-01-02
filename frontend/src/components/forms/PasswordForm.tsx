@@ -67,24 +67,27 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
       <Form.Group controlId="password">
         <Form.Label>New Password</Form.Label>
         <Form.Control
+          autoFocus
           type="password"
           name="password"
-          isInvalid={visibleErrors.password || requiredTestErrors.length > 0}
+          isInvalid={visibleErrors.password}
           value={values.password}
           onBlur={handleBlur}
           onChange={handleChange}
         />
-        {(visibleErrors.password || requiredTestErrors.length > 0) && (
-          <Form.Control.Feedback>{errors.password}</Form.Control.Feedback>
+        {(visibleErrors.password) && (
+          <Form.Control.Feedback type="invalid">
+            {errors.password}
+          </Form.Control.Feedback>
         )}
         {requiredTestErrors.length > 0 && (
-          <Form.Control.Feedback>
+          <Form.Text>
             <ul>
               {requiredTestErrors.map((error, index) => (
                 <li key={index}>{error}</li>
               ))}
             </ul>
-          </Form.Control.Feedback>
+          </Form.Text>
         )}
       </Form.Group>
       <Form.Group controlId="password2">
@@ -98,7 +101,9 @@ const PasswordForm: React.FC<PasswordFormProps> = ({ onSubmit, className }) => {
           onChange={handleChange}
         />
         {visibleErrors.password2 && (
-          <Form.Control.Feedback>{errors.password2}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.password2}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
       <Button
