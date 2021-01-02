@@ -72,14 +72,14 @@ const buildInitialValues = (
 });
 
 /**
- * Prepares the value to be passed to the form's onSubmit callback.
+ * Prepares the value to be passed to the form's onSubmitTimesheet callback.
  *
  * @param values
  *   An object containing the value for each form input.
  * @returns
  *   A array of Shift objects.
  */
-const process = (values: any): { shifts: Shift[]; comment: string } => {
+const processTimesheet = (values: any): { shifts: Shift[]; comment: string } => {
   const weekStartDateTime = values.weekStartDateTime as DateTime;
   const comment = values.comment;
   const shifts: Shift[] = [];
@@ -121,7 +121,7 @@ const process = (values: any): { shifts: Shift[]; comment: string } => {
  *   An object containing the error for any form inputs that contain invalid
  *   values. Returns null if no errors are found.
  */
-const validate = (values: any) => {
+const validateTimesheet = (values: any) => {
   const errors = {} as FormErrors<any>;
   let hasActiveShifts = false;
 
@@ -193,14 +193,14 @@ const validate = (values: any) => {
 interface TimesheetFormProps {
   defaultWeekStartDateTime: DateTime;
   defaultShifts: ShiftTimes[];
-  onSubmit: (values: { shifts: Shift[]; comment: string }) => void;
+  onSubmitTimesheet: (values: { shifts: Shift[]; comment: string }) => void;
   className?: string;
 }
 
 const TimesheetForm: React.FC<TimesheetFormProps> = ({
   defaultWeekStartDateTime,
   defaultShifts,
-  onSubmit,
+  onSubmitTimesheet,
   className,
 }) => {
   const initialValues = useCallback(
@@ -215,14 +215,14 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     errors,
     handleChange,
     handleBlur,
-    handleSubmit,
+    handleSubmit: handleSubmitTimesheet,
     visibleErrors,
   } = useForm(
     initialValues,
     (values) => {
-      onSubmit(process(values));
+      onSubmitTimesheet(processTimesheet(values));
     },
-    validate
+    validateTimesheet
   );
 
   // Clear the time values for the shift and flag the time inputs as untouched.
@@ -332,7 +332,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   });
 
   return (
-    <form onSubmit={handleSubmit} className={className}>
+    <form onSubmit={handleSubmitTimesheet} className={className}>
       {errors.form && <div className="alert alert-danger">{errors.form}</div>}
       <div className="my-3">
         <WeekSelect
@@ -350,13 +350,11 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         />
       </div>
       <div>{shiftInputs}</div>
-      <Form.Group controlId="comment">
-        <Form.Label>Comment</Form.Label>
+      <Form.Group controlId="comment" className="my-3">
+        <Form.Label>Comments/Notes</Form.Label>
         <Form.Control
-          as="textarea"
           name="comment"
           onChange={handleChange}
-          rows={3}
         />
       </Form.Group>
       <div className="my-3 text-right">

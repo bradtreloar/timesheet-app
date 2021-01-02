@@ -24,7 +24,7 @@ test("renders timesheet form", () => {
     <TimesheetForm
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
-      onSubmit={noop}
+      onSubmitTimesheet={noop}
     />
   );
 
@@ -47,7 +47,7 @@ test("handles toggling shift", () => {
     <TimesheetForm
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
-      onSubmit={noop}
+      onSubmitTimesheet={noop}
     />
   );
 
@@ -70,7 +70,7 @@ test("handles erasing times", () => {
     <TimesheetForm
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
-      onSubmit={noop}
+      onSubmitTimesheet={noop}
     />
   );
 
@@ -86,7 +86,7 @@ test("handles entering times", () => {
     <TimesheetForm
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
-      onSubmit={noop}
+      onSubmitTimesheet={noop}
     />
   );
 
@@ -108,7 +108,7 @@ describe("form submission", () => {
       <TimesheetForm
         defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
-        onSubmit={({ shifts }) => {
+        onSubmitTimesheet={({ shifts }) => {
           expect(shifts.length).toEqual(testShifts.length);
           shifts.forEach((shift) => expectValidShift(shift));
           done();
@@ -126,7 +126,7 @@ describe("form submission", () => {
       <TimesheetForm
         defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
-        onSubmit={({ shifts }) => {
+        onSubmitTimesheet={({ shifts }) => {
           expect(shifts.length).toEqual(testShifts.length - 1);
           shifts.forEach((shift) => expectValidShift(shift));
           done();
@@ -142,8 +142,8 @@ describe("form submission", () => {
       <TimesheetForm
         defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
-        onSubmit={() => {
-          throw new Error(`onSubmit should not be called with no shifts.`);
+        onSubmitTimesheet={() => {
+          throw new Error(`onSubmitTimesheet should not be called with no shifts.`);
         }}
       />
     );
@@ -161,9 +161,9 @@ describe("form submission", () => {
       <TimesheetForm
         defaultWeekStartDateTime={testWeekStartDateTime}
         defaultShifts={testShifts}
-        onSubmit={() => {
+        onSubmitTimesheet={() => {
           throw new Error(
-            `onSubmit should not be called with invalid shift time.`
+            `onSubmitTimesheet should not be called with invalid shift time.`
           );
         }}
       />

@@ -83,7 +83,7 @@ const TimesheetFormPage = () => {
           className={classnames(formPending && "is-pending")}
           defaultShifts={user.defaultShifts}
           defaultWeekStartDateTime={defaultWeekStartDateTime}
-          onSubmit={handleSubmit}
+          onSubmitTimesheet={handleSubmit}
         />
       </div>
     </DefaultLayout>
