@@ -13,7 +13,6 @@ import { addTimesheet, selectTimesheets } from "store/timesheets";
 import { Shift, Timesheet } from "types";
 import { useHistory } from "react-router";
 import { DateTime } from "luxon";
-import { Alert } from "react-bootstrap";
 import LoadingPage from "./LoadingPage";
 
 const TimesheetFormPage = () => {
