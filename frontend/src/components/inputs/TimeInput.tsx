@@ -40,7 +40,6 @@ export const TimeInput: React.FC<TimeInputProps> = ({
     <div
       className={classnames("time-input", className)}
       id={id}
-      onBlur={onBlur}
     >
       <div className="time-input-inner">
         <input
@@ -49,6 +48,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           type="text"
           pattern="[0-2]{0,1}[0-9]{0,1}"
           value={hour}
+          onBlur={onBlur}
           onChange={(event) => {
             const value = event.target.value;
             if (underMaxLength(value) && underMaxValue(value, 23)) {
@@ -63,6 +63,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           type="text"
           pattern="[0-5]{0,1}[0-9]{0,1}"
           value={minute}
+          onBlur={onBlur}
           onChange={(event) => {
             const value = event.target.value;
             if (underMaxLength(value) && underMaxValue(value, 59)) {
