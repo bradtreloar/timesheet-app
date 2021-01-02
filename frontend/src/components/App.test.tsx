@@ -4,7 +4,11 @@ import App from "./App";
 import userEvent from "@testing-library/user-event";
 import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter } from "react-router-dom";
-import { randomPassword, randomTimesheets, randomUser } from "../fixtures/random";
+import {
+  randomPassword,
+  randomTimesheets,
+  randomUser,
+} from "../fixtures/random";
 import * as datastore from "../services/datastore";
 import { Provider } from "react-redux";
 import store from "../store";
@@ -108,7 +112,9 @@ describe("authenticated user", () => {
     jest.spyOn(datastore, "logout").mockResolvedValue();
     jest.spyOn(window, "alert").mockImplementation(() => {});
 
-    render(<AppFixture routerEntries={["/"]} />);
+    await act(async () => {
+      render(<AppFixture routerEntries={["/"]} />);
+    });
 
     expect(screen.getByRole("heading")).toHaveTextContent(/timesheets/i);
     userEvent.click(screen.getByText(mockUser.name));
