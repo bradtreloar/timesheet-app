@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import TimesheetTable from "components/tables/TimesheetTable";
 import { useSelector } from "react-redux";
 import { selectTimesheets } from "store/timesheets";
+import Messages from "components/Messages";
 
 const TimesheetIndexPage = () => {
   const { timesheets, status: timesheetStoreStatus } = useSelector(
@@ -14,6 +15,7 @@ const TimesheetIndexPage = () => {
   return (
     <DefaultLayout>
       <PageTitle>Timesheets</PageTitle>
+      <Messages />
       <div className="container">
         <div className="my-3">
           <Link className="btn btn-primary" to="/timesheet/new">
