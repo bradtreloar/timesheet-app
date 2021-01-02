@@ -11,16 +11,20 @@ import store from "store";
 import { useAuth } from "context/auth";
 import AccountForm, { AccountFormValues } from "components/forms/AccountForm";
 import { Link } from "react-router-dom";
+import Messages from "components/Messages";
 
 const AccountPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { setMessage } = useMessages();
 
   const { formError, formPending, handleSubmit } = useFormController(
     async (values: AccountFormValues) => {
       const updatedUser = Object.assign({}, user, values);
-      await store.dispatch(updateUser(updatedUser));
-      setMessage("success", `Account settings updated.`);
+      const action = await store.dispatch(updateUser(updatedUser));
+      if (action.type === "users/update/fulfilled") {
+        setMessage("success", `Account settings updated.`);
+        refreshUser();
+      }
     }
   );
 
@@ -31,6 +35,7 @@ const AccountPage: React.FC = () => {
   return (
     <DefaultLayout>
       <PageTitle>Account Settings</PageTitle>
+      <Messages />
       <div className="container">
         {formError && <Alert variant="danger">{formError}</Alert>}
         <AccountForm
