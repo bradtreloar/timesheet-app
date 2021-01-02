@@ -137,7 +137,7 @@ test("handles hour input with existing value", () => {
   userEvent.type(screen.getByLabelText(/hour/i), hour);
 });
 
-test("ignores invalid input", () => {
+test("ignores alphabetical input", () => {
   const hour = randomInt(1, 23).toString();
   const onChange = jest.fn();
 
@@ -155,6 +155,48 @@ test("ignores invalid input", () => {
   fireEvent.keyPress(hourInput, "a");
   expect(onChange).toHaveBeenCalledTimes(0);
   expect(hourInput.getAttribute("value")).toEqual(hour);
+});
+
+test("ignores numeric input longer then 2 digits", () => {
+  const hour = randomInt(10, 23).toString();
+  const minute = randomInt(10, 59).toString();
+  const onChange = jest.fn();
+
+  render(
+    <TimeInput
+      value={{ hour, minute }}
+      onChange={onChange}
+    />
+  );
+
+  const hourInput = screen.getByLabelText(/hour/i);
+  const minuteInput = screen.getByLabelText(/minute/i);
+  fireEvent.keyPress(hourInput, "1");
+  fireEvent.keyPress(minuteInput, "9");
+  expect(onChange).toHaveBeenCalledTimes(0);
+  expect(hourInput.getAttribute("value")).toEqual(hour);
+  expect(minuteInput.getAttribute("value")).toEqual(minute);
+});
+
+test("ignores numeric input above max value", () => {
+  const hour = randomInt(3, 9).toString();
+  const minute = randomInt(6, 9).toString();
+  const onChange = jest.fn();
+
+  render(
+    <TimeInput
+      value={{ hour, minute }}
+      onChange={onChange}
+    />
+  );
+
+  const hourInput = screen.getByLabelText(/hour/i);
+  const minuteInput = screen.getByLabelText(/minute/i);
+  fireEvent.keyPress(hourInput, "9");
+  fireEvent.keyPress(minuteInput, "9");
+  expect(onChange).toHaveBeenCalledTimes(0);
+  expect(hourInput.getAttribute("value")).toEqual(hour);
+  expect(minuteInput.getAttribute("value")).toEqual(minute);
 });
 
 test("handles erase existing hour value", () => {

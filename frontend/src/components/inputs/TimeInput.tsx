@@ -1,6 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import "./TimeInput.scss";
+import { isInteger } from "lodash";
 
 export type TimeInputValue = {
   hour: string;
@@ -26,8 +27,22 @@ export const TimeInput: React.FC<TimeInputProps> = ({
 }) => {
   const { hour, minute } = value;
 
+  const underMaxLength = (value: string) => value.length <= 2;
+
+  const underMaxValue = (value: string, maxValue: number) => {
+    if (isInteger(value)) {
+      return parseInt(value) <= maxValue;
+    }
+
+    return true;
+  }
+
   return (
-    <div className={classnames("time-input", className)} id={id} onBlur={onBlur}>
+    <div
+      className={classnames("time-input", className)}
+      id={id}
+      onBlur={onBlur}
+    >
       <div className="time-input-inner">
         <input
           aria-label="Hours"
@@ -35,7 +50,12 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           type="text"
           pattern="[0-2]{0,1}[0-9]{0,1}"
           value={hour}
-          onChange={onChange}
+          onChange={(event) => {
+            const value = event.target.value;
+            if (underMaxLength(value) && underMaxValue(value, 23)) {
+              onChange(event);
+            }
+          }}
         />
         <span className="mx-1">:</span>
         <input
@@ -44,7 +64,12 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           type="text"
           pattern="[0-5]{0,1}[0-9]{0,1}"
           value={minute}
-          onChange={onChange}
+          onChange={(event) => {
+            const value = event.target.value;
+            if (underMaxLength(value) && underMaxValue(value, 59)) {
+              onChange(event);
+            }
+          }}
         />
       </div>
     </div>
