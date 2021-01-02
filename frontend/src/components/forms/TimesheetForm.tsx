@@ -322,7 +322,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               {timeInput(`${name}.endTime`, "End")}
               {timeInput(`${name}.breakDuration`, "Break")}
               <div className="shift-hours">
-                <div className="form-control w-100">
+                <div className="form-control w-100 text-right">
                   {shiftHours ? `${shiftHours} hours` : `\u00A0`}
                 </div>
               </div>
