@@ -5,6 +5,9 @@ import TimeInput from "./TimeInput";
 import { randomInt } from "fixtures/random";
 import { noop } from "lodash";
 
+const paddedValue = (value: string) =>
+  value === "" ? value : value.padStart(2, "0");
+
 test("renders null value", () => {
   render(
     <TimeInput
@@ -52,7 +55,7 @@ test("renders minute only", () => {
 
   expect(screen.getByLabelText(/hour/i).getAttribute("value")).toEqual("");
   expect(screen.getByLabelText(/minute/i).getAttribute("value")).toEqual(
-    minute
+    paddedValue(minute)
   );
 });
 
@@ -72,7 +75,7 @@ test("renders hour and minute", () => {
 
   expect(screen.getByLabelText(/hour/i).getAttribute("value")).toEqual(hour);
   expect(screen.getByLabelText(/minute/i).getAttribute("value")).toEqual(
-    minute
+    paddedValue(minute)
   );
 });
 
@@ -162,12 +165,7 @@ test("ignores numeric input longer then 2 digits", () => {
   const minute = randomInt(10, 59).toString();
   const onChange = jest.fn();
 
-  render(
-    <TimeInput
-      value={{ hour, minute }}
-      onChange={onChange}
-    />
-  );
+  render(<TimeInput value={{ hour, minute }} onChange={onChange} />);
 
   const hourInput = screen.getByLabelText(/hour/i);
   const minuteInput = screen.getByLabelText(/minute/i);
@@ -175,7 +173,7 @@ test("ignores numeric input longer then 2 digits", () => {
   fireEvent.keyPress(minuteInput, "9");
   expect(onChange).toHaveBeenCalledTimes(0);
   expect(hourInput.getAttribute("value")).toEqual(hour);
-  expect(minuteInput.getAttribute("value")).toEqual(minute);
+  expect(minuteInput.getAttribute("value")).toEqual(paddedValue(minute));
 });
 
 test("ignores numeric input above max value", () => {
@@ -183,12 +181,7 @@ test("ignores numeric input above max value", () => {
   const minute = randomInt(6, 9).toString();
   const onChange = jest.fn();
 
-  render(
-    <TimeInput
-      value={{ hour, minute }}
-      onChange={onChange}
-    />
-  );
+  render(<TimeInput value={{ hour, minute }} onChange={onChange} />);
 
   const hourInput = screen.getByLabelText(/hour/i);
   const minuteInput = screen.getByLabelText(/minute/i);
@@ -196,7 +189,7 @@ test("ignores numeric input above max value", () => {
   fireEvent.keyPress(minuteInput, "9");
   expect(onChange).toHaveBeenCalledTimes(0);
   expect(hourInput.getAttribute("value")).toEqual(hour);
-  expect(minuteInput.getAttribute("value")).toEqual(minute);
+  expect(minuteInput.getAttribute("value")).toEqual(paddedValue(minute));
 });
 
 test("handles erase existing hour value", () => {

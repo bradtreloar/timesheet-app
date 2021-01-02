@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import classnames from "classnames";
 import "./TimeInput.scss";
 import { isInteger } from "lodash";
@@ -26,6 +26,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   className,
 }) => {
   const { hour, minute } = value;
+  const [minuteHasFocus, setMinuteHasFocus] = useState(false);
 
   const underMaxLength = (value: string) => value.length <= 2;
 
@@ -34,13 +35,30 @@ export const TimeInput: React.FC<TimeInputProps> = ({
       return parseInt(value) <= maxValue;
     }
     return true;
-  }
+  };
+
+  const setFocus = (name: string, hasFocus: boolean) => {
+    if (name.split(".").pop() === "minute") {
+      setMinuteHasFocus(hasFocus);
+    }
+  };
+
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    setFocus(event.target.name, true);
+  };
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    setFocus(event.target.name, false);
+    if (onBlur !== undefined) {
+      onBlur(event);
+    }
+  };
+
+  const paddedValue = (value: string) =>
+    value === "" ? value : value.padStart(2, "0");
 
   return (
-    <div
-      className={classnames("time-input", className)}
-      id={id}
-    >
+    <div className={classnames("time-input", className)} id={id}>
       <div className="time-input-inner">
         <input
           aria-label="Hours"
@@ -48,7 +66,8 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           type="text"
           pattern="[0-2]{0,1}[0-9]{0,1}"
           value={hour}
-          onBlur={onBlur}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onChange={(event) => {
             const value = event.target.value;
             if (underMaxLength(value) && underMaxValue(value, 23)) {
@@ -62,8 +81,9 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           name={name && `${name}.minute`}
           type="text"
           pattern="[0-5]{0,1}[0-9]{0,1}"
-          value={minute}
-          onBlur={onBlur}
+          value={minuteHasFocus ? minute : paddedValue(minute)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onChange={(event) => {
             const value = event.target.value;
             if (underMaxLength(value) && underMaxValue(value, 59)) {

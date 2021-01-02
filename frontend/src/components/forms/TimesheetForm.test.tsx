@@ -16,6 +16,9 @@ export const EMPTY_SHIFT_TIMES = {
   breakDuration: { hour: "", minute: "" },
 } as ShiftTimes;
 
+const paddedValue = (value: string) =>
+  value === "" ? value : value.padStart(2, "0");
+
 const testWeekStartDateTime = DateTime.local();
 
 test("renders timesheet form", () => {
@@ -36,7 +39,7 @@ test("renders timesheet form", () => {
       testShiftTimes.startTime.hour
     );
     expect(within(startTimeInput).getByLabelText(/minute/i)).toHaveValue(
-      testShiftTimes.startTime.minute
+      paddedValue(testShiftTimes.startTime.minute)
     );
   });
 });

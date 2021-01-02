@@ -1,6 +1,9 @@
 import { within } from "@testing-library/react";
 import { Shift, ShiftTimes } from "types";
 
+const paddedValue = (value: string) =>
+  value === "" ? value : value.padStart(2, "0");
+
 const timeInputs = (shiftTimes: ShiftTimes) => [
   {
     label: /start/i,
@@ -21,15 +24,16 @@ export const expectTimesEqual = (
   shiftTimes: ShiftTimes
 ) => {
   for (let { label, value } of timeInputs(shiftTimes)) {
+    const { hour, minute } = value;
     const timeInput = within(shiftInput).getByLabelText(label);
     expect(
       within(timeInput).getByLabelText(/hour/i).getAttribute("value")
-    ).toEqual(value.hour);
+    ).toEqual(hour);
     expect(
       within(timeInput)
         .getByLabelText(/minute/i)
         .getAttribute("value")
-    ).toEqual(value.minute);
+    ).toEqual(paddedValue(minute));
   }
 };
 
