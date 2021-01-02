@@ -31,9 +31,7 @@ const TimesheetFormPage = () => {
         comment,
       };
       const action = await store.dispatch(addTimesheet(timesheet));
-      if (action.type === "timesheets/add/rejected") {
-        throw new Error(`Unable to create timesheet`);
-      } else {
+      if (action.type === "timesheets/add/fulfilled") {
         history.push("/timesheet/confirmation");
       }
     } else {
