@@ -64,7 +64,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.email && (
-          <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
         )}
       </Form.Group>
       <Button

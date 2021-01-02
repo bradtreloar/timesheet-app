@@ -64,7 +64,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.name && (
-          <Form.Control.Feedback>{errors.name}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group controlId="email">
@@ -78,7 +78,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.email && (
-          <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
         )}
       </Form.Group>
       <Button variant="primary" type="submit">

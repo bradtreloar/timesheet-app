@@ -70,7 +70,7 @@ const UserForm: React.FC<UserFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.name && (
-          <Form.Control.Feedback>{errors.name}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group controlId="email">
@@ -84,7 +84,7 @@ const UserForm: React.FC<UserFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.email && (
-          <Form.Control.Feedback>{errors.email}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
         )}
       </Form.Group>
       <Form.Group controlId="isAdmin">
@@ -98,7 +98,7 @@ const UserForm: React.FC<UserFormProps> = ({
           onChange={handleChange}
         />
         {visibleErrors.isAdmin && (
-          <Form.Control.Feedback>{errors.isAdmin}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{errors.isAdmin}</Form.Control.Feedback>
         )}
       </Form.Group>
       <Button variant="primary" type="submit">
