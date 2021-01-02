@@ -8,7 +8,7 @@ import userEvent from "@testing-library/user-event";
 const testMessage = randomstring.generate();
 
 const Fixture: React.FC = () => {
-  const { messages, setMessage, dismissMessages } = useMessages();
+  const { messages, setMessage } = useMessages();
   const [hasMessage, setHasMessage] = useState(false);
 
   useEffect(() => {
@@ -25,9 +25,6 @@ const Fixture: React.FC = () => {
           {value}
         </Alert>
       ))}
-      <button onClick={() => dismissMessages(messages)}>
-        Dismiss messages
-      </button>
     </>
   );
 };
@@ -40,17 +37,4 @@ test("set message", () => {
   );
 
   screen.getByText(testMessage);
-});
-
-test("dismiss messages", async () => {
-  render(
-    <MessagesProvider>
-      <Fixture />
-    </MessagesProvider>
-  );
-
-  screen.getByText(testMessage);
-
-  userEvent.click(screen.getByText(/dismiss messages/i));
-  expect(screen.queryByText(testMessage)).toBeNull();
 });
