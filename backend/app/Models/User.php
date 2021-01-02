@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -20,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'is_admin', 'default_shifts'
+        'name', 'email', 'is_admin', 'default_shifts'
     ];
 
     /**
@@ -49,6 +50,13 @@ class User extends Authenticatable
 
     protected static function booted()
     {
+        static::creating(function ($model) {
+            // Generate a random password if the user was created without one.
+            if (!$model->password) {
+                $model->password = Hash::make(Str::random(40));
+            }
+        });
+
         static::created(function (User $user) {
             Event::dispatch(new UserCreated($user));
         });
