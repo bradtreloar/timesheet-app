@@ -34,14 +34,11 @@ export const useMessages = () => {
   const { expireMessages } = messagesContext;
 
   // Expire messages on unmount.
-  useEffect(
-    () => {
-      return () => {
-        expireMessages();
-      };
-    },
-    [expireMessages]
-  );
+  useEffect(() => {
+    return () => {
+      expireMessages();
+    };
+  }, [expireMessages]);
 
   return messagesContext;
 };
@@ -69,8 +66,9 @@ const MessagesProvider: React.FC = ({ children }) => {
   const dismissMessagesByTag = (tag: string) => {
     const dismissedMessages = messages.filter(({ tags }) => tags.includes(tag));
     if (dismissedMessages.length > 0) {
-      const remainingMessages = messages.filter(({ id }) =>
-        undefined === dismissedMessages.find((message) => message.id === id)
+      const remainingMessages = messages.filter(
+        ({ id }) =>
+          undefined === dismissedMessages.find((message) => message.id === id)
       );
       setMessages(remainingMessages);
     }
@@ -82,8 +80,9 @@ const MessagesProvider: React.FC = ({ children }) => {
       return messageAge.as("seconds") > MESSAGE_MINIMUM_DURATION;
     });
     if (expiredMessages.length > 0) {
-      const remainingMessages = messages.filter(({ id }) =>
-        undefined === expiredMessages.find((message) => message.id === id)
+      const remainingMessages = messages.filter(
+        ({ id }) =>
+          undefined === expiredMessages.find((message) => message.id === id)
       );
       setMessages(remainingMessages);
     }

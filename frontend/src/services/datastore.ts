@@ -153,15 +153,17 @@ export const createShifts = async (
   const shiftResources: ShiftResource[] = shifts.map((shift) =>
     makeShiftResource(shift, timesheet)
   );
-  const createdShifts = await Promise.all(shiftResources.map(async (shiftResource) => {
-    const response: AxiosResponse<{
-      data: ShiftResource;
-    }> = await jsonAPIClient.post(`/shifts`, {
-      data: shiftResource,
-    });
-    const { data } = response.data;
-    return parseShift(data);
-  }));
+  const createdShifts = await Promise.all(
+    shiftResources.map(async (shiftResource) => {
+      const response: AxiosResponse<{
+        data: ShiftResource;
+      }> = await jsonAPIClient.post(`/shifts`, {
+        data: shiftResource,
+      });
+      const { data } = response.data;
+      return parseShift(data);
+    })
+  );
   return createdShifts;
 };
 

@@ -38,7 +38,9 @@ test("fetch settings", async () => {
 });
 
 test("fetch unrestricted settings", async () => {
-  jest.spyOn(datastore, "fetchUnrestrictedSettings").mockResolvedValue(testSettings);
+  jest
+    .spyOn(datastore, "fetchUnrestrictedSettings")
+    .mockResolvedValue(testSettings);
   const action = await store.dispatch(fetchUnrestrictedSettings());
   expect(action.payload).toBe(testSettings);
   expect(action.type).toBe("settings/fetch/fulfilled");

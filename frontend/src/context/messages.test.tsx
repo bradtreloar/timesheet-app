@@ -3,7 +3,6 @@ import { Alert } from "react-bootstrap";
 import { MessagesProvider, useMessages } from "./messages";
 import randomstring from "randomstring";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 
 const testMessage = randomstring.generate();
 

@@ -36,9 +36,13 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
     [shifts]
   );
 
-  const totalHours = useMemo(() => shifts?.reduce((totalHours, shift) => {
-    return totalHours + getShiftHours(shift);
-  }, 0), [shifts])
+  const totalHours = useMemo(
+    () =>
+      shifts?.reduce((totalHours, shift) => {
+        return totalHours + getShiftHours(shift);
+      }, 0),
+    [shifts]
+  );
 
   const submittedDate = DateTime.fromISO(
     timesheet.created as string
@@ -61,9 +65,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
         <tbody>
           {shiftRows}
           <tr>
-            <th>
-              Total hours
-            </th>
+            <th>Total hours</th>
             <td colSpan={4} className="text-right">
               {totalHours}
             </td>

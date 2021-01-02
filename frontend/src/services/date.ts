@@ -136,9 +136,7 @@ export class Time {
    */
   toString() {
     const hour = this.hour ? this.hour.toString().padStart(2, "0") : "00";
-    const minute = this.minute
-      ? this.minute.toString().padStart(2, "0")
-      : "00";
+    const minute = this.minute ? this.minute.toString().padStart(2, "0") : "00";
     return `${hour}:${minute}`;
   }
 

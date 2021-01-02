@@ -13,9 +13,12 @@ const fetchSettings = createAsyncThunk("settings/fetch", async () => {
   return await datastore.fetchSettings();
 });
 
-const fetchUnrestrictedSettings = createAsyncThunk("settings/fetch", async () => {
-  return await datastore.fetchUnrestrictedSettings();
-});
+const fetchUnrestrictedSettings = createAsyncThunk(
+  "settings/fetch",
+  async () => {
+    return await datastore.fetchUnrestrictedSettings();
+  }
+);
 
 const updateSettings = createAsyncThunk(
   "settings/update",

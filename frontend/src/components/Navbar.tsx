@@ -56,15 +56,20 @@ const UserMenu: React.FC = () => {
   if (user) {
     return (
       <NavDropdown id="user-menu" title={user.name}>
-        <NavDropdown.Item onClick={() => {
-          history.push("/account")
-        }}>
+        <NavDropdown.Item
+          onClick={() => {
+            history.push("/account");
+          }}
+        >
           Settings
         </NavDropdown.Item>
-        <NavDropdown.Item data-testid="logout-button" onClick={() => {
-          logout();
-          setMessage("success", `${user.name} has logged out.`);
-        }}>
+        <NavDropdown.Item
+          data-testid="logout-button"
+          onClick={() => {
+            logout();
+            setMessage("success", `${user.name} has logged out.`);
+          }}
+        >
           Log out
         </NavDropdown.Item>
       </NavDropdown>

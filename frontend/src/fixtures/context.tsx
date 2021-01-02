@@ -4,8 +4,6 @@ import { MessagesProvider } from "context/messages";
 
 export const ProvidersFixture: React.FC = ({ children }) => (
   <AuthProvider>
-    <MessagesProvider>
-      {children}
-    </MessagesProvider>
+    <MessagesProvider>{children}</MessagesProvider>
   </AuthProvider>
 );

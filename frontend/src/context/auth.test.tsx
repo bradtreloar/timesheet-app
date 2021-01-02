@@ -165,7 +165,7 @@ describe("unauthenticated user", () => {
     const Fixture: React.FC = () => {
       const { forgotPassword } = useAuth();
       const [message, setMessage] = useState("");
-    
+
       return (
         <>
           {message && <div>{message}</div>}
@@ -202,7 +202,7 @@ describe("unauthenticated user", () => {
       const { resetPassword } = useAuth();
       const [message, setMessage] = useState("");
       const testToken = randomstring.generate(50);
-    
+
       return (
         <>
           {message && <div>{message}</div>}

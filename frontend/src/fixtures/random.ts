@@ -99,7 +99,8 @@ export const randomTimesheet = (user: User): Timesheet => {
     id: randomID(),
     userID: user.id as string,
     shifts: range(7).map(
-      (dateOffset): Shift => randomShift(weekStartDateTime.plus({ days: dateOffset }))
+      (dateOffset): Shift =>
+        randomShift(weekStartDateTime.plus({ days: dateOffset }))
     ),
     created: DateTime.local().toISO(),
     changed: DateTime.local().toISO(),
