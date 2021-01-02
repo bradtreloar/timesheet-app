@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import React from "react";
+import { Button } from "react-bootstrap";
 
 interface WeekSelectProps {
   value: DateTime;
@@ -16,26 +17,26 @@ const WeekSelect: React.FC<WeekSelectProps> = ({ value, onChange }) => {
   }
 
   return (
-    <div className="d-flex">
-      <button
+    <div className="btn-group">
+      <Button
         aria-label="previous week"
-        className="btn btn-secondary"
+        variant="outline-dark"
         onClick={() => {
           handleChange(false);
         }}
       >
         Prev
-      </button>
-      <button
+      </Button>
+      <div className="p-2 px-3 border-top border-bottom border-dark">{label}</div>
+      <Button
         aria-label="next week"
-        className="btn btn-secondary"
+        variant="outline-dark"
         onClick={() => {
           handleChange(true);
         }}
       >
         Next
-      </button>
-      <div className="flex-grow-1">{label}</div>
+      </Button>
     </div>
   );
 };
