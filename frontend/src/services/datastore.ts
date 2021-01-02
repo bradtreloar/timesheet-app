@@ -60,7 +60,11 @@ export const setPassword = async (password: string) => {
   });
 };
 
-export const resetPassword = async (email: string, token: string, password: string) => {
+export const resetPassword = async (
+  email: string,
+  token: string,
+  password: string
+) => {
   await client.get("/csrf-cookie");
   await client.post("/reset-password", {
     email,
@@ -149,13 +153,16 @@ export const createShifts = async (
   const shiftResources: ShiftResource[] = shifts.map((shift) =>
     makeShiftResource(shift, timesheet)
   );
-  const response: AxiosResponse<{
-    data: ShiftResource[];
-  }> = await jsonAPIClient.post(`/shifts`, {
-    data: shiftResources,
-  });
-  const { data } = response.data;
-  return data.map((shiftResource) => parseShift(shiftResource));
+  const createdShifts = await Promise.all(shiftResources.map(async (shiftResource) => {
+    const response: AxiosResponse<{
+      data: ShiftResource;
+    }> = await jsonAPIClient.post(`/shifts`, {
+      data: shiftResource,
+    });
+    const { data } = response.data;
+    return parseShift(data);
+  }));
+  return createdShifts;
 };
 
 export const createTimesheet = async (
@@ -198,7 +205,7 @@ export const fetchUnrestrictedSettings = async (): Promise<Setting[]> => {
   }> = await jsonAPIClient.get(`settings`, {
     params: {
       "filter[is_restricted]": 0,
-    }
+    },
   });
   const { data } = response.data;
   return data.map((resource: SettingResource) => {
