@@ -11,14 +11,22 @@ const menuItems: {
 } = {
   main: [
     {
-      label: "Log in",
-      url: "/login",
-      access: "guest",
+      label: "New Timesheet",
+      url: "/timesheet/new",
     },
     {
       label: "Timesheets",
       url: "/",
-      access: "authenticated",
+    },
+    {
+      label: "Settings",
+      url: "/settings",
+      access: "admin",
+    },
+    {
+      label: "Log in",
+      url: "/login",
+      access: "guest",
     },
   ],
 };
@@ -31,12 +39,10 @@ const getMenu = (name: string, user: User | null) => {
     switch (access) {
       case "admin":
         return user !== null && user.isAdmin;
-      case "authenticated":
-        return user !== null;
       case "guest":
         return user === null;
       default:
-        throw new Error(`Access value "${access}" is invalid.`);
+        return user !== null;
     }
   });
 };
