@@ -15,6 +15,11 @@ const menuItems: {
       url: "/login",
       access: "guest",
     },
+    {
+      label: "Timesheets",
+      url: "/",
+      access: "authenticated",
+    },
   ],
 };
 
