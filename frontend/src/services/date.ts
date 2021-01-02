@@ -183,7 +183,7 @@ export class Time {
   toHours() {
     const thisHours = this.hour || 0;
     const thisMinutes = this.minute || 0;
-    return thisHours + thisMinutes / 60;
+    return parseFloat((thisHours + thisMinutes / 60).toFixed(2));
   }
 
   /**
