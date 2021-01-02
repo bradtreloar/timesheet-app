@@ -61,12 +61,12 @@ const buildInitialValues = (
     const dv = defaultShifts[index];
     const name = `shift.${index}`;
     values[`${name}.isActive`] = dv.isActive;
-    values[`${name}.startTime.hour`] = dv.startTime.hour;
-    values[`${name}.startTime.minute`] = dv.startTime.minute;
-    values[`${name}.endTime.hour`] = dv.endTime.hour;
-    values[`${name}.endTime.minute`] = dv.endTime.minute;
-    values[`${name}.breakDuration.hour`] = dv.breakDuration.hour;
-    values[`${name}.breakDuration.minute`] = dv.breakDuration.minute;
+    values[`${name}.startTime.hour`] = dv.startTime.hour.toString();
+    values[`${name}.startTime.minute`] = dv.startTime.minute.toString();
+    values[`${name}.endTime.hour`] = dv.endTime.hour.toString();
+    values[`${name}.endTime.minute`] = dv.endTime.minute.toString();
+    values[`${name}.breakDuration.hour`] = dv.breakDuration.hour.toString();
+    values[`${name}.breakDuration.minute`] = dv.breakDuration.minute.toString();
     return values;
   }, {} as any),
 });
@@ -245,6 +245,8 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
 
   const timeInput = (name: string, label: string) => {
     const timeError = errors[`${name}`];
+    const hourValue = values[`${name}.hour`];
+    const minuteValue = values[`${name}.minute`];
     const hourError = errors[`${name}.hour`];
     const minuteError = errors[`${name}.minute`];
     const visibleHourError = visibleErrors[`${name}.hour`];
@@ -262,8 +264,8 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
             className="form-control w-auto flex-grow-0"
             name={name}
             value={{
-              hour: values[`${name}.hour`],
-              minute: values[`${name}.minute`],
+              hour: hourValue,
+              minute: minuteValue,
             }}
             onBlur={handleBlur}
             onChange={handleChange}
