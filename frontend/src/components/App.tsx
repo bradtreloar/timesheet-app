@@ -21,6 +21,7 @@ import TimesheetIndexPage from "./pages/TimesheetIndexPage";
 import TimesheetViewPage from "./pages/TimesheetViewPage";
 import { fetchUnrestrictedSettings } from "store/settings";
 import LoadingPage from "./pages/LoadingPage";
+import AccountPage from "./pages/AccountPage";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
@@ -53,6 +54,9 @@ const App: React.FC = () => {
       </ProtectedRoute>
       <ProtectedRoute exact path="/timesheet/:id">
         <TimesheetViewPage />
+      </ProtectedRoute>
+      <ProtectedRoute exact path="/account">
+        <AccountPage />
       </ProtectedRoute>
       <ProtectedRoute exact path="/account/password">
         <PasswordPage />
