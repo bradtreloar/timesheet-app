@@ -19,6 +19,11 @@ const menuItems: {
       url: "/",
     },
     {
+      label: "Users",
+      url: "/users",
+      access: "admin",
+    },
+    {
       label: "Settings",
       url: "/settings",
       access: "admin",
