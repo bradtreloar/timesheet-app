@@ -3,6 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TimesheetForm from "./TimesheetForm";
 import { randomShiftTimesArray } from "fixtures/random";
+import randomstring from "randomstring";
 import { enterShiftTimes, eraseShiftTimes } from "fixtures/userInput";
 import { expectTimesEqual, expectValidShift } from "fixtures/expect";
 import { noop, range } from "lodash";
@@ -176,6 +177,23 @@ describe("form submission", () => {
     expect(screen.queryByText(/enter time/i)).toBeNull();
     userEvent.click(screen.getByText(/^submit$/i));
     expect(screen.getAllByText(/required/i)).toHaveLength(2);
+  });
+
+  test("with invalid comment length", () => {
+    const testShifts = randomShiftTimesArray();
+    render(
+      <TimesheetForm
+        defaultWeekStartDateTime={testWeekStartDateTime}
+        defaultShifts={testShifts}
+        onSubmitTimesheet={() => {
+          throw new Error(
+            `onSubmitTimesheet should not be called with invalid comment length.`
+          );
+        }}
+      />
+    );
+    userEvent.type(screen.getByLabelText(/comment/i), randomstring.generate(300))
+    userEvent.click(screen.getByText(/^submit$/i));
   });
 });
 

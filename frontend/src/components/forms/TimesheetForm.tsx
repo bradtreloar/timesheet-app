@@ -189,6 +189,10 @@ const validateTimesheet = (values: any) => {
     errors[`form`] = `At least one shift is required.`;
   }
 
+  if (values.comment.length > 255) {
+    errors[`comment`] = `Must be no longer than 255 characters`;
+  }
+
   return errors;
 };
 
