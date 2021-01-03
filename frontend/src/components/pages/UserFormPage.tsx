@@ -12,6 +12,7 @@ import { useMessages } from "context/messages";
 import store from "store";
 import { ShiftTimes, User } from "types";
 import { range } from "lodash";
+import Messages from "components/Messages";
 
 const createEmptyDefaultShifts = (): ShiftTimes[] =>
   range(7).map(() => ({
@@ -47,12 +48,13 @@ const UserFormPage: React.FC = () => {
           defaultShifts: createEmptyDefaultShifts(),
         };
         await store.dispatch(addUser(newUser));
-        history.push("/users");
         setMessage("success", `New user ${newUser.name} created.`);
+        history.push("/users");
       } else {
         const updatedUser = Object.assign({}, selectedUser, values);
         await store.dispatch(updateUser(updatedUser));
         setMessage("success", `User ${updatedUser.name} updated.`);
+        history.push("/users");
       }
     }
   );
@@ -64,6 +66,7 @@ const UserFormPage: React.FC = () => {
   return (
     <DefaultLayout>
       <PageTitle>{newUser ? `New User` : `Edit User`}</PageTitle>
+      <Messages />
       <div className="container">
         {usersStoreError && <Alert variant="danger">{usersStoreError}</Alert>}
         {formError && <Alert variant="danger">{formError}</Alert>}
