@@ -136,7 +136,7 @@ export type MessageType = "success" | "warning" | "danger";
 
 export type Message = {
   id: string;
-  value: string;
+  value: string | JSX.Element;
   type: MessageType;
   tags: string[];
   created: DateTime;
