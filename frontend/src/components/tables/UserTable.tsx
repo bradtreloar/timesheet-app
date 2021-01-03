@@ -76,7 +76,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
             <TableHeading name={"name"}>
               <span>Name</span>
             </TableHeading>
-            <TableHeading name={"email"}>
+            <TableHeading name={"email"} className="text-right">
               <span>Email</span>
             </TableHeading>
           </tr>
@@ -89,7 +89,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
                 <td>
                   <Link to={userPageUrl}>{user.name}</Link>
                 </td>
-                <td>
+                <td className="text-right">
                   <Link to={userPageUrl}>{user.email}</Link>
                 </td>
               </tr>
