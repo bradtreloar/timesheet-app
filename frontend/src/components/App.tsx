@@ -6,7 +6,7 @@ import { useAuth } from "context/auth";
 import LoginPage from "components/pages/LoginPage";
 import NotFoundPage from "components/pages/NotFoundPage";
 import store from "store";
-import { fetchTimesheets } from "store/timesheets";
+import { clearTimesheets, fetchTimesheets } from "store/timesheets";
 import { User } from "types";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import PasswordPage from "./pages/PasswordPage";
@@ -19,11 +19,11 @@ import UserFormPage from "./pages/UserFormPage";
 import UserDeletePage from "./pages/UserDeletePage";
 import TimesheetIndexPage from "./pages/TimesheetIndexPage";
 import TimesheetViewPage from "./pages/TimesheetViewPage";
-import { fetchSettings, fetchUnrestrictedSettings } from "store/settings";
+import { clearSettings, fetchSettings, fetchUnrestrictedSettings } from "store/settings";
 import LoadingPage from "./pages/LoadingPage";
 import AccountPage from "./pages/AccountPage";
 import PasswordResetPage from "./pages/PasswordResetPage";
-import { fetchUsers } from "store/users";
+import { clearUsers, fetchUsers } from "store/users";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
@@ -35,20 +35,27 @@ const initialiseStore = async (user: User) => {
   }
 };
 
+const clearStore = async () => {
+  store.dispatch(clearTimesheets());
+  store.dispatch(clearSettings());
+  store.dispatch(clearUsers());
+};
+
 const App: React.FC = () => {
-  const [initialised, setInitialised] = React.useState(false);
+  const [storeInitialised, setStoreInitialised] = React.useState(false);
   const { user, userInitialised } = useAuth();
 
   React.useEffect(() => {
-    if (user && !initialised) {
+    if (user !== null && !storeInitialised) {
       (async () => {
         await initialiseStore(user);
-        setInitialised(true);
+        setStoreInitialised(true);
       })();
-    } else if (!user && initialised) {
-      setInitialised(false);
+    } else if (user === null && storeInitialised) {
+      clearStore();
+      setStoreInitialised(false);
     }
-  }, [user, initialised, setInitialised]);
+  }, [user, storeInitialised, setStoreInitialised]);
 
   return userInitialised ? (
     <Switch>
