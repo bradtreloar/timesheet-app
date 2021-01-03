@@ -45,6 +45,8 @@ const App: React.FC = () => {
         await initialiseStore(user);
         setInitialised(true);
       })();
+    } else if (!user && initialised) {
+      setInitialised(false);
     }
   }, [user, initialised, setInitialised]);
 
