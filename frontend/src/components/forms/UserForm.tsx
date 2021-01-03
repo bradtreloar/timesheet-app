@@ -64,6 +64,7 @@ const UserForm: React.FC<UserFormProps> = ({
       <Form.Group controlId="name">
         <Form.Label>Name</Form.Label>
         <Form.Control
+          autoFocus={isNewUser}
           type="text"
           name="name"
           isInvalid={visibleErrors.name}

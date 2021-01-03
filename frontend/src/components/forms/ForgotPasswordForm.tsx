@@ -55,6 +55,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
       <Form.Group controlId="email">
         <Form.Label>Your email address</Form.Label>
         <Form.Control
+          autoFocus
           disabled={pending}
           type="email"
           name="email"
