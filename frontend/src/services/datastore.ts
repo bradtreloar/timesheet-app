@@ -237,12 +237,16 @@ export const completeTimesheet = async (
 export const updateSettings = async (
   settings: Setting[]
 ): Promise<Setting[]> => {
-  await client.get("/csrf-cookie");
-  const response: AxiosResponse<{
-    data: SettingResource[];
-  }> = await jsonAPIClient.patch(`settings`, {
-    data: settings.map((setting) => makeSettingResource(setting)),
-  });
-  const { data } = response.data;
-  return data.map((resource) => parseSetting(resource));
+  return await Promise.all(
+    settings.map(async (setting) => {
+      await client.get("/csrf-cookie");
+      const response: AxiosResponse<{
+        data: SettingResource;
+      }> = await jsonAPIClient.patch(`settings/${setting.id}`, {
+        data: makeSettingResource(setting),
+      });
+      const { data } = response.data;
+      return parseSetting(data);
+    })
+  );
 };
