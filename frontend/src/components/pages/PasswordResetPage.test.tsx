@@ -1,20 +1,28 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import randomstring from "randomstring";
 import { ProvidersFixture } from "fixtures/context";
-import { MemoryRouter } from "react-router-dom";
-import { randomPassword } from "fixtures/random";
+import { MemoryRouter, Route } from "react-router-dom";
+import { randomPassword, randomUser } from "fixtures/random";
 import PasswordResetPage from "./PasswordResetPage";
 import * as datastore from "services/datastore";
 
 jest.mock("services/datastore");
 const testPassword = randomPassword();
+const testUser = randomUser();
+const testToken = randomstring.generate(30);
 
 const Fixture: React.FC = () => {
   return (
     <ProvidersFixture>
-      <MemoryRouter>
-        <PasswordResetPage />
+      <MemoryRouter initialEntries={[`/reset-password/${testUser.email}/${testToken}`]}>
+        <Route path="/reset-password/:email/:token">
+          <PasswordResetPage />
+        </Route>
+        <Route path="/login">
+          <p>Log in</p>
+        </Route>
       </MemoryRouter>
     </ProvidersFixture>
   );
@@ -46,13 +54,13 @@ test("handles PasswordForm submission", async () => {
   await act(async () => {
     userEvent.click(screen.getByTestId("password-form-submit"));
   });
-  expect(datastore.resetPassword).toHaveBeenCalledWith(testPassword);
+  expect(datastore.resetPassword).toHaveBeenCalledWith(testUser.email, testToken, testPassword);
 });
 
 test("displays error when password update fails", async () => {
   jest
     .spyOn(datastore, "resetPassword")
-    .mockRejectedValue(new Error("unable to set password"));
+    .mockRejectedValue(new Error("unable to reset password"));
 
   await act(async () => {
     render(<Fixture />);
@@ -63,5 +71,5 @@ test("displays error when password update fails", async () => {
   await act(async () => {
     userEvent.click(screen.getByTestId("password-form-submit"));
   });
-  screen.getByText(/unable to set password/i);
+  screen.getByText(/unable to reset password/i);
 });
