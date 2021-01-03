@@ -39,7 +39,6 @@ const AccountPage: React.FC = () => {
       <div className="container">
         {formError && <Alert variant="danger">{formError}</Alert>}
         <AccountForm
-          className={classnames(formPending && "is-pending")}
           defaultValues={{
             name: user.name,
             email: user.email,

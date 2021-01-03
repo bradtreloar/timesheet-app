@@ -73,7 +73,6 @@ const TimesheetFormPage = () => {
         {formError && <div className="alert alert-danger">{formError}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
         <TimesheetForm
-          className={classnames(formPending && "is-pending")}
           defaultShifts={user.defaultShifts}
           defaultWeekStartDateTime={defaultWeekStartDateTime}
           onSubmitTimesheet={handleSubmit}

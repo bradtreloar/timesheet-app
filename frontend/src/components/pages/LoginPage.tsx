@@ -23,7 +23,6 @@ const LoginPage = () => {
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         <LoginForm
-          className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
           pending={formPending}
         />

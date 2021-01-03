@@ -29,7 +29,6 @@ const PasswordPage = () => {
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         <PasswordForm
-          className={classnames(formPending && "is-pending")}
           onSubmit={handleSubmit}
           pending={formPending}
         />

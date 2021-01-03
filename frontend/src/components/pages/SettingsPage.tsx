@@ -47,7 +47,6 @@ const SettingsPage = () => {
         )}
         {formError && <Alert variant="danger">{formError}</Alert>}
         <SettingsForm
-          className={classnames(formPending && "is-pending")}
           defaultValues={settingsObject}
           onSubmit={handleSubmit}
           pending={formPending}

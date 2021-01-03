@@ -69,7 +69,6 @@ const UserFormPage: React.FC = () => {
         {usersStoreError && <Alert variant="danger">{usersStoreError}</Alert>}
         {formError && <Alert variant="danger">{formError}</Alert>}
         <UserForm
-          className={classnames(formPending && "is-pending")}
           defaultValues={
             selectedUser
               ? {
