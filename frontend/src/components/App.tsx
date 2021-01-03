@@ -19,14 +19,20 @@ import UserFormPage from "./pages/UserFormPage";
 import UserDeletePage from "./pages/UserDeletePage";
 import TimesheetIndexPage from "./pages/TimesheetIndexPage";
 import TimesheetViewPage from "./pages/TimesheetViewPage";
-import { fetchUnrestrictedSettings } from "store/settings";
+import { fetchSettings, fetchUnrestrictedSettings } from "store/settings";
 import LoadingPage from "./pages/LoadingPage";
 import AccountPage from "./pages/AccountPage";
 import PasswordResetPage from "./pages/PasswordResetPage";
+import { fetchUsers } from "store/users";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
-  store.dispatch(fetchUnrestrictedSettings());
+  if (user.isAdmin) {
+    store.dispatch(fetchSettings());
+    store.dispatch(fetchUsers());
+  } else {
+    store.dispatch(fetchUnrestrictedSettings());
+  }
 };
 
 const App: React.FC = () => {
@@ -68,7 +74,7 @@ const App: React.FC = () => {
       <AdminRoute exact path="/users">
         <UserIndexPage />
       </AdminRoute>
-      <AdminRoute exact path="/users/add">
+      <AdminRoute exact path="/users/new">
         <UserFormPage />
       </AdminRoute>
       <AdminRoute exact path="/users/:id">
