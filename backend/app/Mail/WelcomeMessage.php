@@ -39,7 +39,7 @@ class WelcomeMessage extends Mailable
     public function build()
     {
         $token = Password::createToken($this->user);
-        $url = URL::to("/reset-password/{$token}");
+        $url = URL::to("/reset-password/{$this->user->email}/{$token}");
         return $this->view('mail.welcome', [
             'url' => $url,
         ]);
