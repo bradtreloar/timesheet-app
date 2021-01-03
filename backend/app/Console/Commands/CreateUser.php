@@ -14,7 +14,7 @@ class CreateUser extends Command
      *
      * @var string
      */
-    protected $signature = 'create:user {email} {name} {password} {--admin}';
+    protected $signature = 'create:user {email} {name} {--admin}';
 
     /**
      * The console command description.
@@ -30,23 +30,21 @@ class CreateUser extends Command
      */
     public function handle()
     {
-        $plain_password = $this->argument("password");
-
         $default_shifts = [];
         for ($i = 0; $i < 7; $i++) {
             $default_shifts[] = [
                 "isActive" => true,
                 "startTime" => [
-                    "hours" => 9,
-                    "minutes" => 0,
+                    "hour" => "9",
+                    "minutes" => "0",
                 ],
                 "endTime" => [
-                    "hours" => 17,
-                    "minutes" => 0,
+                    "hour" => "17",
+                    "minute" => "0",
                 ],
                 "breakDuration" => [
-                    "hours" => 0,
-                    "minutes" => 30,
+                    "hour" => "0",
+                    "minute" => "30",
                 ],
             ];
         }
@@ -55,7 +53,6 @@ class CreateUser extends Command
             $user = new User([
                 "name" => $this->argument("name"),
                 "email" => $this->argument("email"),
-                "password" => Hash::make($plain_password),
                 'is_admin' => $this->option("admin"),
                 'default_shifts' => json_encode($default_shifts),
             ]);
