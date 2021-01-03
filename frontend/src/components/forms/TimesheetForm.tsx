@@ -322,6 +322,11 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
                   handleChange(event);
                 }
               }}
+              onKeyPress ={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                }
+              }}
             />
             <span className="ml-3">{label}</span>
           </label>

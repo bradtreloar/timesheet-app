@@ -56,6 +56,13 @@ export const TimeInput: React.FC<TimeInputProps> = ({
     }
   };
 
+  // Prevent Enter keystroke from submitting form.
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+  };
+
   const paddedValue = (value: string) =>
     value === "" ? value : value.padStart(2, "0");
 
@@ -76,6 +83,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
               onChange(event);
             }
           }}
+          onKeyPress={handleKeyPress}
           disabled={disabled}
         />
         <span className="mx-1">:</span>
@@ -93,6 +101,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
               onChange(event);
             }
           }}
+          onKeyPress={handleKeyPress}
           disabled={disabled}
         />
       </div>
