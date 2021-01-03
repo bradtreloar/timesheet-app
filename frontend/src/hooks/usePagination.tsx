@@ -7,7 +7,7 @@ interface PaginationOptions {
   itemsPerPage?: number;
 }
 
-const usePagination = function<T>(items: T[], options?: PaginationOptions) {
+const usePagination = function <T>(items: T[], options?: PaginationOptions) {
   const [pageIndex, setPageIndex] = useState(0);
   const itemsPerPage =
     options && options.itemsPerPage && options.itemsPerPage > 0
@@ -24,13 +24,14 @@ const usePagination = function<T>(items: T[], options?: PaginationOptions) {
 
   return {
     items: items.slice(firstItem, lastItem),
-    Pager: () => (
-      <Pager
-        pageIndex={pageIndex}
-        pageCount={pageCount}
-        onChange={setPageIndex}
-      />
-    ),
+    Pager: () =>
+      pageCount > 1 ? (
+        <Pager
+          pageIndex={pageIndex}
+          pageCount={pageCount}
+          onChange={setPageIndex}
+        />
+      ) : null,
   };
 };
 
