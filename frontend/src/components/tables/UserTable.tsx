@@ -71,7 +71,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
       </thead>
       <tbody>
         {sortedUsers.map((user, index) => {
-          const userPageUrl = `/admin/user/${user.id}`;
+          const userPageUrl = `/users/${user.id}`;
           return (
             <tr key={index} data-testid="user-index-table-row">
               <td>
