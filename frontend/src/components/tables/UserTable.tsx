@@ -73,10 +73,13 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
       <table className="table">
         <thead>
           <tr>
-            <TableHeading name={"name"}>
+            <TableHeading name="name">
               <span>Name</span>
             </TableHeading>
-            <TableHeading name={"email"} className="text-right">
+            <TableHeading name="isAdmin">
+              <span>Account type</span>
+            </TableHeading>
+            <TableHeading name="email" className="text-right">
               <span>Email</span>
             </TableHeading>
           </tr>
@@ -88,6 +91,9 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
               <tr key={index} data-testid="user-index-table-row">
                 <td>
                   <Link to={userPageUrl}>{user.name}</Link>
+                </td>
+                <td>
+                  {user.isAdmin ? `Administrator` : `Employee`}
                 </td>
                 <td className="text-right">
                   <Link to={userPageUrl}>{user.email}</Link>
