@@ -1,5 +1,4 @@
 import React from "react";
-import classnames from "classnames";
 import { useSelector } from "react-redux";
 import PageTitle from "components/PageTitle";
 import DefaultLayout from "components/layouts/DefaultLayout";

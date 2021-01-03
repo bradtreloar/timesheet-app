@@ -1,5 +1,4 @@
 import React from "react";
-import classnames from "classnames";
 import PageTitle from "components/PageTitle";
 import { useAuth } from "context/auth";
 import DefaultLayout from "components/layouts/DefaultLayout";

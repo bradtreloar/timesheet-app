@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { isInteger } from "lodash";
-import classnames from "classnames";
 import PageTitle from "components/PageTitle";
 import TimesheetForm from "components/forms/TimesheetForm";
 import { useAuth } from "context/auth";
