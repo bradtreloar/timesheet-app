@@ -39,11 +39,28 @@ export const TimeInput: React.FC<TimeInputProps> = ({
     return true;
   };
 
+  const processedValue = (value: string, maxValue: number) => {
+    if (underMaxLength(value) && underMaxValue(value, maxValue)) {
+      return value;
+    }
+    return null;
+  }
+
+  const componentName = (name: string) => name.split(".").pop();
+
   const setFocus = (name: string, hasFocus: boolean) => {
-    if (name.split(".").pop() === "minute") {
+    if (componentName(name) === "minute") {
       setMinuteHasFocus(hasFocus);
     }
   };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const maxValue = componentName(event.target.name) === "minute" ? 59 : 23;
+    const value = processedValue(event.target.value, maxValue);
+    if (value !== null) {
+      onChange(event);
+    }
+  }
 
   const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     setFocus(event.target.name, true);
@@ -77,12 +94,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           value={hour}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          onChange={(event) => {
-            const value = event.target.value;
-            if (underMaxLength(value) && underMaxValue(value, 23)) {
-              onChange(event);
-            }
-          }}
+          onChange={handleChange}
           onKeyPress={handleKeyPress}
           disabled={disabled}
         />
@@ -95,12 +107,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           value={minuteHasFocus ? minute : paddedValue(minute)}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          onChange={(event) => {
-            const value = event.target.value;
-            if (underMaxLength(value) && underMaxValue(value, 59)) {
-              onChange(event);
-            }
-          }}
+          onChange={handleChange}
           onKeyPress={handleKeyPress}
           disabled={disabled}
         />
