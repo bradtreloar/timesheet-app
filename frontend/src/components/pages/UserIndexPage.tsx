@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import UserTable from "components/tables/UserTable";
 import { useSelector } from "react-redux";
 import { selectUsers } from "store/users";
+import Messages from "components/Messages";
 
 const UserIndexPage = () => {
   const { users, status: userStoreStatus } = useSelector(
@@ -14,9 +15,10 @@ const UserIndexPage = () => {
   return (
     <DefaultLayout>
       <PageTitle>Manage Users</PageTitle>
+      <Messages />
       <div className="container">
         <div className="my-3">
-          <Link className="btn btn-primary" to="/new-user">
+          <Link className="btn btn-primary" to="/users/new">
             Create new user
           </Link>
         </div>
