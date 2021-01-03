@@ -13,6 +13,7 @@ import { Shift, Timesheet } from "types";
 import { useHistory } from "react-router";
 import { DateTime } from "luxon";
 import LoadingPage from "./LoadingPage";
+import Messages from "components/Messages";
 
 const TimesheetFormPage = () => {
   const { user } = useAuth();
@@ -68,6 +69,7 @@ const TimesheetFormPage = () => {
   return (
     <DefaultLayout>
       <PageTitle>New Timesheet</PageTitle>
+      <Messages />
       <div className="container">
         {formError && <div className="alert alert-danger">{formError}</div>}
         {error && <div className="alert alert-danger">{error}</div>}

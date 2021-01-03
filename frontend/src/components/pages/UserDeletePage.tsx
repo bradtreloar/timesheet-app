@@ -8,6 +8,7 @@ import DefaultLayout from "components/layouts/DefaultLayout";
 import NotFoundPage from "./NotFoundPage";
 import store from "store";
 import { useMessages } from "context/messages";
+import Messages from "components/Messages";
 
 const UserDeletePage = () => {
   const { id } = useParams<{ id?: string }>();
@@ -34,6 +35,7 @@ const UserDeletePage = () => {
   return (
     <DefaultLayout>
       <PageTitle>Delete User</PageTitle>
+      <Messages />
       <div className="container">
         <p>{`Delete ${user.name}?`}</p>
         <div>

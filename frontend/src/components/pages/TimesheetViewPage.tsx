@@ -1,4 +1,5 @@
 import DefaultLayout from "components/layouts/DefaultLayout";
+import Messages from "components/Messages";
 import PageTitle from "components/PageTitle";
 import TimesheetView from "components/TimesheetView";
 import React from "react";
@@ -17,6 +18,7 @@ const TimesheetViewPage: React.FC = () => {
   return timesheet ? (
     <DefaultLayout>
       <PageTitle>Timesheet Details</PageTitle>
+      <Messages />
       <div className="container">
         <TimesheetView timesheet={timesheet} />
       </div>
