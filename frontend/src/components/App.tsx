@@ -22,6 +22,7 @@ import TimesheetViewPage from "./pages/TimesheetViewPage";
 import { fetchUnrestrictedSettings } from "store/settings";
 import LoadingPage from "./pages/LoadingPage";
 import AccountPage from "./pages/AccountPage";
+import PasswordResetPage from "./pages/PasswordResetPage";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
@@ -81,6 +82,9 @@ const App: React.FC = () => {
       </GuestRoute>
       <GuestRoute exact path="/forgot-password">
         <ForgotPasswordPage />
+      </GuestRoute>
+      <GuestRoute exact path="/reset-password/:email/:token">
+        <PasswordResetPage />
       </GuestRoute>
       <Route>
         <NotFoundPage />
