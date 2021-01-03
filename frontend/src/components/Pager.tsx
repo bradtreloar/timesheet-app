@@ -23,7 +23,11 @@ const Pager: React.FC<PagerProps> = ({ pageIndex, pageCount, onChange }) => {
   }) => (
     <li className="page-item">
       <button
-        disabled={disabled || index === pageIndex}
+        disabled={
+          disabled !== undefined
+            ? disabled
+            : index === pageIndex || index > lastPageIndex || index < 0
+        }
         className="page-link"
         type="button"
         onClick={(event) => {
@@ -45,7 +49,12 @@ const Pager: React.FC<PagerProps> = ({ pageIndex, pageCount, onChange }) => {
         <PagerButton index={0} label="«" srLabel="First" />
         <PagerButton index={pageIndex - 1} label="‹" srLabel="Previous" />
       </>
-      <PagerButton index={0} label={`Page ${pageIndex + 1} of ${pageCount}`} srLabel="(current)" />
+      <PagerButton
+        index={0}
+        label={`Page ${pageIndex + 1} of ${pageCount}`}
+        srLabel="(current)"
+        disabled
+      />
       <>
         <PagerButton index={pageIndex + 1} label="›" srLabel="Next" />
         <PagerButton index={lastPageIndex} label="»" srLabel="Last" />
