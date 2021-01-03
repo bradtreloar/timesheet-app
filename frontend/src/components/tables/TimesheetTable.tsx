@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { Link } from "react-router-dom";
 import { getTimesheetTotalHours } from "services/date";
 import { Timesheet } from "types";
-import Pager from "components/Pager";
+import usePagination from "hooks/usePagination";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -12,19 +12,9 @@ interface TimesheetTableProps {
 }
 
 const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
-  const [pageIndex, setPageIndex] = useState(0);
+  const { items, Pager } = usePagination(timesheets);
 
-  const pageCount = useMemo(
-    () =>
-      timesheets.length > 0 ? Math.ceil(timesheets.length / ITEMS_PER_PAGE) : 0,
-    [timesheets]
-  );
-
-  const firstItem = pageIndex * ITEMS_PER_PAGE;
-  const lastItem = firstItem + ITEMS_PER_PAGE;
-  const visibleTimesheets = timesheets.slice(firstItem, lastItem);
-
-  const tableRows = visibleTimesheets.map((timesheet, index) => {
+  const tableRows = items.map((timesheet, index) => {
     const created = DateTime.fromISO(
       timesheet.created as string
     ).toLocaleString(DateTime.DATE_SHORT);
@@ -53,11 +43,7 @@ const TimesheetTable: React.FC<TimesheetTableProps> = ({ timesheets }) => {
         <tbody>{tableRows}</tbody>
       </table>
       <div>
-        <Pager
-          pageIndex={pageIndex}
-          pageCount={pageCount}
-          onChange={setPageIndex}
-        />
+        <Pager />
       </div>
     </>
   );
