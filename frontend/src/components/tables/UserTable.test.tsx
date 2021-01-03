@@ -6,7 +6,7 @@ import UserTable from "./UserTable";
 import { MemoryRouter } from "react-router";
 import userEvent from "@testing-library/user-event";
 
-const testUsers = range(random(10, 20)).map((index) => randomUser());
+const testUsers = range(random(8, 10)).map((index) => randomUser());
 const sortedTestUsers = orderBy(testUsers, ["name"], ["asc"]);
 
 const Fixture: React.FC = ({ children }) => (
@@ -25,6 +25,7 @@ test("renders rows", () => {
 
   // Check that the users are sorted in the right order
   const emailLinks = screen.getAllByText(/@/);
+
   sortedTestUsers.forEach((user, index) => {
     expect(emailLinks[index]).toHaveTextContent(user.email);
   });
