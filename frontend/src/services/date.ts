@@ -15,6 +15,7 @@ export const getWeekdayName = (number: number) =>
     "Thursday",
     "Friday",
     "Saturday",
+    "Sunday",
   ][number];
 
 /**

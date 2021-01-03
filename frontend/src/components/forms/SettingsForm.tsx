@@ -88,9 +88,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           onChange={handleChange}
           disabled={pending}
         >
-          {range(7).map((index) => {
+          {range(1, 8).map((index) => {
             return (
-              <option key={index} value={index.toString()}>
+              <option key={index} value={(index).toString()}>
                 {getWeekdayName(index)}
               </option>
             );
@@ -99,6 +99,11 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
         <Form.Text className="text-muted">
           Select which day should appear first on the timesheet form.
         </Form.Text>
+        {visibleErrors.firstDayOfWeek && (
+          <Form.Control.Feedback type="invalid">
+            {errors.firstDayOfWeek}
+          </Form.Control.Feedback>
+        )}
       </Form.Group>
       <Button variant="primary" type="submit" disabled={pending}>
         {pending ? `Saving settings` : `Save settings`}
