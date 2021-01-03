@@ -3,12 +3,12 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter } from "react-router-dom";
-import { randomPassword } from "fixtures/random";
+import { randomPassword, randomUser } from "fixtures/random";
 import PasswordPage from "./PasswordPage";
 import * as datastore from "services/datastore";
 
 jest.mock("services/datastore");
-jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(null);
+const testUser = randomUser();
 const testPassword = randomPassword();
 
 const Fixture: React.FC = () => {
@@ -21,6 +21,10 @@ const Fixture: React.FC = () => {
   );
 };
 
+beforeEach(() => {
+  jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(testUser);
+});
+
 test("renders password page", async () => {
   await act(async () => {
     render(<Fixture />);
@@ -31,7 +35,7 @@ test("renders password page", async () => {
   screen.getByLabelText(/re-enter new password/i);
 });
 
-test("handles ForgotPasswordForm submission", async () => {
+test("handles PasswordForm submission", async () => {
   jest.spyOn(datastore, "setPassword").mockResolvedValue();
 
   await act(async () => {
@@ -46,7 +50,7 @@ test("handles ForgotPasswordForm submission", async () => {
   expect(datastore.setPassword).toHaveBeenCalledWith(testPassword);
 });
 
-test("displays error when login fails", async () => {
+test("displays error when password update fails", async () => {
   jest
     .spyOn(datastore, "setPassword")
     .mockRejectedValue(new Error("unable to set password"));
