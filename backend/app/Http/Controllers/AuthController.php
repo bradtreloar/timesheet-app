@@ -104,7 +104,7 @@ class AuthController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:12',
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
