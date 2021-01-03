@@ -23,17 +23,17 @@ class FakerServiceProvider extends ServiceProvider
                     for ($i = 0; $i < 7; $i++) {
                         $default_shifts[] = [
                             "isActive" => true,
-                            "start" => [
-                                "hours" => random_int(0, 8),
-                                "minutes" => random_int(0, 59),
+                            "startTime" => [
+                                "hour" => (string) random_int(0, 8),
+                                "minute" => (string) random_int(0, 59),
                             ],
-                            "end" => [
-                                "hours" => random_int(16, 23),
-                                "minutes" => random_int(0, 59),
+                            "endTime" => [
+                                "hour" => (string) random_int(16, 23),
+                                "minute" => (string) random_int(0, 59),
                             ],
                             "breakDuration" => [
-                                "hours" => random_int(0, 1),
-                                "minutes" => random_int(0, 59),
+                                "hour" => (string) random_int(0, 1),
+                                "minute" => (string) random_int(0, 59),
                             ],
                         ];
                     }
