@@ -33,7 +33,8 @@ const SettingsPage = () => {
       if (action.type === "settings/update/fulfilled") {
         setMessage("success", "Settings updated successfully.");
       }
-    }
+    },
+    { unmountsOnSubmit: false }
   );
 
   return (
