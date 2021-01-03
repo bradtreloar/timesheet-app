@@ -61,6 +61,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       <Form.Group controlId="email">
         <Form.Label>Email Address</Form.Label>
         <Form.Control
+          autoFocus
           type="email"
           name="email"
           isInvalid={visibleErrors.email}
@@ -96,7 +97,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         variant="primary"
         type="submit"
         data-testid="login-form-submit"
-        disabled={pending || !isEmpty(errors)}
+        disabled={pending}
       >
         {pending ? `Logging in` : `Log in`}
       </Button>
