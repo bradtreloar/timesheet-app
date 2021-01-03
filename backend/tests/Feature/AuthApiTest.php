@@ -44,7 +44,7 @@ class AuthApiTest extends TestCase
 
     public function testSuccessfulLoginAttempt()
     {
-        $plain_password = $this->faker()->password();
+        $plain_password = $this->faker()->password(12);
         $user = User::factory()->create([
             'password' => Hash::make($plain_password),
         ]);
@@ -60,7 +60,7 @@ class AuthApiTest extends TestCase
 
     public function testFailedLoginAttempt()
     {
-        $plain_password = $this->faker()->password();
+        $plain_password = $this->faker()->password(12);
         $user = User::factory()->create([
             'password' => Hash::make($plain_password),
         ]);
@@ -113,7 +113,7 @@ class AuthApiTest extends TestCase
 
     public function testResetPassword()
     {
-        $plain_password = $this->faker()->password();
+        $plain_password = $this->faker()->password(12);
         $this->seed();
         $user = User::find(1);
         $token = Password::createToken($user);
@@ -127,7 +127,7 @@ class AuthApiTest extends TestCase
 
     public function testSetPassword()
     {
-        $plain_password = $this->faker()->password();
+        $plain_password = $this->faker()->password(12);
         $password_hash = Hash::make($plain_password);
         $this->seed();
         $user = User::find(1);
