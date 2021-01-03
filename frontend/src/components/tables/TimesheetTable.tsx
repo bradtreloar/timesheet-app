@@ -1,11 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { DateTime } from "luxon";
 import { Link } from "react-router-dom";
 import { getTimesheetTotalHours } from "services/date";
 import { Timesheet } from "types";
 import usePagination from "hooks/usePagination";
-
-const ITEMS_PER_PAGE = 10;
 
 interface TimesheetTableProps {
   timesheets: Timesheet[];
