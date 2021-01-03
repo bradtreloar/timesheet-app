@@ -3,7 +3,6 @@ import classnames from "classnames";
 import * as EmailValidator from "email-validator";
 import useForm from "hooks/useForm";
 import { Alert, Button, Form } from "react-bootstrap";
-import { isEmpty } from "lodash";
 
 type LoginFormValues = {
   email: string;
