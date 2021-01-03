@@ -196,7 +196,7 @@ interface TimesheetFormProps {
   defaultWeekStartDateTime: DateTime;
   defaultShifts: ShiftTimes[];
   onSubmitTimesheet: (values: { shifts: Shift[]; comment: string }) => void;
-  pending: boolean;
+  pending?: boolean;
   className?: string;
 }
 
