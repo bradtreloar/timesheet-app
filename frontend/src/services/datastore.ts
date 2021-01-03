@@ -132,16 +132,25 @@ export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
     },
   });
   const { data, included } = response.data;
+
+  const allShifts =
+    included !== undefined
+      ? included.map((resource) => parseShift(resource))
+      : [];
+
   const timesheets = data.map((resource: TimesheetResource) => {
-    return parseTimesheet(user.id as string, resource);
-  });
-  if (included !== undefined) {
-    const allShifts = included.map((resource) => parseShift(resource));
-    timesheets.forEach((timesheet) => {
-      const shifts = allShifts.filter(({ id }) => id === timesheet.id);
+    const timesheet = parseTimesheet(user.id as string, resource);
+    const relatedShiftResources = resource.relationships.shifts;
+    if (relatedShiftResources !== undefined) {
+      const shiftIds = relatedShiftResources.data.map(({ id }) => id);
+      const shifts = allShifts.filter(({ id }) =>
+        shiftIds.includes(id as string)
+      );
       timesheet.shifts = shifts;
-    });
-  }
+    }
+    return timesheet;
+  });
+
   return timesheets;
 };
 
