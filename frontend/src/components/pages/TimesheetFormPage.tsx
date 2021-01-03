@@ -14,12 +14,16 @@ import { useHistory } from "react-router";
 import { DateTime } from "luxon";
 import LoadingPage from "./LoadingPage";
 import Messages from "components/Messages";
+import { Button } from "react-bootstrap";
+import { useMessages } from "context/messages";
 
 const TimesheetFormPage = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const { setMessage } = useMessages();
   const history = useHistory();
   const { settings } = useSelector(selectSettings);
   const { error } = useSelector(selectTimesheets);
+
   const { formError, formPending, handleSubmit } = useFormController<{
     shifts: Shift[];
     comment: string;
@@ -32,7 +36,16 @@ const TimesheetFormPage = () => {
       };
       const action = await store.dispatch(addTimesheet(timesheet));
       if (action.type === "timesheets/add/fulfilled") {
-        history.push("/timesheet/confirmation");
+        setMessage(
+          "success",
+          <>
+            <p>Your timesheet has been submitted.</p>
+            <p>A copy has been emailed to you at {user?.email}</p>
+            <Button variant="outline-dark" onClick={logout}>Click here to log out</Button>
+          </>,
+          ["timesheet-form"]
+        );
+        history.push("/");
       }
     } else {
       throw new Error(`User is not valid`);
@@ -61,9 +74,7 @@ const TimesheetFormPage = () => {
   }
 
   if (!defaultWeekStartDateTime) {
-    return (
-      <LoadingPage />
-    );
+    return <LoadingPage />;
   }
 
   return (

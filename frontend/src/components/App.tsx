@@ -10,7 +10,6 @@ import { clearTimesheets, fetchTimesheets } from "store/timesheets";
 import { User } from "types";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import PasswordPage from "./pages/PasswordPage";
-import TimesheetConfirmPage from "./pages/TimesheetConfirmPage";
 import TimesheetFormPage from "./pages/TimesheetFormPage";
 import AdminRoute from "./routes/AdminRoute";
 import SettingsPage from "./pages/SettingsPage";
@@ -64,9 +63,6 @@ const App: React.FC = () => {
       </ProtectedRoute>
       <ProtectedRoute exact path="/timesheet/new">
         <TimesheetFormPage />
-      </ProtectedRoute>
-      <ProtectedRoute exact path="/timesheet/confirmation">
-        <TimesheetConfirmPage />
       </ProtectedRoute>
       <ProtectedRoute exact path="/timesheet/:id">
         <TimesheetViewPage />

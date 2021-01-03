@@ -34,11 +34,11 @@ const Fixture: React.FC = () => {
   return (
     <Provider store={store}>
       <ProvidersFixture>
-        <MemoryRouter>
-          <Route exact path="/">
+        <MemoryRouter initialEntries={["/timesheet/new"]}>
+          <Route exact path="/timesheet/new">
             <TimesheetFormPage />
           </Route>
-          <Route exact path="/timesheet/confirmation">
+          <Route exact path="/">
             form submitted
           </Route>
         </MemoryRouter>
