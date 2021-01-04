@@ -72,6 +72,17 @@ const buildInitialValues = (
 });
 
 /**
+ * Processes form values into an array of ShiftTimes objects
+ *
+ * @param values
+ *   An object containing the value for each form input.
+ * @returns
+ *   A array of ShiftTimes objects.
+ */
+const processShiftTimes = (values: any): ShiftTimes[] =>
+  range(7).map((index) => getShiftTimesFromValues(values, index));
+
+/**
  * Prepares the value to be passed to the form's onSubmitTimesheet callback.
  *
  * @param values
@@ -84,9 +95,9 @@ const processTimesheet = (
 ): { shifts: Shift[]; comment: string } => {
   const weekStartDateTime = values.weekStartDateTime as DateTime;
   const comment = values.comment;
+  const allShiftTimes = processShiftTimes(values);
   const shifts: Shift[] = [];
-  range(7).forEach((index) => {
-    const shiftTimes = getShiftTimesFromValues(values, index);
+  allShiftTimes.forEach((shiftTimes, index) => {
     if (shiftTimes.isActive) {
       const shiftDate = weekStartDateTime.plus({ days: index });
       const shift = {
@@ -115,7 +126,7 @@ const processTimesheet = (
 };
 
 /**
- * Validates the form inputs.
+ * Validates the shift times inputs.
  *
  * @param values
  *   An object containing the value for each form input.
@@ -123,7 +134,7 @@ const processTimesheet = (
  *   An object containing the error for any form inputs that contain invalid
  *   values. Returns null if no errors are found.
  */
-const validateTimesheet = (values: any) => {
+const validateShiftTimes = (values: any) => {
   const errors = {} as FormErrors<any>;
   let hasActiveShifts = false;
 
@@ -189,6 +200,21 @@ const validateTimesheet = (values: any) => {
     errors[`form`] = `At least one shift is required.`;
   }
 
+  return errors;
+};
+
+/**
+ * Validates the form inputs.
+ *
+ * @param values
+ *   An object containing the value for each form input.
+ * @returns
+ *   An object containing the error for any form inputs that contain invalid
+ *   values. Returns null if no errors are found.
+ */
+const validateTimesheet = (values: any) => {
+  const errors = validateShiftTimes(values);
+
   if (values.comment.length > 255) {
     errors[`comment`] = `Must be no longer than 255 characters`;
   }
@@ -200,6 +226,7 @@ interface TimesheetFormProps {
   defaultWeekStartDateTime: DateTime;
   defaultShifts: ShiftTimes[];
   onSubmitTimesheet: (values: { shifts: Shift[]; comment: string }) => void;
+  onSubmitDefaultShifts: (shifts: ShiftTimes[]) => void;
   pending?: boolean;
   className?: string;
 }
@@ -208,6 +235,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   defaultWeekStartDateTime,
   defaultShifts,
   onSubmitTimesheet,
+  onSubmitDefaultShifts,
   pending,
   className,
 }) => {
@@ -232,6 +260,16 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     },
     validateTimesheet
   );
+
+  const handleSubmitDefaultShifts = (
+    event: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    const errors = validateShiftTimes(values);
+    if (isEmpty(errors)) {
+      onSubmitDefaultShifts(processShiftTimes(values));
+    }
+  };
 
   // Clear the time values for the shift and flag the time inputs as untouched.
   const clearShiftValues = (shiftName: string) => {
@@ -291,18 +329,33 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     );
   };
 
-  const shiftInputs = range(7).map((index) => {
-    const name = `shift.${index}`;
-    const shiftDate = values.weekStartDateTime.plus({ days: index });
-    const shiftTimes = getShiftTimesFromValues(values, index);
-    let shiftHours;
+  const allShiftTimes = range(7).map((index) =>
+    getShiftTimesFromValues(values, index)
+  );
+
+  const allShiftHours = allShiftTimes.map((shiftTimes) => {
     try {
-      shiftHours = getShiftHoursFromTimes(shiftTimes);
+      return getShiftHoursFromTimes(shiftTimes);
     } catch (error) {
       if (!(error instanceof InvalidTimeException)) {
         throw error;
       }
     }
+    return null;
+  });
+
+  const timesheetTotalHours = allShiftHours.reduce(
+    (totalHours: number, shiftHours) => {
+      return shiftHours ? totalHours + shiftHours : totalHours;
+    },
+    0
+  );
+
+  const shiftInputs = range(7).map((index) => {
+    const name = `shift.${index}`;
+    const shiftDate = values.weekStartDateTime.plus({ days: index });
+    const shiftTimes = allShiftTimes[index];
+    const shiftHours = allShiftHours[index];
     const label = shiftDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
     const isActive = shiftTimes.isActive;
 
@@ -311,7 +364,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         <div className="d-lg-flex" aria-label="Shift">
           <label className="d-flex align-items-center m-0 flex-grow-1 pl-2 py-1 py-lg-2 mr-lg-3">
             <input
-              data-testid="shift-toggle"
+              data-testid={`shift-${index}-toggle`}
               name={`${name}.isActive`}
               type="checkbox"
               checked={isActive}
@@ -322,7 +375,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
                   handleChange(event);
                 }
               }}
-              onKeyPress ={(event) => {
+              onKeyPress={(event) => {
                 if (event.key === "Enter") {
                   event.preventDefault();
                 }
@@ -366,7 +419,24 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
           disabled={pending}
         />
       </div>
-      <div>{shiftInputs}</div>
+      <div>
+        {shiftInputs}
+        <div className="border p-1 my-1 bg-light">
+          <div
+            aria-label="Total"
+            className="d-flex w-100 align-items-center mt-1 mt-lg-0"
+          >
+            <div className="mx-2 text-right flex-grow-1">Total</div>
+            <div className="timesheet-total-hours">
+              <div className="form-control w-100 text-right">
+                {timesheetTotalHours
+                  ? `${timesheetTotalHours} hours`
+                  : `\u00A0`}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Form.Group controlId="comment" className="my-3">
         <Form.Label>Comments/Notes</Form.Label>
         <Form.Control
@@ -376,6 +446,15 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         />
       </Form.Group>
       <div className="my-3 text-right">
+        <Button
+          variant="secondary"
+          type="button"
+          disabled={!isEmpty(errors)}
+          onClick={handleSubmitDefaultShifts}
+        >
+          Save these shifts as my default
+        </Button>
+        &nbsp;
         <Button variant="primary" type="submit" disabled={pending}>
           {pending ? `Submitting` : `Submit`}
         </Button>

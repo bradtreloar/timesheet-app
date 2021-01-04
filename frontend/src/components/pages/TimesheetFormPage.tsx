@@ -9,22 +9,27 @@ import DefaultLayout from "components/layouts/DefaultLayout";
 import store from "store";
 import { selectSettings } from "store/settings";
 import { addTimesheet, selectTimesheets } from "store/timesheets";
-import { Shift, Timesheet } from "types";
+import { Shift, ShiftTimes, Timesheet, User } from "types";
 import { useHistory } from "react-router";
 import { DateTime } from "luxon";
 import LoadingPage from "./LoadingPage";
 import Messages from "components/Messages";
 import { Button } from "react-bootstrap";
 import { useMessages } from "context/messages";
+import { updateUser } from "store/users";
 
 const TimesheetFormPage = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const { setMessage } = useMessages();
   const history = useHistory();
   const { settings } = useSelector(selectSettings);
   const { error } = useSelector(selectTimesheets);
 
-  const { formError, formPending, handleSubmit } = useFormController<{
+  const {
+    formError,
+    formPending,
+    handleSubmit: handleSubmitTimesheet,
+  } = useFormController<{
     shifts: Shift[];
     comment: string;
   }>(async ({ shifts, comment }) => {
@@ -41,7 +46,9 @@ const TimesheetFormPage = () => {
           <>
             <p>Your timesheet has been submitted.</p>
             <p>A copy has been emailed to you at {user?.email}</p>
-            <Button variant="outline-dark" onClick={logout}>Click here to log out</Button>
+            <Button variant="outline-dark" onClick={logout}>
+              Click here to log out
+            </Button>
           </>,
           ["timesheet-form"]
         );
@@ -51,6 +58,17 @@ const TimesheetFormPage = () => {
       throw new Error(`User is not valid`);
     }
   });
+
+  const handleSubmitDefaultShifts = async (defaultShifts: ShiftTimes[]) => {
+    const updatedUser: User = Object.assign({}, user, { defaultShifts });
+    const action = await store.dispatch(updateUser(updatedUser));
+    if (action.type === "users/update/fulfilled") {
+      setMessage("success", "Your default shifts have been updated.", [
+        "timesheet-form",
+      ]);
+      await refreshUser();
+    }
+  };
 
   const firstDayOfWeek = useMemo(
     () => settings.find(({ name }) => name === "firstDayOfWeek")?.value,
@@ -87,7 +105,8 @@ const TimesheetFormPage = () => {
         <TimesheetForm
           defaultShifts={user.defaultShifts}
           defaultWeekStartDateTime={defaultWeekStartDateTime}
-          onSubmitTimesheet={handleSubmit}
+          onSubmitTimesheet={handleSubmitTimesheet}
+          onSubmitDefaultShifts={handleSubmitDefaultShifts}
           pending={formPending}
         />
       </div>

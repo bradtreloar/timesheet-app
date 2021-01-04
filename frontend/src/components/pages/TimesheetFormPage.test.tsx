@@ -13,7 +13,7 @@ import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
 import store from "store";
 import { setSettings } from "store/settings";
-import { Shift } from "types";
+import { Shift, ShiftTimes } from "types";
 import { getTimesFromShift } from "services/adaptors";
 import { DateTime } from "luxon";
 
@@ -29,6 +29,13 @@ testUser.defaultShifts = testShifts.map((shift) => getTimesFromShift(shift));
 const testSettings = randomSettings({
   firstDayOfWeek: DateTime.fromISO(testShifts[0].start).weekday.toString(),
 });
+
+export const EMPTY_SHIFT_TIMES = {
+  isActive: false,
+  startTime: { hour: "", minute: "" },
+  endTime: { hour: "", minute: "" },
+  breakDuration: { hour: "", minute: "" },
+} as ShiftTimes;
 
 const Fixture: React.FC = () => {
   return (
@@ -61,7 +68,7 @@ test("renders timesheet page", async () => {
   expect(screen.getByRole("heading")).toHaveTextContent(/new timesheet/i);
 });
 
-test("handles TimesheetForm submission", async () => {
+test("handles timesheet submission", async () => {
   jest.spyOn(datastore, "createTimesheet").mockResolvedValue(testTimesheet);
   jest.spyOn(datastore, "createShifts").mockResolvedValue(testShifts);
   jest.spyOn(datastore, "completeTimesheet").mockResolvedValue(testTimesheet);
@@ -100,4 +107,22 @@ test("displays error when timesheet creation fails", async () => {
     shifts: testTimesheet.shifts,
     comment: testTimesheet.comment,
   });
+});
+
+test("updates the user's default shifts and shows a confirmation message", async () => {
+  const updatedTestUser = {...testUser};
+  updatedTestUser.defaultShifts[0] = EMPTY_SHIFT_TIMES;
+  jest.spyOn(datastore, "updateUser").mockResolvedValue(updatedTestUser);
+
+  await act(async () => {
+    render(<Fixture />);
+  });
+
+  expect(screen.getByRole("heading")).toHaveTextContent(/new timesheet/i);
+  userEvent.click(screen.getByTestId("shift-0-toggle"));
+  await act(async () => {
+    userEvent.click(screen.getByText(/save these shifts as my default/i));
+  });
+  await screen.findByText(/your default shifts have been updated/i);
+  expect(datastore.updateUser).toHaveBeenCalledWith(updatedTestUser);
 });

@@ -29,6 +29,7 @@ test("renders timesheet form", () => {
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmitTimesheet={noop}
+      onSubmitDefaultShifts={noop}
     />
   );
 
@@ -52,14 +53,15 @@ test("handles toggling shift", () => {
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmitTimesheet={noop}
+      onSubmitDefaultShifts={noop}
     />
   );
 
   const shiftInput = screen.getAllByLabelText(/^shift$/i)[0];
   within(shiftInput).getByLabelText(/start/i);
-  userEvent.click(within(shiftInput).getByTestId("shift-toggle"));
+  userEvent.click(within(shiftInput).getByTestId("shift-0-toggle"));
   expect(within(shiftInput).queryByLabelText(/start/i)).toBeNull();
-  userEvent.click(within(shiftInput).getByTestId("shift-toggle"));
+  userEvent.click(within(shiftInput).getByTestId("shift-0-toggle"));
   within(shiftInput).getByLabelText(/start/i);
   expect(
     within(within(shiftInput).getByLabelText(/start/i))
@@ -75,6 +77,7 @@ test("handles erasing times", () => {
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmitTimesheet={noop}
+      onSubmitDefaultShifts={noop}
     />
   );
 
@@ -91,6 +94,7 @@ test("handles entering times", () => {
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmitTimesheet={noop}
+      onSubmitDefaultShifts={noop}
     />
   );
 
@@ -117,6 +121,7 @@ describe("form submission", () => {
           shifts.forEach((shift) => expectValidShift(shift));
           done();
         }}
+        onSubmitDefaultShifts={noop}
       />
     );
     userEvent.click(screen.getByText(/^submit$/i));
@@ -135,6 +140,7 @@ describe("form submission", () => {
           shifts.forEach((shift) => expectValidShift(shift));
           done();
         }}
+        onSubmitDefaultShifts={noop}
       />
     );
     userEvent.click(screen.getByText(/^submit$/i));
@@ -151,6 +157,7 @@ describe("form submission", () => {
             `onSubmitTimesheet should not be called with no shifts.`
           );
         }}
+        onSubmitDefaultShifts={noop}
       />
     );
     userEvent.click(screen.getByText(/^submit$/i));
@@ -172,6 +179,7 @@ describe("form submission", () => {
             `onSubmitTimesheet should not be called with invalid shift time.`
           );
         }}
+        onSubmitDefaultShifts={noop}
       />
     );
     expect(screen.queryByText(/enter time/i)).toBeNull();
@@ -190,11 +198,28 @@ describe("form submission", () => {
             `onSubmitTimesheet should not be called with invalid comment length.`
           );
         }}
+        onSubmitDefaultShifts={noop}
       />
     );
     userEvent.type(screen.getByLabelText(/comment/i), randomstring.generate(300))
     userEvent.click(screen.getByText(/^submit$/i));
   });
+});
+
+test("default shifts submission", (done) => {
+  const testShifts = randomShiftTimesArray();
+  render(
+    <TimesheetForm
+      defaultWeekStartDateTime={testWeekStartDateTime}
+      defaultShifts={testShifts}
+      onSubmitTimesheet={noop}
+      onSubmitDefaultShifts={(defaultShifts) => {
+        expect(defaultShifts).toEqual(testShifts);
+        done();
+      }}
+    />
+  );
+  userEvent.click(screen.getByText(/^save these shifts as my default$/i));
 });
 
 test("Disable form controls in pending state", () => {
@@ -204,6 +229,7 @@ test("Disable form controls in pending state", () => {
       defaultWeekStartDateTime={testWeekStartDateTime}
       defaultShifts={testShifts}
       onSubmitTimesheet={noop}
+      onSubmitDefaultShifts={noop}
       pending
     />
   );
