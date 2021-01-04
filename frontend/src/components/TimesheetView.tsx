@@ -29,7 +29,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
             <td className="text-right">{startTime}</td>
             <td className="text-right">{endTime}</td>
             <td className="text-right">{breakTime}</td>
-            <td className="text-right">{totalHours}</td>
+            <td className="text-right text-nowrap">{totalHours} hours</td>
           </tr>
         );
       }),
