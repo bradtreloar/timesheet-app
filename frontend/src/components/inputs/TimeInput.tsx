@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import classnames from "classnames";
 import "./TimeInput.scss";
 import { isInteger } from "lodash";
@@ -28,6 +28,9 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   className,
 }) => {
   const { hour, minute } = value;
+  const hourRef = useRef<HTMLInputElement>(null);
+  const minuteRef = useRef<HTMLInputElement>(null);
+
   const [minuteHasFocus, setMinuteHasFocus] = useState(false);
 
   const underMaxLength = (value: string) => value.length <= 2;
@@ -44,7 +47,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
       return value;
     }
     return null;
-  }
+  };
 
   const componentName = (name: string) => name.split(".").pop();
 
@@ -60,7 +63,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
     if (value !== null) {
       onChange(event);
     }
-  }
+  };
 
   const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     setFocus(event.target.name, true);
@@ -83,6 +86,14 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   const paddedValue = (value: string) =>
     value === "" ? value : value.padStart(2, "0");
 
+  useEffect(() => {
+    // Since we change the value of the minute field on focus, we need to
+    // re-select the field contents.
+    if (minuteHasFocus && minuteRef.current !== null) {
+      minuteRef.current.select();
+    }
+  }, [minuteHasFocus]);
+
   return (
     <div className={classnames("time-input", className)} id={id}>
       <div className="time-input-inner">
@@ -97,6 +108,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           onChange={handleChange}
           onKeyPress={handleKeyPress}
           disabled={disabled}
+          ref={hourRef}
         />
         <span className="mx-1">:</span>
         <input
@@ -110,6 +122,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
           onChange={handleChange}
           onKeyPress={handleKeyPress}
           disabled={disabled}
+          ref={minuteRef}
         />
       </div>
     </div>
