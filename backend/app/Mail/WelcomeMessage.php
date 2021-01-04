@@ -40,8 +40,8 @@ class WelcomeMessage extends Mailable
     {
         $token = Password::createToken($this->user);
         $url = URL::to("/reset-password/{$this->user->email}/{$token}");
-        return $this->view('mail.welcome', [
-            'url' => $url,
-        ]);
+        return $this
+            ->subject("Welcome to Allbiz Timesheet")
+            ->markdown('mail.welcome', ['url' => $url]);
     }
 }

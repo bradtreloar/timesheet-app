@@ -38,6 +38,9 @@ class TimesheetReceipt extends Mailable
     public function build()
     {
         $attachment_path = TimesheetPDF::create($this->timesheet);
-        return $this->view('mail.timesheet')->attach($attachment_path);
+        return $this
+            ->subject("Your timesheet has been submitted")
+            ->markdown('mail.timesheet')
+            ->attach($attachment_path);
     }
 }

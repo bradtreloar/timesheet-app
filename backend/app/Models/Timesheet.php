@@ -20,6 +20,10 @@ class Timesheet extends Model
         'comment',
     ];
 
+    protected $appends = [
+        'totalHours'
+    ];
+
     /**
      * The model's default values for attributes.
      *
@@ -28,6 +32,16 @@ class Timesheet extends Model
     protected $attributes = [
         'state' => self::STATE_DRAFT,
     ];
+
+    public function getTotalHoursAttribute()
+    {
+        $totalHours = 0;
+        $shifts = $this->shifts()->get();
+        foreach ($shifts as $shift) {
+            $totalHours += $shift->hours;
+        }
+        return number_format($totalHours, 2);
+    }
 
     public function user(): BelongsTo
     {

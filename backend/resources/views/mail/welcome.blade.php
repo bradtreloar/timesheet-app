@@ -1,23 +1,30 @@
-@extends('mail.layout')
+@component('mail::layout')
+@slot('header')
+@component('mail::header', ['url' => config('app.url')])
+{{ config('app.name') }}
+@endcomponent
+@endslot
 
-@section('content')
-<table style="width: 100%;border-collapse:collapse;">
-    <tbody>
-        <tr>
-            <td style="font-size:1.25rem;font-weight:bold;padding:1rem 0">Welcome</td>
-        </tr>
-        <tr>
-            <td style="padding:1rem 0">
-                A user account has been created for you. Before you can log in, you need to set your secret password.
-            </td>
-        </tr>
-        <tr>
-            <td style="padding:1rem 0">
-                <a style="padding:0.75rem 1rem;background-color:royalblue;color:white;text-decoration:none" href="{{ $url }}">
-                    Click here to set your password
-                </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
-@endsection
+# Welcome
+
+A user account has been created for you.
+
+Before you can log in, you need to set your secret password.
+
+@component('mail::button', ['url' => $url])
+Set Password
+@endcomponent
+
+@slot('subcopy')
+@component('mail::subcopy')
+If you’re having trouble clicking the "Reset Password" button, copy and paste
+the URL below into your web browser: <span class="break-all"><{{ $url }}></span>
+@endcomponent
+@endslot
+
+@slot('footer')
+@component('mail::footer')
+© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+@endcomponent
+@endslot
+@endcomponent
