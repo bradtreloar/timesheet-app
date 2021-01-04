@@ -31,18 +31,17 @@ describe("handles inputs", () => {
   });
 
   test("start of week", () => {
-    const firstDayOfWeek = parseInt(testSettings.firstDayOfWeek);
-    const testfirstDayOfWeek = firstDayOfWeek > 0 ? firstDayOfWeek - 1 : 6;
+    const testFirstDayOfWeek = parseInt(testSettings.firstDayOfWeek);
     render(<SettingsForm defaultValues={testSettings} onSubmit={noop} />);
     const firstDayOfWeekSelect = screen.getByLabelText(/start of week/i);
     fireEvent.change(firstDayOfWeekSelect, {
       target: {
-        value: testfirstDayOfWeek.toString(),
+        value: testFirstDayOfWeek.toString(),
       },
     });
     expect(
       screen.getByLabelText(/start of week/i).getAttribute("data-value")
-    ).toEqual(testfirstDayOfWeek.toString());
+    ).toEqual(testFirstDayOfWeek.toString());
   });
 });
 
