@@ -27,3 +27,9 @@ $h3-font-size: $font-size-base * 1.25;
 $h4-font-size: $font-size-base * 1.15;
 $h5-font-size: $font-size-base * 1.1;
 $h6-font-size: $font-size-base;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+) !default;
