@@ -11,7 +11,11 @@ const MESSAGE_MINIMUM_DURATION = 3;
 
 interface MessagesContextValue {
   messages: Message[];
-  setMessage: (type: MessageType, value: string | JSX.Element, tags?: string[]) => void;
+  setMessage: (
+    type: MessageType,
+    value: string | JSX.Element,
+    tags?: string[]
+  ) => void;
   dismissMessage: (message: Message) => void;
   dismissMessagesByTag: (tag: string) => void;
   expireMessages: () => void;
@@ -46,7 +50,11 @@ export const useMessages = () => {
 const MessagesProvider: React.FC = ({ children }) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const setMessage = (type: MessageType, value: string | JSX.Element, tags?: string[]) => {
+  const setMessage = (
+    type: MessageType,
+    value: string | JSX.Element,
+    tags?: string[]
+  ) => {
     setMessages([
       ...messages,
       {

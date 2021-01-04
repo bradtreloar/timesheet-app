@@ -18,7 +18,11 @@ import UserFormPage from "./pages/UserFormPage";
 import UserDeletePage from "./pages/UserDeletePage";
 import TimesheetIndexPage from "./pages/TimesheetIndexPage";
 import TimesheetViewPage from "./pages/TimesheetViewPage";
-import { clearSettings, fetchSettings, fetchUnrestrictedSettings } from "store/settings";
+import {
+  clearSettings,
+  fetchSettings,
+  fetchUnrestrictedSettings,
+} from "store/settings";
 import LoadingPage from "./pages/LoadingPage";
 import AccountPage from "./pages/AccountPage";
 import PasswordResetPage from "./pages/PasswordResetPage";

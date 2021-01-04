@@ -13,7 +13,7 @@ const useFormController = <T>(
 
   const handleSubmit = async (values: T) => {
     setFormPending(true);
-    
+
     try {
       await onSubmit(values);
     } catch (error) {
