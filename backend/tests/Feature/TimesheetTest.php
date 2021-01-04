@@ -7,8 +7,6 @@ use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Sebdesign\SM\Facade as StateMachine;
 use Tests\TestCase;
 
