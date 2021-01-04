@@ -13,10 +13,12 @@ const menuItems: {
     {
       label: "New Timesheet",
       url: "/timesheet/new",
+      access: "authenticated",
     },
     {
       label: "Timesheets",
       url: "/",
+      access: "authenticated",
     },
     {
       label: "Users",
@@ -46,6 +48,8 @@ const getMenu = (name: string, user: User | null) => {
         return user !== null && user.isAdmin;
       case "guest":
         return user === null;
+      case "authenticated":
+        return user !== null;
       default:
         return user !== null;
     }
