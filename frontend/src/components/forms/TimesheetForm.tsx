@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { isEmpty, range } from "lodash";
+import classnames from "classnames";
 import {
   getShiftHoursFromTimes,
   InvalidTimeException,
@@ -297,31 +298,39 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const minuteError = errors[`${name}.minute`];
     const visibleHourError = visibleErrors[`${name}.hour`];
     const visibleMinuteError = visibleErrors[`${name}.minute`];
+    const visibleError = visibleHourError || visibleMinuteError;
 
     return (
       <div className="mr-md-3 mb-2 mb-md-0 flex-grow-1">
-        <div className="input-group" aria-label={label}>
-          <div className="input-group-prepend flex-grow-1">
-            <div className="input-group-text w-100">
-              <small className="text-uppercase">{label}</small>
+        <div>
+          <div className="input-group" aria-label={label}>
+            <div className="input-group-prepend flex-grow-1">
+              <div className="input-group-text w-100">
+                <small className="text-uppercase">{label}</small>
+              </div>
             </div>
+            <TimeInput
+              className={classnames(
+                "form-control w-auto flex-grow-0",
+                (visibleError || timeError) && "is-invalid"
+              )}
+              name={name}
+              value={{
+                hour: hourValue,
+                minute: minuteValue,
+              }}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              disabled={pending}
+            />
           </div>
-          <TimeInput
-            className="form-control w-auto flex-grow-0"
-            name={name}
-            value={{
-              hour: hourValue,
-              minute: minuteValue,
-            }}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            disabled={pending}
-          />
-          {(timeError || visibleHourError || visibleMinuteError) && (
-            <div className="invalid-feedback">
-              {timeError && <div>{timeError}</div>}
-              {visibleHourError && <div>{hourError}</div>}
-              {visibleMinuteError && <div>{minuteError}</div>}
+          {(timeError || visibleError) && (
+            <div className="sr-only">
+              <Form.Control.Feedback type="invalid">
+                {timeError && <div>{timeError}</div>}
+                {visibleHourError && <div>{hourError}</div>}
+                {visibleMinuteError && <div>{minuteError}</div>}
+              </Form.Control.Feedback>
             </div>
           )}
         </div>
