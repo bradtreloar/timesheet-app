@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 
-class DeleteUser extends Command
+class UserDelete extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'delete:user {email}';
+    protected $signature = 'user:delete {email}';
 
     /**
      * The console command description.

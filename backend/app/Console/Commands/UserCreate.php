@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 
-class CreateUser extends Command
+class UserCreate extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'create:user {email} {name} {--admin}';
+    protected $signature = 'user:create {email} {name} {--admin}';
 
     /**
      * The console command description.
