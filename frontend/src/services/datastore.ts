@@ -13,6 +13,7 @@ import {
   parseUserFromResource,
   makeUserResource,
 } from "./adaptors";
+import { orderBy } from "lodash";
 
 export const client = axios.create({
   baseURL: `${API_HOST}`,
@@ -129,6 +130,7 @@ export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
   }> = await jsonAPIClient.get(`users/${user.id}/timesheets`, {
     params: {
       include: "shifts",
+      sort: "-created-at",
     },
   });
   const { data, included } = response.data;
@@ -143,8 +145,10 @@ export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
     const relatedShiftResources = resource.relationships.shifts;
     if (relatedShiftResources !== undefined) {
       const shiftIds = relatedShiftResources.data.map(({ id }) => id);
-      const shifts = allShifts.filter(({ id }) =>
-        shiftIds.includes(id as string)
+      const shifts = orderBy(
+        allShifts.filter(({ id }) => shiftIds.includes(id as string)),
+        "start",
+        "asc"
       );
       timesheet.shifts = shifts;
     }
