@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import GuestRoute from "components/routes/GuestRoute";
 import ProtectedRoute from "components/routes/ProtectedRoute";
@@ -48,7 +48,7 @@ const App: React.FC = () => {
   const [storeInitialised, setStoreInitialised] = React.useState(false);
   const { user, userInitialised } = useAuth();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user !== null && !storeInitialised) {
       (async () => {
         await initialiseStore(user);
