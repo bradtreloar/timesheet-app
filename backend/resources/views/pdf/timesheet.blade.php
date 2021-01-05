@@ -51,43 +51,51 @@ th {
         <table>
             <thead>
                 <tr>
-                    <th>
+                    <td style="width:100%">
                         Date
                     </th>
-                    <th>
+                    <th style="text-align:right;white-space:nowrap">
                         Start
                     </th>
-                    <th>
+                    <th style="text-align:right;white-space:nowrap">
                         End
                     </th>
-                    <th>
+                    <th style="text-align:right;white-space:nowrap">
                         Break
                     </th>
-                    <th>
+                    <th style="text-align:right;white-space:nowrap">
                         Hours
                     </th>
                 </tr>
             </thead>
             <tbody style="text-align: left;vertical-align:top;">
-                @foreach ($timesheet->shifts as $shift)
+                @foreach ($timesheet->shifts->sortBy('start') as $shift)
                     <tr>
-                        <td>
+                        <td style="width:100%">
                             {{ $shift->start->format("D d-m-Y") }}
                         </td>
-                        <td style="white-space:nowrap">
+                        <td style="text-align:right;white-space:nowrap">
                             {{ $shift->start->format("h:i A") }}
                         </td>
-                        <td style="white-space:nowrap">
+                        <td style="text-align:right;white-space:nowrap">
                             {{ $shift->end->format("h:i A") }}
                         </td>
-                        <td style="white-space:nowrap">
+                        <td style="text-align:right;white-space:nowrap">
                             {{ $shift->break_duration }} min
                         </td>
-                        <td style="white-space:nowrap">
+                        <td style="text-align:right;white-space:nowrap">
                             {{ $shift->hours }} hours
                         </td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="4" style="text-align:right;white-space:nowrap">
+                        <strong>Total</strong>
+                    </td>
+                    <td style="text-align:right;white-space:nowrap">
+                        {{ $timesheet->totalHours }} hours
+                    </td>
+                </tr>
             </tbody>
         </table>
         <table>
