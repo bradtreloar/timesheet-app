@@ -1,9 +1,7 @@
 <?php
 
-use App\Events\TimesheetCompleted;
 use App\Models\Timesheet;
-use Illuminate\Support\Facades\Event;
-use Sebdesign\SM\Event\TransitionEvent;
+use App\Services\TimesheetEventDispatcher;
 
 return [
     'timesheetState' => [
@@ -26,14 +24,10 @@ return [
             'after' => [
                 'on_complete' => [
                     'on' => 'complete',
-                    'do' => function (TransitionEvent $transitionEvent) {
-                        /**
-                         * @var App\Models\Timesheet $timesheet
-                         */
-                        $timesheet = $transitionEvent->getStateMachine()->getObject();
-                        $event = new TimesheetCompleted($timesheet);
-                        Event::dispatch($event);
-                    }
+                    'do' => [
+                        TimesheetEventDispatcher::class,
+                        'dispatchCompletedEvent'
+                    ],
                 ],
             ],
         ],
