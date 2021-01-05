@@ -33,18 +33,18 @@ class UserCreate extends Command
         $default_shifts = [];
         for ($i = 0; $i < 7; $i++) {
             $default_shifts[] = [
-                "isActive" => true,
+                "isActive" => false,
                 "startTime" => [
-                    "hour" => "9",
-                    "minutes" => "0",
+                    "hour" => "",
+                    "minute" => "",
                 ],
                 "endTime" => [
-                    "hour" => "17",
-                    "minute" => "0",
+                    "hour" => "",
+                    "minute" => "",
                 ],
                 "breakDuration" => [
-                    "hour" => "0",
-                    "minute" => "30",
+                    "hour" => "",
+                    "minute" => "",
                 ],
             ];
         }
