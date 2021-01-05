@@ -24,8 +24,10 @@ const TimesheetIndexPage = () => {
         </div>
         {timesheetStoreStatus === "pending" ? (
           <p>Loading...</p>
-        ) : (
+        ) : timesheets.length > 0 ? (
           <TimesheetTable timesheets={timesheets} />
+        ) : (
+          <p>You don't have any timesheets, yet.</p>
         )}
       </div>
     </DefaultLayout>
