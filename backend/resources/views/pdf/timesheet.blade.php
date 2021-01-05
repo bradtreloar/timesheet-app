@@ -75,10 +75,10 @@ th {
                             {{ $shift->start->format("D d-m-Y") }}
                         </td>
                         <td style="text-align:right;white-space:nowrap">
-                            {{ $shift->start->format("h:i A") }}
+                            {{ $shift->start->format("H:i") }}
                         </td>
                         <td style="text-align:right;white-space:nowrap">
-                            {{ $shift->end->format("h:i A") }}
+                            {{ $shift->end->format("H:i") }}
                         </td>
                         <td style="text-align:right;white-space:nowrap">
                             {{ $shift->break_duration }} min

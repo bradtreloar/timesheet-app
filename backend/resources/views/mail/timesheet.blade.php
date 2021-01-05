@@ -20,7 +20,7 @@
 | Date | Start | End | Break | Hours |
 | :--  | --:   | --: | --:   | --:   |
 @foreach ($timesheet->shifts->sortBy('start') as $shift)
-| {{ $shift->start->format("D, j M Y") }} | {{ $shift->start->format("H:i A") }} | {{ $shift->end->format("H:i A") }} | {{ $shift->break_duration }} min | {{ $shift->hours }} hours |
+| {{ $shift->start->format("D, j M Y") }} | {{ $shift->start->format("H:i") }} | {{ $shift->end->format("H:i") }} | {{ $shift->break_duration }} min | {{ $shift->hours }} hours |
 @endforeach
 | __Total Hours__ |||| {{ $timesheet->totalHours }} hours |
 @endcomponent
