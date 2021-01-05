@@ -159,6 +159,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | XSRF Cookie Domain
+    |--------------------------------------------------------------------------
+    |
+    | Custom variable.
+    |
+    | Custom variable. Allows the XSRF-TOKEN cookie to be set on a different
+    | domain than the session cookie.
+    |
+    */
+
+    'xsrf_domain' => env('XSRF_DOMAIN', env('SESSION_DOMAIN', null)),
+
+    /*
+    |--------------------------------------------------------------------------
     | HTTPS Only Cookies
     |--------------------------------------------------------------------------
     |
