@@ -72,7 +72,7 @@ th {
                 @foreach ($timesheet->shifts->sortBy('start') as $shift)
                     <tr>
                         <td style="width:100%">
-                            {{ $shift->start->format("D d-m-Y") }}
+                            {{ $shift->start->format("D, d-m-Y") }}
                         </td>
                         <td style="text-align:right;white-space:nowrap">
                             {{ $shift->start->format("H:i") }}
