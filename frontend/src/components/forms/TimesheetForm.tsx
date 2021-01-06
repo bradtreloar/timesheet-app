@@ -373,7 +373,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const isActive = shiftTimes.isActive;
 
     return (
-      <div key={index} className="border p-1 my-1 bg-light">
+      <div key={index} className="shift-input border p-1 my-1 bg-light">
         <div className="d-lg-flex" aria-label="Shift">
           <label className="d-flex align-items-center m-0 flex-grow-1 pl-2 py-1 py-lg-2 mr-lg-3">
             <input

@@ -3,3 +3,9 @@
 .timesheet-total-hours {
   min-width: 7.5em;
 }
+
+.shift-input {
+  label {
+    user-select: none;
+  }
+}
