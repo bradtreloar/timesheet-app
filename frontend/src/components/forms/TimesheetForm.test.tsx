@@ -22,7 +22,7 @@ const paddedValue = (value: string) =>
 
 const testWeekStartDateTime = DateTime.local();
 
-test("renders timesheet form", () => {
+test("renders", () => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
@@ -46,7 +46,7 @@ test("renders timesheet form", () => {
   });
 });
 
-test("handles toggling shift", () => {
+test("toggles shift time input when shift checkbox is clicked", () => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
@@ -70,24 +70,7 @@ test("handles toggling shift", () => {
   ).toEqual("");
 });
 
-test("handles erasing times", () => {
-  const testShifts = randomShiftTimesArray();
-  render(
-    <TimesheetForm
-      defaultWeekStartDateTime={testWeekStartDateTime}
-      defaultShifts={testShifts}
-      onSubmitTimesheet={noop}
-      onSubmitDefaultShifts={noop}
-    />
-  );
-
-  for (let shiftInput of screen.getAllByLabelText(/^shift$/i)) {
-    eraseShiftTimes(shiftInput);
-    expectTimesEqual(shiftInput, EMPTY_SHIFT_TIMES);
-  }
-});
-
-test("handles entering times", () => {
+test("handles erasing and re-entering shift times", () => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
@@ -109,8 +92,8 @@ test("handles entering times", () => {
   }
 });
 
-describe("form submission", () => {
-  test("with all shifts", (done) => {
+describe("calls timesheet submit handler when submit button clicked", () => {
+  test("with all shifts active", (done) => {
     const testShifts = randomShiftTimesArray();
     render(
       <TimesheetForm
@@ -127,7 +110,7 @@ describe("form submission", () => {
     userEvent.click(screen.getByText(/^submit$/i));
   });
 
-  test("with only some shifts", (done) => {
+  test("with only some shifts active", (done) => {
     const testShifts = randomShiftTimesArray();
     testShifts.pop();
     testShifts.push(EMPTY_SHIFT_TIMES);
@@ -145,8 +128,10 @@ describe("form submission", () => {
     );
     userEvent.click(screen.getByText(/^submit$/i));
   });
+});
 
-  test("with no shifts", () => {
+describe("displays errors when invalid input is entered", () => {
+  test("with no shifts active", () => {
     const testShifts = range(7).map(() => EMPTY_SHIFT_TIMES);
     render(
       <TimesheetForm
@@ -206,7 +191,7 @@ describe("form submission", () => {
   });
 });
 
-test("default shifts submission", (done) => {
+test("calls default shifts submit handler when \"save defaults\" button is clicked", (done) => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
@@ -222,7 +207,7 @@ test("default shifts submission", (done) => {
   userEvent.click(screen.getByText(/^save these shifts as my default$/i));
 });
 
-test("Disable form controls in pending state", () => {
+test("disables form controls when pending prop is true", () => {
   const testShifts: ShiftTimes[] = randomShiftTimesArray();
   render(
     <TimesheetForm
