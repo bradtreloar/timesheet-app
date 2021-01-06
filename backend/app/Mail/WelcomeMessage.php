@@ -39,7 +39,8 @@ class WelcomeMessage extends Mailable
     public function build()
     {
         $token = Password::createToken($this->user);
-        $url = URL::to("/reset-password/{$this->user->email}/{$token}");
+        $baseURL = env('APP_URL', '');
+        $url = URL::to("{$baseURL}/reset-password/{$this->user->email}/{$token}");
         return $this
             ->subject("Welcome to Allbiz Timesheet")
             ->markdown('mail.welcome', ['url' => $url]);
