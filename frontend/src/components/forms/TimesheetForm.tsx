@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { isEmpty, range } from "lodash";
 import classnames from "classnames";
 import {
@@ -262,6 +262,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     validateTimesheet
   );
 
+  const defaultShiftTimesErrors = useMemo(() => validateShiftTimes(values), [
+    values,
+  ]);
+
   const handleSubmitDefaultShifts = (
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => {
@@ -455,7 +459,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         />
       </Form.Group>
       <div className="my-3 text-right">
-        {isEmpty(errors) && (
+        {isEmpty(defaultShiftTimesErrors) && (
           <>
             <Button
               variant="light"

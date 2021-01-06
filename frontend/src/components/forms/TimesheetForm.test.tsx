@@ -225,7 +225,7 @@ test("disables form controls when pending prop is true", () => {
   screen.getByText(/submitting/i);
 });
 
-test('hides "save default shifts" button when form has errors', () => {
+test('hides "save default shifts" button when shift times are not valid', () => {
   const testShifts: ShiftTimes[] = randomShiftTimesArray();
 
   render(
