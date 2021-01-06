@@ -186,12 +186,15 @@ describe("displays errors when invalid input is entered", () => {
         onSubmitDefaultShifts={noop}
       />
     );
-    userEvent.type(screen.getByLabelText(/comment/i), randomstring.generate(300))
+    userEvent.type(
+      screen.getByLabelText(/comment/i),
+      randomstring.generate(300)
+    );
     userEvent.click(screen.getByText(/^submit$/i));
   });
 });
 
-test("calls default shifts submit handler when \"save defaults\" button is clicked", (done) => {
+test('calls default shifts submit handler when "save defaults" button is clicked', (done) => {
   const testShifts = randomShiftTimesArray();
   render(
     <TimesheetForm
@@ -220,4 +223,24 @@ test("disables form controls when pending prop is true", () => {
   );
 
   screen.getByText(/submitting/i);
+});
+
+test('hides "save default shifts" button when form has errors', () => {
+  const testShifts: ShiftTimes[] = randomShiftTimesArray();
+
+  render(
+    <TimesheetForm
+      defaultWeekStartDateTime={testWeekStartDateTime}
+      defaultShifts={testShifts}
+      onSubmitTimesheet={noop}
+      onSubmitDefaultShifts={noop}
+    />
+  );
+
+  const shiftInput = screen.getAllByLabelText(/^shift$/i)[0];
+  const startTimeInput = within(shiftInput).getByLabelText(/start/i);
+  userEvent.clear(within(startTimeInput).getByLabelText(/hour/i));
+  userEvent.clear(within(startTimeInput).getByLabelText(/minute/i));
+
+  expect(screen.queryByText(/^save these shifts as my default$/i)).toBeNull();
 });

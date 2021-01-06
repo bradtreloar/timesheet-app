@@ -455,14 +455,15 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         />
       </Form.Group>
       <div className="my-3 text-right">
-        <Button
-          variant="secondary"
-          type="button"
-          disabled={!isEmpty(errors)}
-          onClick={handleSubmitDefaultShifts}
-        >
-          Save these shifts as my default
-        </Button>
+        {isEmpty(errors) && (
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={handleSubmitDefaultShifts}
+          >
+            Save these shifts as my default
+          </Button>
+        )}
         &nbsp;
         <Button variant="primary" type="submit" disabled={pending}>
           {pending ? `Submitting` : `Submit`}
