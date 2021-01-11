@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { forOwn, isEmpty, range } from "lodash";
+import { isEmpty, range } from "lodash";
 import classnames from "classnames";
 import {
   getShiftHoursFromTimes,
