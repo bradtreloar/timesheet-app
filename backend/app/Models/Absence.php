@@ -14,9 +14,25 @@ class Absence extends Model
         'date', 'reason'
     ];
 
+    protected $appends = [
+        'reasonLabel'
+    ];
+
     protected $dates = [
         'date',
     ];
+
+    public function getReasonLabelAttribute()
+    {
+        return [
+            "absent:sick-day" => "Absent: sick day",
+            "absent:not-sick-day" => "Absent: not sick day",
+            "annual-leave" => "Annual leave",
+            "long-service" => "Long service leave",
+            "unpaid-leave" => "Unpaid leave",
+            "rostered-day-off" => "Rostered day off",
+        ][$this->reason];
+    }
 
     public function timesheet(): BelongsTo
     {

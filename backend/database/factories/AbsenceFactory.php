@@ -24,7 +24,7 @@ class AbsenceFactory extends Factory
     {
         return [
             'date' => Carbon::yesterday(),
-            'reason' => 'rostered-day-off',
+            'reason' => 'absent:sick-day',
         ];
     }
 }

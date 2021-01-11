@@ -16,6 +16,7 @@
 
 ## Shifts
 
+@if (count($timesheet->shifts) > 0)
 @component('mail::table')
 | Date | Start | End | Break | Hours |
 | :--  | --:   | --: | --:   | --:   |
@@ -24,6 +25,23 @@
 @endforeach
 | __Total Hours__ |||| {{ $timesheet->totalHours }} hours |
 @endcomponent
+@else
+No shifts.
+@endif
+
+## Leave and Absences
+
+@if (count($timesheet->absences) > 0)
+@component('mail::table')
+| Date | Reason
+| :--  | :--
+@foreach ($timesheet->absences->sortBy('date') as $absence)
+| {{ $absence->date->format("D, j M Y") }} | {{ $absence->reasonLabel }} |
+@endforeach
+@endcomponent
+@else
+No leave or absences.
+@endif
 
 ## Comment
 

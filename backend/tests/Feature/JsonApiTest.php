@@ -91,7 +91,7 @@ class JsonApiTest extends TestCase
             "type" => "absences",
             "attributes" => [
                 "date" => $this->faker->iso8601(),
-                "reason" => "rostered-day-off",
+                "reason" => "absent:sick-day",
             ],
             "relationships" => [
                 "timesheet" => [

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Absence;
 use App\Models\Shift;
 use App\Models\Timesheet;
 use App\Models\User;
@@ -37,8 +38,13 @@ class FakeTimesheet extends Command
             $timesheet = Timesheet::factory()->create([
                 'user_id' => $user->id,
             ]);
-            for ($i = 0; $i < 7; $i++) {
+            for ($i = 0; $i < 3; $i++) {
                 Shift::factory()->create([
+                    'timesheet_id' => $timesheet->id,
+                ]);
+            }
+            for ($i = 0; $i < 2; $i++) {
+                Absence::factory()->create([
                     'timesheet_id' => $timesheet->id,
                 ]);
             }
