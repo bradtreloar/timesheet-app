@@ -30,10 +30,11 @@ class UserCreate extends Command
      */
     public function handle()
     {
-        $default_shifts = [];
+        $default_values = [];
         for ($i = 0; $i < 7; $i++) {
-            $default_shifts[] = [
+            $default_values[] = [
                 "isActive" => false,
+                "reason" => "rostered-day-off",
                 "startTime" => [
                     "hour" => "",
                     "minute" => "",
@@ -54,7 +55,7 @@ class UserCreate extends Command
                 "name" => $this->argument("name"),
                 "email" => $this->argument("email"),
                 'is_admin' => $this->option("admin"),
-                'default_shifts' => json_encode($default_shifts),
+                'default_values' => json_encode($default_values),
             ]);
             $user->markEmailAsVerified();
             $user->save();

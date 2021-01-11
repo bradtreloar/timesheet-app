@@ -19,9 +19,9 @@ class FakerServiceProvider extends ServiceProvider
             $newClass = new class($faker) extends \Faker\Provider\Base {
                 public function defaultShifts()
                 {
-                    $default_shifts = [];
+                    $default_values = [];
                     for ($i = 0; $i < 7; $i++) {
-                        $default_shifts[] = [
+                        $default_values[] = [
                             "isActive" => true,
                             "startTime" => [
                                 "hour" => (string) random_int(0, 8),
@@ -37,7 +37,7 @@ class FakerServiceProvider extends ServiceProvider
                             ],
                         ];
                     }
-                    return json_encode($default_shifts);
+                    return json_encode($default_values);
                 }
             };
 

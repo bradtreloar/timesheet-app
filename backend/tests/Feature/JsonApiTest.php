@@ -143,7 +143,7 @@ class JsonApiTest extends TestCase
                 "name" => $user->name,
                 "email" => $user->email,
                 "is_admin" => $user->is_admin,
-                "default_shifts" => $user->default_shifts,
+                "default_values" => $user->default_values,
             ],
         ];
 

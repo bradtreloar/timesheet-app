@@ -35,7 +35,7 @@ class Schema extends SchemaProvider
             'email' => $resource->email,
             'name' => $resource->name,
             'is_admin' => $resource->is_admin,
-            'default_shifts' => $resource->default_shifts,
+            'default_values' => $resource->default_values,
         ];
     }
 

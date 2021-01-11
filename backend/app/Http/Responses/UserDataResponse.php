@@ -24,7 +24,7 @@ class UserDataResponse extends JsonResponse
             'email' => $user->email,
             'name' => $user->name,
             'is_admin' => $user->is_admin,
-            'default_shifts' => $user->default_shifts,
+            'default_values' => $user->default_values,
         ];
 
         parent::__construct($data, $status, $headers);
