@@ -21,11 +21,16 @@ const addTimesheet = createAsyncThunk(
   async (timesheet: Timesheet) => {
     const createdTimesheet = await datastore.createTimesheet(timesheet);
     if (timesheet.shifts !== undefined) {
-      const createdShifts = await datastore.createShifts(
+      createdTimesheet.shifts = await datastore.createShifts(
         timesheet.shifts,
         createdTimesheet
       );
-      createdTimesheet.shifts = createdShifts;
+    }
+    if (timesheet.absences !== undefined) {
+      createdTimesheet.absences = await datastore.createAbsences(
+        timesheet.absences,
+        createdTimesheet
+      );
     }
     return await datastore.completeTimesheet(createdTimesheet);
   }

@@ -6,7 +6,7 @@ import {
   InvalidTimeException,
   Time,
 } from "services/date";
-import { Shift, ShiftValues } from "types";
+import { Absence, Shift, ShiftValues } from "types";
 import useForm, { FormErrors } from "hooks/useForm";
 import WeekSelect from "components/inputs/WeekSelect";
 import TimeInput from "components/inputs/TimeInput";
@@ -102,15 +102,16 @@ const processShiftValues = (values: any): ShiftValues[] =>
  */
 const processTimesheet = (
   values: any
-): { shifts: Shift[]; comment: string } => {
+): { shifts: Shift[]; absences: Absence[], comment: string } => {
   const weekStartDateTime = values.weekStartDateTime as DateTime;
   const comment = values.comment;
   const allShiftValues = processShiftValues(values);
   const shifts: Shift[] = [];
+  const absences: Absence[] = [];
   allShiftValues.forEach((shiftValues, index) => {
+    const shiftDate = weekStartDateTime.plus({ days: index });
     if (shiftValues.isActive) {
-      const shiftDate = weekStartDateTime.plus({ days: index });
-      const shift = {
+      const shift: Shift = {
         start: shiftDate
           .set({
             hour: parseInt(shiftValues.startTime.hour),
@@ -130,10 +131,15 @@ const processTimesheet = (
       };
       shifts.push(shift);
     } else {
+      const absence: Absence = {
+        date: shiftDate.toISO(),
+        reason: shiftValues.reason,
+      };
+      absences.push(absence);
     }
   });
 
-  return { shifts, comment };
+  return { shifts, absences, comment };
 };
 
 /**
@@ -238,7 +244,7 @@ const validateTimesheet = (values: any) => {
 
 interface TimesheetFormProps {
   defaultShiftValues: ShiftValues[];
-  onSubmitTimesheet: (values: { shifts: Shift[]; comment: string }) => void;
+  onSubmitTimesheet: (values: { shifts: Shift[]; absences: Absence[]; comment: string }) => void;
   onSubmitDefaultShiftValues: (shifts: ShiftValues[]) => void;
   pending?: boolean;
   className?: string;

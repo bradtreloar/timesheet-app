@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Setting, Shift, Timesheet, User, UserData, UserResource } from "types";
+import { Absence, AbsenceResource, Setting, Shift, Timesheet, User, UserData, UserResource } from "types";
 import { SettingResource, ShiftResource, TimesheetResource } from "types";
 import { API_HOST } from "settings";
 import {
@@ -12,6 +12,8 @@ import {
   parseUser,
   parseUserFromResource,
   makeUserResource,
+  makeAbsenceResource,
+  parseAbsence,
 } from "./adaptors";
 import { orderBy } from "lodash";
 
@@ -178,6 +180,28 @@ export const createShifts = async (
     })
   );
   return createdShifts;
+};
+
+export const createAbsences = async (
+  absences: Absence[],
+  timesheet: Timesheet
+): Promise<Absence[]> => {
+  await client.get("/csrf-cookie");
+  const absenceResources: AbsenceResource[] = absences.map((absence) =>
+    makeAbsenceResource(absence, timesheet)
+  );
+  const createdAbsences = await Promise.all(
+    absenceResources.map(async (absenceResource) => {
+      const response: AxiosResponse<{
+        data: AbsenceResource;
+      }> = await jsonAPIClient.post(`/shifts`, {
+        data: absenceResource,
+      });
+      const { data } = response.data;
+      return parseAbsence(data);
+    })
+  );
+  return createdAbsences;
 };
 
 export const createTimesheet = async (

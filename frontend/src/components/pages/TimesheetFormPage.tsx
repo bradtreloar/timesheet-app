@@ -7,7 +7,7 @@ import useFormController from "hooks/useFormController";
 import DefaultLayout from "components/layouts/DefaultLayout";
 import store from "store";
 import { addTimesheet, selectTimesheets } from "store/timesheets";
-import { Shift, ShiftValues, Timesheet, User } from "types";
+import { Absence, Shift, ShiftValues, Timesheet, User } from "types";
 import { useHistory } from "react-router";
 import Messages from "components/Messages";
 import { Button } from "react-bootstrap";
@@ -26,12 +26,14 @@ const TimesheetFormPage = () => {
     handleSubmit: handleSubmitTimesheet,
   } = useFormController<{
     shifts: Shift[];
+    absences: Absence[];
     comment: string;
-  }>(async ({ shifts, comment }) => {
+  }>(async ({ shifts, absences, comment }) => {
     if (user?.id) {
       const timesheet: Timesheet = {
         userID: user.id,
-        shifts: shifts,
+        shifts,
+        absences,
         comment,
       };
       const action = await store.dispatch(addTimesheet(timesheet));

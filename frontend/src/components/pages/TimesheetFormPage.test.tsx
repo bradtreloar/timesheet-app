@@ -82,6 +82,7 @@ test("handles timesheet submission", async () => {
   await screen.findByText(/form submitted/i);
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
     userID: testTimesheet.userID,
+    absences: [],
     shifts: testTimesheet.shifts,
     comment: testTimesheet.comment,
   });
@@ -104,6 +105,7 @@ test("displays error when timesheet creation fails", async () => {
   await screen.findByText(errorMessage);
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
     userID: testTimesheet.userID,
+    absences: [],
     shifts: testTimesheet.shifts,
     comment: testTimesheet.comment,
   });
