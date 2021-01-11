@@ -1,18 +1,14 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { isInteger } from "lodash";
 import PageTitle from "components/PageTitle";
 import TimesheetForm from "components/forms/TimesheetForm";
 import { useAuth } from "context/auth";
 import useFormController from "hooks/useFormController";
 import DefaultLayout from "components/layouts/DefaultLayout";
 import store from "store";
-import { selectSettings } from "store/settings";
 import { addTimesheet, selectTimesheets } from "store/timesheets";
-import { Shift, ShiftTimes, Timesheet, User } from "types";
+import { Shift, ShiftValues, Timesheet, User } from "types";
 import { useHistory } from "react-router";
-import { DateTime } from "luxon";
-import LoadingPage from "./LoadingPage";
 import Messages from "components/Messages";
 import { Button } from "react-bootstrap";
 import { useMessages } from "context/messages";
@@ -22,7 +18,6 @@ const TimesheetFormPage = () => {
   const { user, logout, refreshUser } = useAuth();
   const { setMessage } = useMessages();
   const history = useHistory();
-  const { settings } = useSelector(selectSettings);
   const { error } = useSelector(selectTimesheets);
 
   const {
@@ -59,8 +54,8 @@ const TimesheetFormPage = () => {
     }
   });
 
-  const handleSubmitDefaultShifts = async (defaultShifts: ShiftTimes[]) => {
-    const updatedUser: User = Object.assign({}, user, { defaultShifts });
+  const handleSubmitDefaultShifts = async (defaultShiftValues: ShiftValues[]) => {
+    const updatedUser: User = Object.assign({}, user, { defaultShiftValues });
     const action = await store.dispatch(updateUser(updatedUser));
     if (action.type === "users/update/fulfilled") {
       setMessage("success", "Your default shifts have been updated.", [
@@ -70,29 +65,8 @@ const TimesheetFormPage = () => {
     }
   };
 
-  const firstDayOfWeek = useMemo(
-    () => settings.find(({ name }) => name === "firstDayOfWeek")?.value,
-    [settings]
-  );
-
-  const defaultWeekStartDateTime = useMemo(() => {
-    if (firstDayOfWeek !== undefined && isInteger(parseInt(firstDayOfWeek))) {
-      return DateTime.local().set({
-        weekday: parseInt(firstDayOfWeek),
-        hour: 0,
-        minute: 0,
-        second: 0,
-        millisecond: 0,
-      });
-    }
-  }, [firstDayOfWeek]);
-
   if (!user) {
     throw new Error(`User is not logged in.`);
-  }
-
-  if (!defaultWeekStartDateTime) {
-    return <LoadingPage />;
   }
 
   return (
@@ -103,10 +77,9 @@ const TimesheetFormPage = () => {
         {formError && <div className="alert alert-danger">{formError}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
         <TimesheetForm
-          defaultShifts={user.defaultShifts}
-          defaultWeekStartDateTime={defaultWeekStartDateTime}
+          defaultShiftValues={user.defaultShiftValues}
           onSubmitTimesheet={handleSubmitTimesheet}
-          onSubmitDefaultShifts={handleSubmitDefaultShifts}
+          onSubmitDefaultShiftValues={handleSubmitDefaultShifts}
           pending={formPending}
         />
       </div>

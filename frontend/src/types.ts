@@ -1,3 +1,4 @@
+import { reasons } from "components/forms/TimesheetForm";
 import { DateTime } from "luxon";
 
 export type User = {
@@ -5,7 +6,7 @@ export type User = {
   name: string;
   email: string;
   isAdmin: boolean;
-  defaultShifts: ShiftTimes[];
+  defaultShiftValues: ShiftValues[];
 };
 
 export type Timesheet = {
@@ -14,6 +15,7 @@ export type Timesheet = {
   changed?: string;
   userID: string;
   shifts?: Shift[];
+  absences?: Absence[];
   comment: string;
 };
 
@@ -26,8 +28,19 @@ export type Shift = {
   breakDuration: number;
 };
 
-export type ShiftTimes = {
+export type Absence = {
+  id?: string;
+  created?: string;
+  changed?: string;
+  date: string;
+  reason: Reason;
+}
+
+export type Reason = keyof typeof reasons;
+
+export type ShiftValues = {
   isActive: boolean;
+  reason: Reason;
   startTime: {
     hour: string;
     minute: string;
@@ -52,7 +65,6 @@ export type Setting = {
 
 export type Settings = {
   timesheetRecipients: string;
-  firstDayOfWeek: string;
 };
 
 interface RelatedResourceData<T> {
@@ -115,6 +127,20 @@ export interface ShiftResource {
     start: string;
     end: string;
     break_duration: number;
+  };
+  relationships: {
+    timesheet: RelatedResource<"timesheets">;
+  };
+}
+
+export interface AbsenceResource {
+  id?: string;
+  type: "absences";
+  attributes: {
+    created?: string;
+    changed?: string;
+    date: string;
+    reason: Reason;
   };
   relationships: {
     timesheet: RelatedResource<"timesheets">;

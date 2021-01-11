@@ -1,9 +1,7 @@
 import React from "react";
 import { Settings } from "types";
 import { Button, Form } from "react-bootstrap";
-import { range } from "lodash";
 import useForm from "hooks/useForm";
-import { getWeekdayName } from "services/date";
 
 interface SettingsFormProps {
   defaultValues: Settings;
@@ -13,17 +11,8 @@ interface SettingsFormProps {
 }
 
 const validate = (values: Settings) => {
-  const { firstDayOfWeek, timesheetRecipients } = values;
+  const { timesheetRecipients } = values;
   const errors = {} as any;
-
-  const firstDayOfWeekInt = parseInt(firstDayOfWeek);
-  if (
-    isNaN(firstDayOfWeekInt) ||
-    firstDayOfWeekInt < 1 ||
-    firstDayOfWeekInt > 7
-  ) {
-    errors.firstDayOfWeek = `Selection is not valid`;
-  }
 
   if (
     timesheetRecipients.match(
@@ -71,37 +60,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
         {visibleErrors.timesheetRecipients && (
           <Form.Control.Feedback type="invalid">
             {errors.timesheetRecipients}
-          </Form.Control.Feedback>
-        )}
-      </Form.Group>
-
-      <Form.Group controlId="firstDayOfWeek">
-        <Form.Label>Start of Week</Form.Label>
-        <Form.Control
-          as="select"
-          custom
-          name="firstDayOfWeek"
-          value={values.firstDayOfWeek}
-          data-value={values.firstDayOfWeek}
-          isInvalid={visibleErrors.firstDayOfWeek}
-          onBlur={handleBlur}
-          onChange={handleChange}
-          disabled={pending}
-        >
-          {range(1, 8).map((index) => {
-            return (
-              <option key={index} value={(index).toString()}>
-                {getWeekdayName(index)}
-              </option>
-            );
-          })}
-        </Form.Control>
-        <Form.Text className="text-muted">
-          Select which day should appear first on the timesheet form.
-        </Form.Text>
-        {visibleErrors.firstDayOfWeek && (
-          <Form.Control.Feedback type="invalid">
-            {errors.firstDayOfWeek}
           </Form.Control.Feedback>
         )}
       </Form.Group>

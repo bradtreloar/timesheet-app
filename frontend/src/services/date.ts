@@ -1,22 +1,5 @@
 import { DateTime } from "luxon";
-import { Shift, ShiftTimes, Timesheet } from "types";
-
-/**
- * Gets the Australian English day name.
- *
- * @param number the day of the week, where Sunday is 0.
- */
-export const getWeekdayName = (number: number) =>
-  [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ][number];
+import { Shift, ShiftValues, Timesheet } from "types";
 
 /**
  * A class for storing a time with only hours and minute.
@@ -214,12 +197,12 @@ export class InvalidTimeException extends Error {
 /**
  * Calculates a shift duration in hours from a set of times.
  *
- * @param shiftTimes
+ * @param shiftValues
  */
-export const getShiftHoursFromTimes = (shiftTimes: ShiftTimes) => {
-  const startTime = Time.fromObject(shiftTimes.startTime);
-  const endTime = Time.fromObject(shiftTimes.endTime);
-  const breakDuration = Time.fromObject(shiftTimes.breakDuration);
+export const getShiftHoursFromTimes = (shiftValues: ShiftValues) => {
+  const startTime = Time.fromObject(shiftValues.startTime);
+  const endTime = Time.fromObject(shiftValues.endTime);
+  const breakDuration = Time.fromObject(shiftValues.breakDuration);
 
   const shiftMinutes =
     endTime.toMinutes() - startTime.toMinutes() - breakDuration.toMinutes();
@@ -232,8 +215,6 @@ export const getShiftHoursFromTimes = (shiftTimes: ShiftTimes) => {
 
 /**
  * Calculates a shift duration in hours from a set of dates.
- *
- * @param shiftTimes
  */
 export const getShiftHours = ({ start, end, breakDuration }: Shift) => {
   // Get the difference between start and end times, minus break duration.
@@ -245,8 +226,6 @@ export const getShiftHours = ({ start, end, breakDuration }: Shift) => {
 
 /**
  * Calculates a shift duration in hours from a set of dates.
- *
- * @param shiftTimes
  */
 export const getTimesheetTotalHours = ({ shifts }: Timesheet) => {
   return shifts

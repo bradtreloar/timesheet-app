@@ -1,9 +1,10 @@
 import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ProvidersFixture } from "fixtures/context";
 import { MemoryRouter, Route } from "react-router-dom";
 import {
+  randomReason,
   randomSettings,
   randomTimesheet,
   randomUser,
@@ -13,7 +14,7 @@ import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
 import store from "store";
 import { setSettings } from "store/settings";
-import { Shift, ShiftTimes } from "types";
+import { Shift, ShiftValues } from "types";
 import { getTimesFromShift } from "services/adaptors";
 import { DateTime } from "luxon";
 
@@ -23,19 +24,16 @@ const testTimesheet = randomTimesheet(testUser);
 testTimesheet.comment = "";
 const testShifts = testTimesheet.shifts as Shift[];
 // Make the user's default shift times coincide with the test timesheet's times.
-testUser.defaultShifts = testShifts.map((shift) => getTimesFromShift(shift));
-// Make the first day of the week coincide with the date of the first shift
-// in testTimesheet.
-const testSettings = randomSettings({
-  firstDayOfWeek: DateTime.fromISO(testShifts[0].start).weekday.toString(),
-});
+testUser.defaultShiftValues = testShifts.map((shift) => getTimesFromShift(shift));
+const testSettings = randomSettings();
 
 export const EMPTY_SHIFT_TIMES = {
   isActive: false,
+  reason: "rostered-day-off",
   startTime: { hour: "", minute: "" },
   endTime: { hour: "", minute: "" },
   breakDuration: { hour: "", minute: "" },
-} as ShiftTimes;
+} as ShiftValues;
 
 const Fixture: React.FC = () => {
   return (
@@ -91,7 +89,9 @@ test("handles timesheet submission", async () => {
 
 test("displays error when timesheet creation fails", async () => {
   const errorMessage = "unable to create timesheet";
-  jest.spyOn(datastore, "createTimesheet").mockRejectedValue(new Error(errorMessage));
+  jest
+    .spyOn(datastore, "createTimesheet")
+    .mockRejectedValue(new Error(errorMessage));
 
   await act(async () => {
     render(<Fixture />);
@@ -110,8 +110,8 @@ test("displays error when timesheet creation fails", async () => {
 });
 
 test("updates the user's default shifts and shows a confirmation message", async () => {
-  const updatedTestUser = {...testUser};
-  updatedTestUser.defaultShifts[0] = EMPTY_SHIFT_TIMES;
+  const updatedTestUser = { ...testUser };
+  updatedTestUser.defaultShiftValues[0] = EMPTY_SHIFT_TIMES;
   jest.spyOn(datastore, "updateUser").mockResolvedValue(updatedTestUser);
 
   await act(async () => {
@@ -120,6 +120,7 @@ test("updates the user's default shifts and shows a confirmation message", async
 
   expect(screen.getByRole("heading")).toHaveTextContent(/new timesheet/i);
   userEvent.click(screen.getByTestId("shift-0-toggle"));
+  userEvent.selectOptions(screen.getByTestId("shift-0-reason"), "rostered-day-off");
   await act(async () => {
     userEvent.click(screen.getByText(/save these shifts as my default/i));
   });

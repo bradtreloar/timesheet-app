@@ -1,9 +1,18 @@
-import { Setting, Settings, Shift, ShiftTimes, Timesheet, User } from "types";
+import {
+  Reason,
+  Setting,
+  Settings,
+  Shift,
+  ShiftValues,
+  Timesheet,
+  User,
+} from "types";
 import randomstring from "randomstring";
 import { Time } from "services/date";
 import faker from "faker";
 import { random as randomNumber, range } from "lodash";
 import { DateTime } from "luxon";
+import { reasons } from "components/forms/TimesheetForm";
 
 const randomID = () => randomstring.generate();
 
@@ -13,7 +22,7 @@ export const randomUser = (userIsAdmin?: boolean): User => {
     name: faker.name.findName(),
     email: faker.internet.email(),
     isAdmin: userIsAdmin === true,
-    defaultShifts: range(7).map((index) => randomShiftTimes()),
+    defaultShiftValues: range(7).map((index) => randomShiftValues()),
   };
 };
 
@@ -38,15 +47,22 @@ export const randomTime = (min: string, max: string) => {
   return new Time(hour, minute);
 };
 
-export const randomShiftTimesArray = (): ShiftTimes[] =>
-  range(7).map(() => randomShiftTimes());
+export const randomShiftValuesArray = (): ShiftValues[] =>
+  range(7).map(() => randomShiftValues());
+
+export const randomReason = () => {
+  const reasonKeys = Object.keys(reasons);
+  return reasonKeys[
+    randomInt(0, reasonKeys.length - 1)
+  ] as keyof typeof reasons;
+};
 
 /**
- * Generates random ShiftTimes
+ * Generates random ShiftValues
  *
  * @param date
  */
-export const randomShiftTimes = (): ShiftTimes => {
+export const randomShiftValues = (): ShiftValues => {
   const shiftDuration = Math.floor(Math.random() * 9) + 3;
   const breakMinutes = Math.floor(Math.random() * 15) + 30;
   const startHours = Math.floor(Math.random() * 12);
@@ -55,6 +71,7 @@ export const randomShiftTimes = (): ShiftTimes => {
   const endMinutes = Math.floor(Math.random() * 60);
   return {
     isActive: true,
+    reason: "none",
     startTime: {
       hour: startHours.toString(),
       minute: startMinutes.toString(),
@@ -94,7 +111,14 @@ export const randomShift = (dateTime: DateTime): Shift => {
 };
 
 export const randomTimesheet = (user: User): Timesheet => {
-  const weekStartDateTime = DateTime.fromObject({ hour: 0, minute: 0 });
+  const weekStartDateTime = DateTime.fromObject({
+    weekday: 1,
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  });
+
   return {
     id: randomID(),
     userID: user.id as string,
@@ -123,16 +147,8 @@ export const randomSettings = (
     created: DateTime.local().toISO(),
     changed: DateTime.local().toISO(),
   },
-  {
-    id: randomID(),
-    name: "firstDayOfWeek",
-    value: settings?.firstDayOfWeek || randomInt(1, 7).toString(),
-    created: DateTime.local().toISO(),
-    changed: DateTime.local().toISO(),
-  },
 ];
 
 export const randomSettingsObject = (): Settings => ({
   timesheetRecipients: faker.internet.email(),
-  firstDayOfWeek: randomInt(1, 7).toString(),
 });

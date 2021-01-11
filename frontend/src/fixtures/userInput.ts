@@ -1,6 +1,6 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ShiftTimes } from "types";
+import { ShiftValues } from "types";
 
 export const submitLoginForm = (email: string, password: string) => {
   userEvent.type(screen.getByLabelText(/Email Address/), email);
@@ -8,26 +8,26 @@ export const submitLoginForm = (email: string, password: string) => {
   userEvent.click(screen.getByText(/Log in/));
 };
 
-const timeInputs = (shiftTimes: ShiftTimes) => [
+const timeInputs = (shiftValues: ShiftValues) => [
   {
     label: /start/i,
-    value: shiftTimes.startTime,
+    value: shiftValues.startTime,
   },
   {
     label: /end/i,
-    value: shiftTimes.endTime,
+    value: shiftValues.endTime,
   },
   {
     label: /break/i,
-    value: shiftTimes.breakDuration,
+    value: shiftValues.breakDuration,
   },
 ];
 
-export const enterShiftTimes = (
+export const enterShiftValues = (
   shiftInput: HTMLElement,
-  shiftTimes: ShiftTimes
+  shiftValues: ShiftValues
 ) => {
-  for (let { label, value } of timeInputs(shiftTimes)) {
+  for (let { label, value } of timeInputs(shiftValues)) {
     const timeInput = within(shiftInput).getByLabelText(label);
     if (value !== null) {
       if (value.hour !== null) {
@@ -44,7 +44,7 @@ export const enterShiftTimes = (
   }
 };
 
-export const eraseShiftTimes = (shiftInput: HTMLElement) => {
+export const eraseShiftValues = (shiftInput: HTMLElement) => {
   const inputLabels = [/start/i, /end/i, /break/i];
 
   for (let label of inputLabels) {

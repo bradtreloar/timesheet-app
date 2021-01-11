@@ -1,8 +1,10 @@
 import { getShiftHoursFromTimes } from "services/date";
 import {
+  Absence,
+  AbsenceResource,
   SettingResource,
   ShiftResource,
-  ShiftTimes,
+  ShiftValues,
   TimesheetResource,
   User,
   UserData,
@@ -22,6 +24,20 @@ export const parseSetting = (resource: SettingResource): Setting => {
     created,
     name,
     value,
+  };
+};
+
+export const parseAbsence = (resource: AbsenceResource): Absence => {
+  const {
+    id,
+    attributes: { created, changed, date, reason },
+  } = resource;
+  return {
+    id: id as string,
+    created: created as string,
+    changed: changed as string,
+    date,
+    reason,
   };
 };
 
@@ -68,7 +84,7 @@ export const parseUserFromResource = (resource: UserResource): User => {
     name,
     email,
     isAdmin: is_admin,
-    defaultShifts: JSON.parse(default_shifts),
+    defaultShiftValues: JSON.parse(default_shifts),
   };
 };
 
@@ -79,7 +95,7 @@ export const parseUser = (data: UserData): User => {
     name,
     email,
     isAdmin: is_admin,
-    defaultShifts: JSON.parse(default_shifts),
+    defaultShiftValues: JSON.parse(default_shifts),
   };
 };
 
@@ -136,6 +152,43 @@ export const makeShiftResource = (
   return resource;
 };
 
+export const makeAbsenceResource = (
+  absence: Absence,
+  timesheet: Timesheet
+): AbsenceResource => {
+  if (timesheet.id === undefined) {
+    throw new Error(
+      `Unable to create Shift resource: timesheet must have a valid ID.`
+    );
+  }
+  const { id, date, reason, changed, created } = absence;
+  const resource: AbsenceResource = {
+    type: "absences",
+    attributes: {
+      date,
+      reason
+    },
+    relationships: {
+      timesheet: {
+        data: {
+          id: timesheet.id,
+          type: "timesheets",
+        },
+      },
+    },
+  };
+  if (id) {
+    resource.id = id;
+  }
+  if (changed) {
+    resource.attributes.changed = changed;
+  }
+  if (created) {
+    resource.attributes.created = created;
+  }
+  return resource;
+};
+
 export const makeTimesheetResource = (
   timesheet: Timesheet
 ): TimesheetResource => {
@@ -165,14 +218,14 @@ export const makeTimesheetResource = (
 };
 
 export const makeUserResource = (user: User): UserResource => {
-  const { id, name, email, isAdmin, defaultShifts } = user;
+  const { id, name, email, isAdmin, defaultShiftValues } = user;
   const resource: UserResource = {
     type: "users",
     attributes: {
       name,
       email,
       is_admin: isAdmin,
-      default_shifts: JSON.stringify(defaultShifts),
+      default_shifts: JSON.stringify(defaultShiftValues),
     },
     relationships: {},
   };
@@ -183,26 +236,26 @@ export const makeUserResource = (user: User): UserResource => {
 };
 
 export const makeUserData = (user: User): UserData => {
-  const { id, name, email, isAdmin, defaultShifts } = user;
+  const { id, name, email, isAdmin, defaultShiftValues } = user;
   return {
     id,
     name,
     email,
     is_admin: isAdmin,
-    default_shifts: JSON.stringify(defaultShifts),
+    default_shifts: JSON.stringify(defaultShiftValues),
   };
 };
 
 export const getShiftFromTimes = (
   date: Date,
-  shiftTimes: ShiftTimes
+  shiftValues: ShiftValues
 ): Shift => {
-  if (shiftTimes === null) {
+  if (shiftValues === null) {
     throw new Error(`No shift times.`);
   }
 
-  const { startTime, endTime, breakDuration } = shiftTimes;
-  const shiftDuration = getShiftHoursFromTimes(shiftTimes);
+  const { startTime, endTime, breakDuration } = shiftValues;
+  const shiftDuration = getShiftHoursFromTimes(shiftValues);
 
   if (shiftDuration === null || shiftDuration <= 0) {
     throw new Error(`Invalid shift times.`);
@@ -215,7 +268,7 @@ export const getShiftFromTimes = (
   };
 };
 
-export const getTimesFromShift = (shift: Shift): ShiftTimes => {
+export const getTimesFromShift = (shift: Shift): ShiftValues => {
   const start = new Date(shift.start);
   const end = new Date(shift.end);
   const breakHours = Math.floor(shift.breakDuration / 60);
@@ -223,6 +276,7 @@ export const getTimesFromShift = (shift: Shift): ShiftTimes => {
 
   return {
     isActive: true,
+    reason: "none",
     startTime: {
       hour: start.getHours().toString(),
       minute: start.getMinutes().toString(),

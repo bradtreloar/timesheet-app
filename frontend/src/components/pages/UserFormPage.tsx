@@ -10,13 +10,14 @@ import { useHistory, useParams } from "react-router";
 import NotFoundPage from "./NotFoundPage";
 import { useMessages } from "context/messages";
 import store from "store";
-import { ShiftTimes, User } from "types";
+import { ShiftValues, User } from "types";
 import { range } from "lodash";
 import Messages from "components/Messages";
 
-const createEmptyDefaultShifts = (): ShiftTimes[] =>
+const createEmptyDefaultShifts = (): ShiftValues[] =>
   range(7).map(() => ({
     isActive: false,
+    reason: "rostered-day-off",
     startTime: {
       hour: "",
       minute: "",
@@ -45,7 +46,7 @@ const UserFormPage: React.FC = () => {
       if (newUser) {
         const newUser: User = {
           ...values,
-          defaultShifts: createEmptyDefaultShifts(),
+          defaultShiftValues: createEmptyDefaultShifts(),
         };
         await store.dispatch(addUser(newUser));
         setMessage("success", `New user ${newUser.name} created.`);

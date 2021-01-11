@@ -1,29 +1,29 @@
 import { within } from "@testing-library/react";
-import { Shift, ShiftTimes } from "types";
+import { Shift, ShiftValues } from "types";
 
 const paddedValue = (value: string) =>
   value === "" ? value : value.padStart(2, "0");
 
-const timeInputs = (shiftTimes: ShiftTimes) => [
+const timeInputs = (shiftValues: ShiftValues) => [
   {
     label: /start/i,
-    value: shiftTimes.startTime,
+    value: shiftValues.startTime,
   },
   {
     label: /end/i,
-    value: shiftTimes.endTime,
+    value: shiftValues.endTime,
   },
   {
     label: /break/i,
-    value: shiftTimes.breakDuration,
+    value: shiftValues.breakDuration,
   },
 ];
 
 export const expectTimesEqual = (
   shiftInput: HTMLElement,
-  shiftTimes: ShiftTimes
+  shiftValues: ShiftValues
 ) => {
-  for (let { label, value } of timeInputs(shiftTimes)) {
+  for (let { label, value } of timeInputs(shiftValues)) {
     const { hour, minute } = value;
     const timeInput = within(shiftInput).getByLabelText(label);
     expect(
