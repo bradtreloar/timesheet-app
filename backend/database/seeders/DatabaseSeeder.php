@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Absence;
 use App\Models\Setting;
 use App\Models\Shift;
 use App\Models\Timesheet;
@@ -26,7 +27,11 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id,
             ]);
 
-            $shift = Shift::factory()->create([
+            Shift::factory()->create([
+                'timesheet_id' => $timesheet->id,
+            ]);
+
+            Absence::factory()->create([
                 'timesheet_id' => $timesheet->id,
             ]);
         }

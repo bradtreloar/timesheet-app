@@ -66,6 +66,7 @@ return [
     | `'posts' => App\Post::class`
     */
     'resources' => [
+        'absences' => \App\Models\Absence::class,
         'settings' => \App\Models\Setting::class,
         'shifts' => \App\Models\Shift::class,
         'timesheets' => \App\Models\Timesheet::class,

@@ -51,6 +51,11 @@ JsonApi::register('default')
                     $relations->hasOne('timesheet');
                 }
             );
+            $api->resource('absences')->relationships(
+                function ($relations) {
+                    $relations->hasOne('timesheet');
+                }
+            );
             $api->resource('settings');
         }
     );

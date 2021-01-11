@@ -51,6 +51,14 @@ class Schema extends SchemaProvider
                 self::DATA => function () use ($resource) {
                     return $resource->shifts;
                 },
+            ],
+            'absences' => [
+                self::SHOW_SELF => true,
+                self::SHOW_RELATED => true,
+                self::SHOW_DATA => isset($includeRelationships['absences']),
+                self::DATA => function () use ($resource) {
+                    return $resource->absences;
+                },
             ]
         ];
     }

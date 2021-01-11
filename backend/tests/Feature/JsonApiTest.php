@@ -77,6 +77,34 @@ class JsonApiTest extends TestCase
     }
 
     /**
+     * Creates an absence data array.
+     *
+     * @param Timesheet $timesheet
+     *   The absence's timesheet.
+     *
+     * @return array
+     *   The absence data.
+     */
+    protected function fakeAbsenceData(Timesheet $timesheet): array
+    {
+        return [
+            "type" => "absences",
+            "attributes" => [
+                "date" => $this->faker->iso8601(),
+                "reason" => "rostered-day-off",
+            ],
+            "relationships" => [
+                "timesheet" => [
+                    "data" => [
+                        "type" => "timesheets",
+                        "id" => "{$timesheet->id}",
+                    ]
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Creates a shift data array.
      *
      * @param Timesheet $timesheet
@@ -421,25 +449,23 @@ class JsonApiTest extends TestCase
         $this->assertDatabaseCount("shifts", 3);
     }
 
-    public function testCreateMultipleShifts()
+    public function testCreateAbsence()
     {
         $this->seed();
         $timesheet = Timesheet::find(1);
         $user = $timesheet->user;
-        for ($i = 0; $i < 5; $i++) {
-            $request_data = [
-                "data" => $this->fakeShiftData($timesheet),
-            ];
-            $response = $this->actingAs($user)
-                ->jsonApi("POST", "/shifts", $request_data);
-            $response->assertStatus(201);
-            $response->assertJson([
-                "data" => [
-                    "type" => "shifts",
-                ]
-            ]);
-        }
-        $this->assertDatabaseCount("shifts", 7);
-        $this->assertCount(6, $timesheet->shifts);
+        $request_data = [
+            "data" => $this->fakeAbsenceData($timesheet),
+        ];
+        $response = $this->actingAs($user)
+            ->jsonApi("POST", "/absences", $request_data);
+        $response->assertStatus(201);
+        $response->assertJson([
+            "data" => [
+                "type" => "absences",
+                "id" => "3",
+            ]
+        ]);
+        $this->assertDatabaseCount("absences", 3);
     }
 }

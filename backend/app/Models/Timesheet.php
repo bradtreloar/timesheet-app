@@ -48,6 +48,11 @@ class Timesheet extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function absences(): HasMany
+    {
+        return $this->hasMany(Absence::class);
+    }
+
     public function shifts(): HasMany
     {
         return $this->hasMany(Shift::class);

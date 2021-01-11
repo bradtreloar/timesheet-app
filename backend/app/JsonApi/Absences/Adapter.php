@@ -1,6 +1,6 @@
 <?php
 
-namespace App\JsonApi\Timesheets;
+namespace App\JsonApi\Absences;
 
 use CloudCreativity\LaravelJsonApi\Eloquent\AbstractAdapter;
 use CloudCreativity\LaravelJsonApi\Pagination\StandardStrategy;
@@ -31,7 +31,7 @@ class Adapter extends AbstractAdapter
      */
     public function __construct(StandardStrategy $paging)
     {
-        parent::__construct(new \App\Models\Timesheet(), $paging);
+        parent::__construct(new \App\Models\Absence(), $paging);
     }
 
     /**
@@ -44,17 +44,7 @@ class Adapter extends AbstractAdapter
         $this->filterWithScopes($query, $filters);
     }
 
-    protected function absences()
-    {
-        return $this->hasMany();
-    }
-
-    protected function shifts()
-    {
-        return $this->hasMany();
-    }
-
-    protected function user()
+    protected function timesheet()
     {
         return $this->belongsTo();
     }
