@@ -85,7 +85,7 @@ export interface UserData {
   name: string;
   email: string;
   is_admin: boolean;
-  default_shifts: string;
+  default_values: string;
 }
 
 export interface UserResource {
@@ -95,7 +95,7 @@ export interface UserResource {
     name: string;
     email: string;
     is_admin: boolean;
-    default_shifts: string;
+    default_values: string;
     created?: string;
     changed?: string;
   };

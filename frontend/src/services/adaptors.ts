@@ -77,25 +77,25 @@ export const parseTimesheet = (
 export const parseUserFromResource = (resource: UserResource): User => {
   const {
     id,
-    attributes: { name, email, is_admin, default_shifts },
+    attributes: { name, email, is_admin, default_values },
   } = resource;
   return {
     id,
     name,
     email,
     isAdmin: is_admin,
-    defaultShiftValues: JSON.parse(default_shifts),
+    defaultShiftValues: JSON.parse(default_values),
   };
 };
 
 export const parseUser = (data: UserData): User => {
-  const { id, name, email, is_admin, default_shifts } = data;
+  const { id, name, email, is_admin, default_values } = data;
   return {
     id: (id as number).toString(),
     name,
     email,
     isAdmin: is_admin,
-    defaultShiftValues: JSON.parse(default_shifts),
+    defaultShiftValues: JSON.parse(default_values),
   };
 };
 
@@ -225,7 +225,7 @@ export const makeUserResource = (user: User): UserResource => {
       name,
       email,
       is_admin: isAdmin,
-      default_shifts: JSON.stringify(defaultShiftValues),
+      default_values: JSON.stringify(defaultShiftValues),
     },
     relationships: {},
   };
@@ -242,7 +242,7 @@ export const makeUserData = (user: User): UserData => {
     name,
     email,
     is_admin: isAdmin,
-    default_shifts: JSON.stringify(defaultShiftValues),
+    default_values: JSON.stringify(defaultShiftValues),
   };
 };
 
