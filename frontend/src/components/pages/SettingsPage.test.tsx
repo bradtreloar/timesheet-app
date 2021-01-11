@@ -21,9 +21,7 @@ const testShifts = testTimesheet.shifts as Shift[];
 testUser.defaultShiftValues = testShifts.map((shift) => getTimesFromShift(shift));
 // Make the first day of the week coincide with the date of the first shift
 // in testTimesheet.
-const testSettings = randomSettings({
-  firstDayOfWeek: DateTime.fromISO(testShifts[0].start).weekday.toString()
-});
+const testSettings = randomSettings();
 
 const Fixture: React.FC = () => {
   return (
