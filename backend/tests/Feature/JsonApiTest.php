@@ -224,30 +224,6 @@ class JsonApiTest extends TestCase
         ]);
     }
 
-    public function testFetchUnrestrictedSettings()
-    {
-        $this->seed();
-        $user = User::find(1);
-        $settings = Setting::where('is_restricted', false)->get();
-        $this->assertCount(1, $settings);
-        $response = $this->actingAs($user)
-            ->jsonApi("GET", "/settings?filter[is_restricted]=0");
-        $response->assertStatus(200);
-        $this->assertCount(1, $response->json("data"));
-        foreach ($settings as $setting) {
-            $response->assertJson([
-                'data' => [
-                    [
-                        "attributes" => [
-                            "name" => $setting->name,
-                            "value" => $setting->value,
-                        ]
-                    ]
-                ]
-            ]);
-        }
-    }
-
     public function testFetchAllSettings()
     {
         $this->seed();
@@ -257,7 +233,7 @@ class JsonApiTest extends TestCase
         $settings = Setting::all();
         $response = $this->actingAs($user)->jsonApi("GET", "/settings");
         $response->assertStatus(200);
-        $this->assertCount(2, $response->json("data"));
+        $this->assertCount(1, $response->json("data"));
         foreach ($settings as $index => $setting) {
             $response->assertJson([
                 'data' => [
@@ -278,14 +254,15 @@ class JsonApiTest extends TestCase
         $user = User::find(1);
         $user->is_admin = true;
         $user->save();
-        $setting = Setting::where("name", "startOfWeek")->first();
+        $setting = Setting::where("name", "timesheetRecipients")->first();
         $sid = $setting->id;
+        $newValue = $this->faker->email();
         $request_data = [
             "data" => [
                 "id" => (string) $sid,
                 "type" => "settings",
                 "attributes" => [
-                    "value" => "5",
+                    "value" => $newValue,
                 ],
             ],
         ];
@@ -293,7 +270,7 @@ class JsonApiTest extends TestCase
             ->jsonApi("PATCH", "/settings/{$setting->id}", $request_data);
         $response->assertStatus(200);
         $setting = Setting::find($sid);
-        $this->assertEquals("5", $setting->value);
+        $this->assertEquals($newValue, $setting->value);
     }
 
     public function testFetchTimesheet()

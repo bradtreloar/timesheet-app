@@ -36,12 +36,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        Setting::create([
-            'name' => 'startOfWeek',
-            'value' => '0',
-            'is_restricted' => false,
-        ]);
-
         $timesheetRecipients = [];
         $timesheetRecipients[] = Str::random(10) . '@example.com';
         $timesheetRecipients[] = Str::random(10) . '@example.com';
