@@ -21,7 +21,7 @@ class Timesheet extends Model
     ];
 
     protected $appends = [
-        'totalHours'
+        'totalWeekdayHours'
     ];
 
     /**
@@ -33,14 +33,16 @@ class Timesheet extends Model
         'state' => self::STATE_DRAFT,
     ];
 
-    public function getTotalHoursAttribute()
+    public function getTotalWeekdayHoursAttribute()
     {
-        $totalHours = 0;
+        $totalWeekdayHours = 0;
         $shifts = $this->shifts()->get();
         foreach ($shifts as $shift) {
-            $totalHours += $shift->hours;
+            if ($shift->start->dayOfWeekIso <= 5) {
+                $totalWeekdayHours += $shift->hours;
+            }
         }
-        return number_format($totalHours, 2);
+        return number_format($totalWeekdayHours, 2);
     }
 
     public function user(): BelongsTo

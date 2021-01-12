@@ -7,10 +7,12 @@
 
 # Timesheet submitted
 
+@component('mail::table')
 | | |
 | :-- | :-- |
 | __Employee__  | {{ $timesheet->user->name }} |
 | __Submitted__ | {{ $timesheet->created_at->format("j F Y") }} |
+@endcomponent
 
 <br/>
 
@@ -21,9 +23,16 @@
 | Date | Start | End | Break | Hours |
 | :--  | --:   | --: | --:   | --:   |
 @foreach ($timesheet->shifts->sortBy('start') as $shift)
+@if ($shift->start->dayOfWeekIso <= 5)
 | {{ $shift->start->format("D, j M Y") }} | {{ $shift->start->format("H:i") }} | {{ $shift->end->format("H:i") }} | {{ $shift->break_duration }} min | {{ $shift->hours }} hours |
+@endif
 @endforeach
-| __Total Hours__ |||| {{ $timesheet->totalHours }} hours |
+| __Total Weekday Hours__ |||| {{ $timesheet->totalWeekdayHours }} hours |
+@foreach ($timesheet->shifts->sortBy('start') as $shift)
+@if ($shift->start->dayOfWeekIso > 5)
+| {{ $shift->start->format("D, j M Y") }} | {{ $shift->start->format("H:i") }} | {{ $shift->end->format("H:i") }} | {{ $shift->break_duration }} min | {{ $shift->hours }} hours |
+@endif
+@endforeach
 @endcomponent
 @else
 No shifts.

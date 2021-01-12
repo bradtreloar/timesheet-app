@@ -72,32 +72,55 @@ th {
                 </thead>
                 <tbody style="text-align: left;vertical-align:top;">
                     @foreach ($timesheet->shifts->sortBy('start') as $shift)
-                        <tr>
-                            <td style="width:100%">
-                                {{ $shift->start->format("D, d-m-Y") }}
-                            </td>
-                            <td style="text-align:right;white-space:nowrap">
-                                {{ $shift->start->format("H:i") }}
-                            </td>
-                            <td style="text-align:right;white-space:nowrap">
-                                {{ $shift->end->format("H:i") }}
-                            </td>
-                            <td style="text-align:right;white-space:nowrap">
-                                {{ $shift->break_duration }} min
-                            </td>
-                            <td style="text-align:right;white-space:nowrap">
-                                {{ $shift->hours }} hours
-                            </td>
-                        </tr>
+                        @if ($shift->start->dayOfWeekIso <= 5)
+                            <tr>
+                                <td style="width:100%">
+                                    {{ $shift->start->format("D, d-m-Y") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->start->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->end->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->break_duration }} min
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->hours }} hours
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     <tr>
                         <td colspan="4" style="text-align:right;white-space:nowrap">
-                            <strong>Total</strong>
+                            <strong>Total Weekday Hours</strong>
                         </td>
                         <td style="text-align:right;white-space:nowrap">
-                            {{ $timesheet->totalHours }} hours
+                            {{ $timesheet->totalWeekdayHours }} hours
                         </td>
                     </tr>
+                    @foreach ($timesheet->shifts->sortBy('start') as $shift)
+                        @if ($shift->start->dayOfWeekIso > 5)
+                            <tr>
+                                <td style="width:100%">
+                                    {{ $shift->start->format("D, d-m-Y") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->start->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->end->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->break_duration }} min
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $shift->hours }} hours
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
                 </tbody>
             </table>
         @else
