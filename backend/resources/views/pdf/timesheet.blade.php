@@ -155,18 +155,8 @@ th {
         @else
             <p>No leave or absences.</p>
         @endif
-        <table>
-            <tbody style="text-align: left;vertical-align:top;">
-                <tr>
-                    <th>
-                        Comment
-                    </th>
-                    <td style="width: 100%;">
-                        {{ $timesheet->comment ? $timesheet->comment : "none" }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>Comment</h2>
+        <p>{{ $timesheet->comment ? $timesheet->comment : "none" }}</p>
     </div>
 </body>
 
