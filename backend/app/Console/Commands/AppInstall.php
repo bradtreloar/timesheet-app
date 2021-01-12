@@ -76,8 +76,7 @@ class AppInstall extends Command
                 "name" => "timesheetRecipients",
                 "value" => $this->option("timesheet-recipients"),
             ]);
-            $user->markEmailAsVerified();
-            $user->save();
+            $setting->save();
             return 0;
         } catch (QueryException $ex) {
             print("Unable to create user.\n");
