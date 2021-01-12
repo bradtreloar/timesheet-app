@@ -221,10 +221,6 @@ const validateShiftValues = (values: any) => {
     });
   }
 
-  if (!hasActiveShifts) {
-    errors[`form`] = `At least one shift is required.`;
-  }
-
   return errors;
 };
 
