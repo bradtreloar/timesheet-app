@@ -132,23 +132,6 @@ describe("calls timesheet submit handler when submit button clicked", () => {
 });
 
 describe("displays errors when invalid input is entered", () => {
-  test("with no shifts active", () => {
-    const testShifts = range(7).map(() => EMPTY_SHIFT_TIMES);
-    render(
-      <TimesheetForm
-        defaultShiftValues={testShifts}
-        onSubmitTimesheet={() => {
-          throw new Error(
-            `onSubmitTimesheet should not be called with no shifts.`
-          );
-        }}
-        onSubmitDefaultShiftValues={noop}
-      />
-    );
-    userEvent.click(screen.getByText(/^submit$/i));
-    screen.getByText(/at least one shift is required/i);
-  });
-
   test("with incomplete shift", () => {
     const testShifts: ShiftValues[] = randomShiftValuesArray();
     testShifts[0].breakDuration = {
