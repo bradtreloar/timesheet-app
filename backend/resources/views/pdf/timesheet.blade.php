@@ -126,7 +126,7 @@ th {
         @else
             <p>No shifts.</p>
         @endif
-        <h2>Leave or Absences</h2>
+        <h2>Leave and Absences</h2>
         @if (count($timesheet->absences) > 0)
         <table>
             <thead>
