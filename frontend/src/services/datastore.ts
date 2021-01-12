@@ -1,5 +1,14 @@
 import axios, { AxiosResponse } from "axios";
-import { Absence, AbsenceResource, Setting, Shift, Timesheet, User, UserData, UserResource } from "types";
+import {
+  Absence,
+  AbsenceResource,
+  Setting,
+  Shift,
+  Timesheet,
+  User,
+  UserData,
+  UserResource,
+} from "types";
 import { SettingResource, ShiftResource, TimesheetResource } from "types";
 import { API_HOST } from "settings";
 import {
@@ -128,23 +137,38 @@ export const deleteUser = async (user: User): Promise<User> => {
 export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
   const response: AxiosResponse<{
     data: TimesheetResource[];
-    included?: ShiftResource[];
+    included?: (ShiftResource | AbsenceResource)[];
   }> = await jsonAPIClient.get(`users/${user.id}/timesheets`, {
     params: {
-      include: "shifts",
+      include: "shifts,absences",
       sort: "-created-at",
     },
   });
   const { data, included } = response.data;
 
-  const allShifts =
+  const shiftResources =
     included !== undefined
-      ? included.map((resource) => parseShift(resource))
+      ? (included.filter(({ type }) => type === "shifts") as ShiftResource[])
       : [];
+
+  const absenceResources =
+    included !== undefined
+      ? (included.filter(
+          ({ type }) => type === "absences"
+        ) as AbsenceResource[])
+      : [];
+
+  const allShifts = shiftResources.map((shiftResource) =>
+    parseShift(shiftResource)
+  );
+  const allAbsences = absenceResources.map((absenceResource) =>
+    parseAbsence(absenceResource)
+  );
 
   const timesheets = data.map((resource: TimesheetResource) => {
     const timesheet = parseTimesheet(user.id as string, resource);
     const relatedShiftResources = resource.relationships.shifts;
+    const relatedAbsenceResources = resource.relationships.absences;
     if (relatedShiftResources !== undefined) {
       const shiftIds = relatedShiftResources.data.map(({ id }) => id);
       const shifts = orderBy(
@@ -153,6 +177,15 @@ export const fetchTimesheets = async (user: User): Promise<Timesheet[]> => {
         "asc"
       );
       timesheet.shifts = shifts;
+    }
+    if (relatedAbsenceResources !== undefined) {
+      const absenceIds = relatedAbsenceResources.data.map(({ id }) => id);
+      const absences = orderBy(
+        allAbsences.filter(({ id }) => absenceIds.includes(id as string)),
+        "date",
+        "asc"
+      );
+      timesheet.absences = absences;
     }
     return timesheet;
   });

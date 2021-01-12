@@ -1,42 +1,72 @@
 import { DateTime } from "luxon";
 import React, { useMemo } from "react";
 import { getShiftHours, Time } from "services/date";
-import { Timesheet } from "types";
+import { Shift, Timesheet } from "types";
+import { reasons } from "./forms/TimesheetForm";
 
 interface TimesheetViewProps {
   timesheet: Timesheet;
 }
 
 const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
-  const { shifts } = timesheet;
+  const { shifts, absences } = timesheet;
 
-  const shiftRows = useMemo(
-    () =>
-      shifts?.map((shift, index) => {
-        const { start, end, breakDuration } = shift;
-        const totalHours = getShiftHours(shift);
-
-        const startDateTime = DateTime.fromISO(start);
-        const endDateTime = DateTime.fromISO(end);
-        const label = startDateTime.toLocaleString();
-        const startTime = startDateTime.toLocaleString(DateTime.TIME_SIMPLE);
-        const endTime = endDateTime.toLocaleString(DateTime.TIME_SIMPLE);
-        const breakTime = Time.fromMinutes(breakDuration).toString();
-
-        return (
-          <tr key={index}>
-            <td className="w-100">{label}</td>
-            <td className="text-right">{startTime}</td>
-            <td className="text-right">{endTime}</td>
-            <td className="text-right">{breakTime}</td>
-            <td className="text-right text-nowrap">{totalHours} hours</td>
-          </tr>
-        );
-      }),
+  const weekdayShifts = useMemo(
+    () => shifts?.filter(({ start }) => DateTime.fromISO(start).weekday <= 5),
     [shifts]
   );
 
-  const totalHours = useMemo(
+  const weekendShifts = useMemo(
+    () => shifts?.filter(({ start }) => DateTime.fromISO(start).weekday > 5),
+    [shifts]
+  );
+
+  const shiftRows = (shifts?: Shift[]) =>
+    shifts?.map((shift, index) => {
+      const { start, end, breakDuration } = shift;
+      const startDateTime = DateTime.fromISO(start);
+      const endDateTime = DateTime.fromISO(end);
+
+      return (
+        <tr key={index}>
+          <td className="w-100">
+            <span className="d-none d-md-inline">{startDateTime.weekdayShort},&nbsp;</span>
+            {startDateTime.toLocaleString()}
+          </td>
+          <td className="text-right">{startDateTime.toLocaleString(DateTime.TIME_SIMPLE)}</td>
+          <td className="text-right">{endDateTime.toLocaleString(DateTime.TIME_SIMPLE)}</td>
+          <td className="text-right">{Time.fromMinutes(breakDuration).toString()}</td>
+          <td className="text-right text-nowrap">{getShiftHours(shift)} hours</td>
+        </tr>
+      );
+    });
+
+  const weekdayShiftRows = useMemo(() => shiftRows(weekdayShifts), [
+    weekdayShifts,
+  ]);
+  const weekendShiftRows = useMemo(() => shiftRows(weekendShifts), [
+    weekendShifts,
+  ]);
+
+  const absenceRows = useMemo(
+    () =>
+      absences?.map((absence, index) => {
+        const { date, reason } = absence;
+
+        return (
+          <tr key={index}>
+            <td className="w-100">
+              <span className="d-none d-md-inline">{DateTime.fromISO(date).weekdayShort},&nbsp;</span>
+              {DateTime.fromISO(date).toLocaleString()}
+            </td>
+            <td className="text-nowrap">{reasons[reason]}</td>
+          </tr>
+        );
+      }),
+    [absences]
+  );
+
+  const totalWeekdayHours = useMemo(
     () =>
       shifts?.reduce((totalHours, shift) => {
         return totalHours + getShiftHours(shift);
@@ -51,27 +81,52 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
   return (
     <>
       <p>Submitted on {submittedDate}</p>
-      <h2>Shifts</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th className="text-right">Start</th>
-            <th className="text-right">End</th>
-            <th className="text-right">Break</th>
-            <th className="text-right">Hours</th>
-          </tr>
-        </thead>
-        <tbody>
-          {shiftRows}
-          <tr>
-            <th>Total hours</th>
-            <td colSpan={4} className="text-right">
-              {totalHours} hours
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <h2>Shifts</h2>
+        {shifts ? (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th className="text-right">Start</th>
+                <th className="text-right">End</th>
+                <th className="text-right">Break</th>
+                <th className="text-right">Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+              {weekdayShiftRows}
+              <tr>
+                <th colSpan={3}>Total weekday hours</th>
+                <td colSpan={2} className="text-right">
+                  {totalWeekdayHours} hours
+                </td>
+              </tr>
+              {weekendShiftRows}
+            </tbody>
+          </table>
+        ) : (
+          <p>No shifts</p>
+        )}
+      </div>
+      <div>
+        <h2>Leave and Absences</h2>
+        {absences ? (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th className="text-right">Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              {absenceRows}
+            </tbody>
+          </table>
+        ) : (
+          <p>No leave or absences</p>
+        )}
+      </div>
     </>
   );
 };

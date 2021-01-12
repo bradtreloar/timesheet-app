@@ -115,6 +115,7 @@ export interface TimesheetResource {
   relationships: {
     user: RelatedResource<"users">;
     shifts?: RelatedResourceArray<"shifts">;
+    absences?: RelatedResourceArray<"absences">;
   };
 }
 
