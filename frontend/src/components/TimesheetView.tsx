@@ -83,7 +83,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
       <p>Submitted on {submittedDate}</p>
       <div>
         <h2>Shifts</h2>
-        {shifts ? (
+        {shifts && shifts.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -111,7 +111,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
       </div>
       <div>
         <h2>Leave and Absences</h2>
-        {absences ? (
+        {absences && absences.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
