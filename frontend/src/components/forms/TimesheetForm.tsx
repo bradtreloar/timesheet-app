@@ -302,7 +302,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     }
   };
 
-  const handleShiftToggle = (name: string, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleShiftToggle = (
+    name: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const isActive = event.target.checked;
     const newValues = {} as { [key: string]: "" | boolean };
     const newTouchedValues = {} as { [key: string]: false };
@@ -445,9 +448,11 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
                 ))}
               </Form.Control>
               {visibleErrors[`${name}.reason`] && (
-                <Form.Control.Feedback type="invalid">
-                  {errors[`${name}.reason`]}
-                </Form.Control.Feedback>
+                <div className="sr-only">
+                  <Form.Control.Feedback type="invalid">
+                    {errors[`${name}.reason`]}
+                  </Form.Control.Feedback>
+                </div>
               )}
             </div>
           )}
