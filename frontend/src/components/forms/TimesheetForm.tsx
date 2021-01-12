@@ -378,14 +378,13 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     return null;
   });
 
-  const timesheetTotalHours = allShiftHours.reduce(
-    (totalHours: number, shiftHours) => {
-      return shiftHours ? totalHours + shiftHours : totalHours;
-    },
+  const timesheetTotalWeekdayHours = allShiftHours.reduce(
+    (totalHours: number, shiftHours, index) =>
+      shiftHours && index < 5 ? totalHours + shiftHours : totalHours,
     0
   );
 
-  const shiftInputs = range(7).map((index) => {
+  const shiftInput = (index: number) => {
     const name = `shift.${index}`;
     const shiftDate = values.weekStartDateTime.plus({ days: index });
     const shiftValues = allShiftValues[index];
@@ -452,7 +451,10 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         </div>
       </div>
     );
-  });
+  };
+
+  const weekdayShiftInputs = range(0, 5).map((index) => shiftInput(index));
+  const weekendShiftInputs = range(5, 7).map((index) => shiftInput(index));
 
   return (
     <form onSubmit={handleSubmitTimesheet} className={className}>
@@ -474,22 +476,23 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         />
       </div>
       <div>
-        {shiftInputs}
+        {weekdayShiftInputs}
         <div className="border p-1 my-1 bg-light">
           <div
             aria-label="Total"
             className="d-flex w-100 align-items-center mt-1 mt-lg-0"
           >
-            <div className="mx-2 text-right flex-grow-1">Total</div>
+            <div className="mx-2 text-right flex-grow-1">Weekday Hours</div>
             <div className="timesheet-total-hours">
               <div className="form-control w-100 text-right">
-                {timesheetTotalHours
-                  ? `${timesheetTotalHours} hours`
+                {timesheetTotalWeekdayHours
+                  ? `${timesheetTotalWeekdayHours} hours`
                   : `\u00A0`}
               </div>
             </div>
           </div>
         </div>
+        {weekendShiftInputs}
       </div>
       <Form.Group controlId="comment" className="my-3">
         <Form.Label>Comments/Notes</Form.Label>
