@@ -158,13 +158,10 @@ const processTimesheet = (
  */
 const validateShiftValues = (values: any) => {
   const errors = {} as FormErrors<any>;
-  let hasActiveShifts = false;
 
   range(7).forEach((index) => {
     // Don't validate a shift's values while it is disabled.
     if (values[`shift.${index}.isActive`] === true) {
-      hasActiveShifts = true;
-
       shiftTimesNames.forEach((name) => {
         const prefix = `shift.${index}.${name}`;
         const hour = values[`${prefix}.hour`];
