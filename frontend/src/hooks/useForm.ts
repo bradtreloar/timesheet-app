@@ -1,5 +1,5 @@
 import { forOwn, isEmpty } from "lodash";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export type FormValue = any;
 
@@ -77,14 +77,12 @@ const useForm = <T>(
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
     setValue(name, value);
-    doValidate();
   };
 
   const handleBlur = (event: any) => {
     const target = event.target;
     const name = target.name;
     setTouchedValue(name, true);
-    doValidate();
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -95,6 +93,10 @@ const useForm = <T>(
       onSubmit(values);
     }
   };
+
+  useEffect(() => {
+    doValidate();
+  }, [values, doValidate]);
 
   return {
     values,
