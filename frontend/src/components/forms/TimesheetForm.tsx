@@ -36,7 +36,10 @@ export const reasons = {
   "rostered-day-off": "Rostered day off",
 } as const;
 
-const getShiftValuesFromFormValues = (values: any, index: number): ShiftValues => {
+const getShiftValuesFromFormValues = (
+  values: any,
+  index: number
+): ShiftValues => {
   return {
     isActive: values[`shift.${index}.isActive`],
     reason: values[`shift.${index}.reason`],
@@ -102,7 +105,7 @@ const processShiftValues = (values: any): ShiftValues[] =>
  */
 const processTimesheet = (
   values: any
-): { shifts: Shift[]; absences: Absence[], comment: string } => {
+): { shifts: Shift[]; absences: Absence[]; comment: string } => {
   const weekStartDateTime = values.weekStartDateTime as DateTime;
   const comment = values.comment;
   const allShiftValues = processShiftValues(values);
@@ -244,7 +247,11 @@ const validateTimesheet = (values: any) => {
 
 interface TimesheetFormProps {
   defaultShiftValues: ShiftValues[];
-  onSubmitTimesheet: (values: { shifts: Shift[]; absences: Absence[]; comment: string }) => void;
+  onSubmitTimesheet: (values: {
+    shifts: Shift[];
+    absences: Absence[];
+    comment: string;
+  }) => void;
   onSubmitDefaultShiftValues: (shifts: ShiftValues[]) => void;
   pending?: boolean;
   className?: string;
@@ -283,14 +290,6 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     values,
   ]);
 
-  // React.useEffect(() => {
-  //   console.warn(defaultShiftValuesErrors);
-  // }, [defaultShiftValuesErrors]);
-
-  // React.useEffect(() => {
-  //   console.warn(`shift.0.reason:`, values[`shift.0.reason`]);
-  // }, [values]);
-
   const handleSubmitDefaultShifts = (
     event: React.MouseEvent<HTMLElement, MouseEvent>
   ) => {
@@ -301,20 +300,19 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     }
   };
 
-  // Clear the time values for the shift and flag the time inputs as untouched.
-  const clearShiftValues = (shiftName: string) => {
-    const newValues = shiftTimesInputNames.reduce((values, inputName) => {
-      values[`${shiftName}.${inputName}`] = "";
-      return values;
-    }, {} as { [key: string]: "" | false });
-    newValues[`${shiftName}.isActive`] = false;
-    const newTouchedValues = shiftTimesInputNames.reduce(
-      (touchedValues, inputName) => {
-        touchedValues[`${shiftName}.${inputName}`] = false;
-        return touchedValues;
-      },
-      {} as { [key: string]: false }
-    );
+  const handleShiftToggle = (name: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const isActive = event.target.checked;
+    const newValues = {} as { [key: string]: "" | boolean };
+    const newTouchedValues = {} as { [key: string]: false };
+    newValues[`${name}.isActive`] = isActive;
+    if (!isActive) {
+      // Clear the time values for the shift and flag the time inputs
+      // as untouched.
+      shiftTimesInputNames.forEach((inputName) => {
+        newValues[`${name}.${inputName}`] = "";
+        newTouchedValues[`${name}.${inputName}`] = false;
+      });
+    }
     setSomeValues(newValues);
     setSomeTouchedValues(newTouchedValues);
   };
@@ -407,13 +405,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               name={`${name}.isActive`}
               type="checkbox"
               checked={isActive}
-              onChange={(event) => {
-                if (!event.target.checked) {
-                  clearShiftValues(name);
-                } else {
-                  handleChange(event);
-                }
-              }}
+              onChange={(event) => handleShiftToggle(name, event)}
               onKeyPress={(event) => {
                 if (event.key === "Enter") {
                   event.preventDefault();
