@@ -194,7 +194,7 @@ export const createAbsences = async (
     absenceResources.map(async (absenceResource) => {
       const response: AxiosResponse<{
         data: AbsenceResource;
-      }> = await jsonAPIClient.post(`/shifts`, {
+      }> = await jsonAPIClient.post(`/absences`, {
         data: absenceResource,
       });
       const { data } = response.data;
