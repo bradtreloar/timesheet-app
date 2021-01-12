@@ -53,7 +53,7 @@ th {
             <table>
                 <thead>
                     <tr>
-                        <td style="width:100%">
+                        <th style="width:100%">
                             Date
                         </th>
                         <th style="text-align:right;white-space:nowrap">
