@@ -27,6 +27,7 @@ import LoadingPage from "./pages/LoadingPage";
 import AccountPage from "./pages/AccountPage";
 import PasswordResetPage from "./pages/PasswordResetPage";
 import { clearUsers, fetchUsers } from "store/users";
+import ErrorPage from "./pages/ErrorPage";
 
 const initialiseStore = async (user: User) => {
   store.dispatch(fetchTimesheets(user));
@@ -46,7 +47,7 @@ const clearStore = async () => {
 
 const App: React.FC = () => {
   const [storeInitialised, setStoreInitialised] = React.useState(false);
-  const { user, userInitialised } = useAuth();
+  const { user, userInitialised, error: authError } = useAuth();
 
   useEffect(() => {
     if (user !== null && !storeInitialised) {
@@ -105,6 +106,8 @@ const App: React.FC = () => {
         <NotFoundPage />
       </Route>
     </Switch>
+  ) : authError ? (
+    <ErrorPage message={authError} />
   ) : (
     <LoadingPage />
   );

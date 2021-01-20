@@ -20,6 +20,7 @@ interface AuthContextState {
     token: string,
     password: string
   ) => Promise<void>;
+  error: string | null;
 }
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
@@ -44,6 +45,7 @@ const AuthProvider: React.FC = ({ children }) => {
     : null;
   const [userInitialised, setUserInitialised] = React.useState(false);
   const [user, setUser] = React.useState(initialUser);
+  const [error, setError] = React.useState<string | null>(null);
   const isAuthenticated = user !== null;
   const isAdmin = user !== null && user.isAdmin;
 
@@ -156,8 +158,14 @@ const AuthProvider: React.FC = ({ children }) => {
   React.useEffect(() => {
     if (!userInitialised) {
       (async () => {
-        await refreshUser();
-        setUserInitialised(true);
+        try {
+          await refreshUser();
+          setUserInitialised(true);
+        } catch (error) {
+          if (error.isAxiosError && error.response === undefined) {
+            setError(`The app has run into a problem.`)
+          }
+        }
       })();
     }
   }, [userInitialised, refreshUser]);
@@ -173,6 +181,7 @@ const AuthProvider: React.FC = ({ children }) => {
     forgotPassword,
     setPassword,
     resetPassword,
+    error,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
