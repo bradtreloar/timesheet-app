@@ -394,7 +394,13 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     const reason = shiftValues.reason;
 
     return (
-      <div key={index} className="shift-input border p-1 my-1 bg-light">
+      <div
+        key={index}
+        className={classnames(
+          "shift-input border p-1 my-1 bg-light",
+          isActive && "border-primary"
+        )}
+      >
         <div className="d-lg-flex" aria-label="Shift">
           <label className="d-flex align-items-center m-0 flex-grow-1 pl-2 py-1 py-lg-2 mr-lg-3">
             <input
@@ -505,7 +511,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
       <div className="my-3 d-md-flex flex-row-reverse justify-content-between align-items-center">
         <div>
           <Button variant="success" size="lg" type="submit" disabled={pending}>
-            {pending ? `Submitting` : `Submit`}
+            {pending ? `Submitting timesheet` : `Submit timesheet`}
           </Button>
         </div>
         {isEmpty(defaultShiftValuesErrors) && (
