@@ -398,7 +398,11 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         key={index}
         className={classnames(
           "shift-input border p-1 my-1 bg-light",
-          isActive && "border-primary"
+          isActive
+            ? "border-primary"
+            : reason !== "rostered-day-off" &&
+                reason !== "none" &&
+                "border-primary"
         )}
       >
         <div className="d-lg-flex" aria-label="Shift">
