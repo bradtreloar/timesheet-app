@@ -50,7 +50,7 @@ const App: React.FC = () => {
   const { user, userInitialised, error: authError } = useAuth();
 
   useEffect(() => {
-    if (user !== null && !storeInitialised) {
+    if (userInitialised && user !== null && !storeInitialised) {
       (async () => {
         await initialiseStore(user);
         setStoreInitialised(true);
@@ -59,7 +59,7 @@ const App: React.FC = () => {
       clearStore();
       setStoreInitialised(false);
     }
-  }, [user, storeInitialised, setStoreInitialised]);
+  }, [user, userInitialised, storeInitialised, setStoreInitialised]);
 
   return userInitialised ? (
     <Switch>
