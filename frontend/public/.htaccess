@@ -6,4 +6,5 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
 RewriteRule . /index.html [L]
+RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L] 
 </IfModule>
