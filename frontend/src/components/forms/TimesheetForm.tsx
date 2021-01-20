@@ -523,7 +523,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
             {pending ? `Submitting timesheet` : `Submit timesheet`}
           </Button>
           &nbsp;
-          <Button className="mb-3" variant="secondary" size="lg" type="reset" disabled={pending}>
+          <Button className="mb-3" variant="outline-secondary" size="lg" type="reset" disabled={pending}>
             Reset form
           </Button>
         </div>
