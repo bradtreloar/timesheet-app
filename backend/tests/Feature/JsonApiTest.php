@@ -154,6 +154,13 @@ class JsonApiTest extends TestCase
         return $user_data;
     }
 
+    public function testRejectUnauthenticated()
+    {
+        $this->seed();
+        $response = $this->jsonApi("GET", "/users");
+        $response->assertStatus(401);
+    }
+
     public function testCreateUser()
     {
         $this->seed();
