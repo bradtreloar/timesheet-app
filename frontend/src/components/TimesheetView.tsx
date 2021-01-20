@@ -33,9 +33,9 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
             <span className="d-none d-md-inline">{startDateTime.weekdayShort},&nbsp;</span>
             {startDateTime.toLocaleString()}
           </td>
-          <td className="text-right">{startDateTime.toLocaleString(DateTime.TIME_SIMPLE)}</td>
-          <td className="text-right">{endDateTime.toLocaleString(DateTime.TIME_SIMPLE)}</td>
-          <td className="text-right">{Time.fromMinutes(breakDuration).toString()}</td>
+          <td className="text-right text-nowrap">{startDateTime.toLocaleString(DateTime.TIME_SIMPLE)}</td>
+          <td className="text-right text-nowrap">{endDateTime.toLocaleString(DateTime.TIME_SIMPLE)}</td>
+          <td className="text-right text-nowrap">{Time.fromMinutes(breakDuration).toString()}</td>
           <td className="text-right text-nowrap">{getShiftHours(shift)} hours</td>
         </tr>
       );
@@ -98,7 +98,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({ timesheet }) => {
               {weekdayShiftRows}
               <tr>
                 <th colSpan={3}>Total weekday hours</th>
-                <td colSpan={2} className="text-right">
+                <td colSpan={2} className="text-right text-nowrap">
                   {totalWeekdayHours} hours
                 </td>
               </tr>
