@@ -109,7 +109,7 @@ describe("calls timesheet submit handler when submit button clicked", () => {
         onSubmitDefaultShiftValues={noop}
       />
     );
-    userEvent.click(screen.getByText(/^submit$/i));
+    userEvent.click(screen.getByText(/^submit/i));
   });
 
   test("with only some shifts active", (done) => {
@@ -127,7 +127,7 @@ describe("calls timesheet submit handler when submit button clicked", () => {
         onSubmitDefaultShiftValues={noop}
       />
     );
-    userEvent.click(screen.getByText(/^submit$/i));
+    userEvent.click(screen.getByText(/^submit/i));
   });
 });
 
@@ -150,7 +150,7 @@ describe("displays errors when invalid input is entered", () => {
       />
     );
     expect(screen.queryByText(/enter time/i)).toBeNull();
-    userEvent.click(screen.getByText(/^submit$/i));
+    userEvent.click(screen.getByText(/^submit/i));
     expect(screen.getAllByText(/required/i)).toHaveLength(2);
   });
 
@@ -171,7 +171,7 @@ describe("displays errors when invalid input is entered", () => {
       screen.getByLabelText(/comment/i),
       randomstring.generate(300)
     );
-    userEvent.click(screen.getByText(/^submit$/i));
+    userEvent.click(screen.getByText(/^submit/i));
   });
 });
 
@@ -188,6 +188,24 @@ test('calls default shifts submit handler when "save defaults" button is clicked
     />
   );
   userEvent.click(screen.getByText(/^save these shifts as my default$/i));
+});
+
+test("restores form to default shifts when reset button is clicked", (done) => {
+  const testShifts = randomShiftValuesArray();
+  render(
+    <TimesheetForm
+      defaultShiftValues={testShifts}
+      onSubmitTimesheet={({ shifts }) => {
+        expect(shifts.length).toEqual(testShifts.length);
+        shifts.forEach((shift) => expectValidShift(shift));
+        done();
+      }}
+      onSubmitDefaultShiftValues={noop}
+    />
+  );
+  userEvent.click(screen.getByTestId("shift-0-toggle"));
+  userEvent.click(screen.getByText(/^reset form/i));
+  userEvent.click(screen.getByText(/^submit/i));
 });
 
 test("disables form controls when pending prop is true", () => {

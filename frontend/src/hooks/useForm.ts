@@ -94,6 +94,13 @@ const useForm = <T>(
     }
   };
 
+  const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setValues(initialValues);
+    setErrors({});
+    setSubmitAttempted(false);
+  };
+
   useEffect(() => {
     doValidate();
   }, [values, doValidate]);
@@ -111,6 +118,7 @@ const useForm = <T>(
     handleBlur,
     handleChange,
     handleSubmit,
+    handleReset,
   };
 };
 

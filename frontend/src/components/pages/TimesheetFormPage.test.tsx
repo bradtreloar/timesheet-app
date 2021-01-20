@@ -77,7 +77,7 @@ test("handles timesheet submission", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent(/new timesheet/i);
   await act(async () => {
-    userEvent.click(screen.getByText(/^submit$/i));
+    userEvent.click(screen.getByText(/^submit/i));
   });
   await screen.findByText(/form submitted/i);
   expect(datastore.createTimesheet).toHaveBeenCalledWith({
@@ -100,7 +100,7 @@ test("displays error when timesheet creation fails", async () => {
 
   expect(screen.getByRole("heading")).toHaveTextContent(/new timesheet/i);
   await act(async () => {
-    userEvent.click(screen.getByText(/^submit$/i));
+    userEvent.click(screen.getByText(/^submit/i));
   });
   await screen.findByText(errorMessage);
   expect(datastore.createTimesheet).toHaveBeenCalledWith({

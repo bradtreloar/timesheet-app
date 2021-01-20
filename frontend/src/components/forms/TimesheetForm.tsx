@@ -272,6 +272,7 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     handleChange,
     handleBlur,
     handleSubmit: handleSubmitTimesheet,
+    handleReset,
     visibleErrors,
   } = useForm(
     initialValues,
@@ -467,7 +468,11 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
   const weekendShiftInputs = range(5, 7).map((index) => shiftInput(index));
 
   return (
-    <form onSubmit={handleSubmitTimesheet} className={className}>
+    <form
+      onSubmit={handleSubmitTimesheet}
+      onReset={handleReset}
+      className={className}
+    >
       {errors.form && <div className="alert alert-danger">{errors.form}</div>}
       <div className="my-3">
         <WeekSelect
@@ -513,9 +518,13 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
         />
       </Form.Group>
       <div className="my-3 d-md-flex flex-row-reverse justify-content-between align-items-center">
-        <div>
-          <Button variant="success" size="lg" type="submit" disabled={pending}>
+        <div className="d-md-flex flex-row-reverse align-items-center">
+          <Button className="mb-3" variant="success" size="lg" type="submit" disabled={pending}>
             {pending ? `Submitting timesheet` : `Submit timesheet`}
+          </Button>
+          &nbsp;
+          <Button className="mb-3" variant="secondary" size="lg" type="reset" disabled={pending}>
+            Reset form
           </Button>
         </div>
         {isEmpty(defaultShiftValuesErrors) && (
@@ -527,7 +536,6 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
             >
               Save these shifts as my default
             </Button>
-            &nbsp;
           </div>
         )}
       </div>
