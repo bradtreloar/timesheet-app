@@ -502,9 +502,14 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
           disabled={pending}
         />
       </Form.Group>
-      <div className="my-3 text-right">
+      <div className="my-3 d-md-flex flex-row-reverse justify-content-between align-items-center">
+        <div>
+          <Button variant="success" size="lg" type="submit" disabled={pending}>
+            {pending ? `Submitting` : `Submit`}
+          </Button>
+        </div>
         {isEmpty(defaultShiftValuesErrors) && (
-          <>
+          <div>
             <Button
               variant="light"
               type="button"
@@ -513,11 +518,8 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
               Save these shifts as my default
             </Button>
             &nbsp;
-          </>
+          </div>
         )}
-        <Button variant="primary" type="submit" disabled={pending}>
-          {pending ? `Submitting` : `Submit`}
-        </Button>
       </div>
     </form>
   );
