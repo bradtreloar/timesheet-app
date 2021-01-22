@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\SMSNotification;
 use App\Events\UserCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'is_admin', 'default_values'
+        'name', 'email', 'phone_number', 'accepts_reminders', 'is_admin', 'default_values'
     ];
 
     /**
@@ -41,6 +42,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'is_admin' => 'bool',
+        'accepts_reminders' => 'bool',
     ];
 
     public function timesheets()
@@ -60,5 +62,16 @@ class User extends Authenticatable
         static::created(function (User $user) {
             Event::dispatch(new UserCreated($user));
         });
+    }
+
+    /**
+     * Route notifications for the SMS channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
+     */
+    public function routeNotificationForSMS(SMSNotification $notification)
+    {
+        return $this->phone_number;
     }
 }

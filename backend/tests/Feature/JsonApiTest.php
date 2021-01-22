@@ -142,6 +142,8 @@ class JsonApiTest extends TestCase
             "attributes" => [
                 "name" => $user->name,
                 "email" => $user->email,
+                "phone_number" => $user->phone_number,
+                "accepts_reminders" => $user->accepts_reminders,
                 "is_admin" => $user->is_admin,
                 "default_values" => $user->default_values,
             ],

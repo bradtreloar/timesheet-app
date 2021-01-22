@@ -33,6 +33,8 @@ class Schema extends SchemaProvider
             'created' => $resource->created_at->toISO8601String(),
             'changed' => $resource->updated_at->toISO8601String(),
             'email' => $resource->email,
+            'phone_number' => $resource->phone_number,
+            'accepts_reminders' => $resource->accepts_reminders,
             'name' => $resource->name,
             'is_admin' => $resource->is_admin,
             'default_values' => $resource->default_values,

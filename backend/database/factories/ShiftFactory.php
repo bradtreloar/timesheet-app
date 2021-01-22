@@ -22,12 +22,9 @@ class ShiftFactory extends Factory
      */
     public function definition()
     {
-        $start = Carbon::yesterday();
-        $end = Carbon::yesterday()->addHours(8);
-
         return [
-            'start' => $start,
-            'end' => $end,
+            'start' => Carbon::yesterday(),
+            'end' => Carbon::yesterday()->addHours(8),
             'break_duration' => 45,
         ];
     }
