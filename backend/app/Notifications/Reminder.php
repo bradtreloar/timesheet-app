@@ -42,6 +42,6 @@ class Reminder extends Notification implements SMSNotification
      */
     public function toSMS($notifiable): string
     {
-        return 'This is a reminder that you need to submit a timesheet for this week.\n\nRegards, Allbiz Supplies';
+        return 'This is a reminder that you need to submit a timesheet for this week. Regards, Allbiz Supplies';
     }
 }
