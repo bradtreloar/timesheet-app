@@ -24,6 +24,7 @@ class CreateAbsencesTable extends Migration
                         "annual-leave",
                         "long-service",
                         "unpaid-leave",
+                        "public-holiday",
                         "rostered-day-off",
                     ]
                 );

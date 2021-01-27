@@ -25,11 +25,12 @@ class Absence extends Model
     public function getReasonLabelAttribute()
     {
         return [
-            "absent:sick-day" => "Absent: sick day",
-            "absent:not-sick-day" => "Absent: not sick day",
+            "absent:sick-day" => "Rostered but absent: sick day",
+            "absent:not-sick-day" => "Rostered but absent: not a sick day",
             "annual-leave" => "Annual leave",
             "long-service" => "Long service leave",
             "unpaid-leave" => "Unpaid leave",
+            "public-holiday" => "Public holiday",
             "rostered-day-off" => "Rostered day off",
         ][$this->reason];
     }
