@@ -77,23 +77,27 @@ export const parseTimesheet = (
 export const parseUserFromResource = (resource: UserResource): User => {
   const {
     id,
-    attributes: { name, email, is_admin, default_values },
+    attributes: { name, email, phone_number, accepts_reminders, is_admin, default_values },
   } = resource;
   return {
     id,
     name,
     email,
+    phoneNumber: phone_number,
+    acceptsReminders: accepts_reminders,
     isAdmin: is_admin,
     defaultShiftValues: JSON.parse(default_values),
   };
 };
 
 export const parseUser = (data: UserData): User => {
-  const { id, name, email, is_admin, default_values } = data;
+  const { id, name, email, phone_number, accepts_reminders, is_admin, default_values } = data;
   return {
     id: (id as number).toString(),
     name,
     email,
+    phoneNumber: phone_number,
+    acceptsReminders: accepts_reminders,
     isAdmin: is_admin,
     defaultShiftValues: JSON.parse(default_values),
   };
@@ -218,12 +222,14 @@ export const makeTimesheetResource = (
 };
 
 export const makeUserResource = (user: User): UserResource => {
-  const { id, name, email, isAdmin, defaultShiftValues } = user;
+  const { id, name, email, phoneNumber, acceptsReminders, isAdmin, defaultShiftValues } = user;
   const resource: UserResource = {
     type: "users",
     attributes: {
       name,
       email,
+      phone_number: phoneNumber,
+      accepts_reminders: acceptsReminders,
       is_admin: isAdmin,
       default_values: JSON.stringify(defaultShiftValues),
     },
@@ -236,11 +242,13 @@ export const makeUserResource = (user: User): UserResource => {
 };
 
 export const makeUserData = (user: User): UserData => {
-  const { id, name, email, isAdmin, defaultShiftValues } = user;
+  const { id, name, email, phoneNumber, acceptsReminders, isAdmin, defaultShiftValues } = user;
   return {
     id,
     name,
     email,
+    phone_number: phoneNumber,
+    accepts_reminders: acceptsReminders,
     is_admin: isAdmin,
     default_values: JSON.stringify(defaultShiftValues),
   };

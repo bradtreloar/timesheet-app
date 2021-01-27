@@ -86,6 +86,8 @@ export interface UserData {
   id?: string | number;
   name: string;
   email: string;
+  phone_number: string;
+  accepts_reminders: boolean;
   is_admin: boolean;
   default_values: string;
 }
@@ -96,6 +98,8 @@ export interface UserResource {
   attributes: {
     name: string;
     email: string;
+    phone_number: string;
+    accepts_reminders: boolean;
     is_admin: boolean;
     default_values: string;
     created?: string;
