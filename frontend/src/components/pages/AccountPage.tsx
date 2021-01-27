@@ -24,6 +24,8 @@ const AccountPage: React.FC = () => {
         setMessage("success", `Account settings updated.`, ["account"]);
         await refreshUser();
       }
+    }, {
+      unmountsOnSubmit: false,
     }
   );
 
