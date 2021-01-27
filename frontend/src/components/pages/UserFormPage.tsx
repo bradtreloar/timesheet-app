@@ -77,6 +77,8 @@ const UserFormPage: React.FC = () => {
               ? {
                   name: selectedUser.name,
                   email: selectedUser.email,
+                  phoneNumber: selectedUser.phoneNumber,
+                  acceptsReminders: selectedUser.acceptsReminders,
                   isAdmin: selectedUser.isAdmin,
                 }
               : null

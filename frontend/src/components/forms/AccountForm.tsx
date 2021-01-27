@@ -26,9 +26,11 @@ const validate = (values: AccountFormValues) => {
     errors.email = `Must be a valid email address`;
   }
 
-  if (phoneNumber === "") {
-    errors.phoneNumber = `Required`;
-  } else {
+  if (acceptsReminders === true && phoneNumber === "") {
+    errors.phoneNumber = `Required for reminders`;
+  }
+
+  if (phoneNumber !== "") {
     const normalisedPhoneNumber = phoneNumber
       .replace(/-/g, "")
       .replace(/ /g, "");

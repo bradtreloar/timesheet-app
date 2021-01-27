@@ -119,7 +119,7 @@ describe("Existing User", () => {
     userEvent.clear(screen.getByLabelText(/name/i));
     userEvent.clear(screen.getByLabelText(/phone number/i));
     userEvent.click(screen.getByText(/save/i));
-    expect(screen.getAllByText(/required/i)).toHaveLength(2);
+    expect(screen.getAllByText(/required/i)).toHaveLength(3);
   });
 
   test("Reject invalid form input", () => {

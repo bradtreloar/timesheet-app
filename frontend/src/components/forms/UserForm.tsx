@@ -15,7 +15,7 @@ export interface UserFormValues {
 
 const validate = (values: UserFormValues) => {
   const errors = {} as { [key: string]: any };
-  const { name, email } = values;
+  const { name, email, phoneNumber, acceptsReminders } = values;
 
   if (name === "") {
     errors.name = `Required`;
@@ -25,6 +25,19 @@ const validate = (values: UserFormValues) => {
     errors.email = `Required`;
   } else if (EmailValidator.validate(email) === false) {
     errors.email = `Must be a valid email address`;
+  }
+
+  if (acceptsReminders === true && phoneNumber === "") {
+    errors.phoneNumber = `Required for reminders`;
+  }
+
+  if (phoneNumber !== "") {
+    const normalisedPhoneNumber = phoneNumber
+      .replace(/-/g, "")
+      .replace(/ /g, "");
+    if (normalisedPhoneNumber.match(/04[0-9]{8}/) === null) {
+      errors.phoneNumber = `Must be a valid Australian mobile number`;
+    }
   }
 
   return errors;
