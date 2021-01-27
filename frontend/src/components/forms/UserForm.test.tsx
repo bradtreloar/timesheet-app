@@ -6,10 +6,18 @@ import UserForm from "./UserForm";
 import { randomUser } from "fixtures/random";
 import { noop } from "lodash";
 
-const { name: testName, email: testEmail } = randomUser();
+const testUser = randomUser();
+const {
+  name: testName,
+  email: testEmail,
+  phoneNumber: testPhoneNumber,
+  acceptsReminders: testAcceptsReminders,
+} = testUser;
 const testDefaultValues = {
   name: testName,
   email: testEmail,
+  phoneNumber: testPhoneNumber,
+  acceptsReminders: testAcceptsReminders,
   isAdmin: false,
 };
 
@@ -22,9 +30,11 @@ describe("New User", () => {
     render(
       <UserForm
         defaultValues={null}
-        onSubmit={({ name, email, isAdmin }) => {
+        onSubmit={({ name, email, phoneNumber, acceptsReminders, isAdmin }) => {
           expect(name).toEqual(testName);
           expect(email).toEqual(testEmail);
+          expect(phoneNumber).toEqual(testPhoneNumber);
+          expect(acceptsReminders).toEqual(testAcceptsReminders);
           expect(isAdmin).toEqual(false);
           done();
         }}
@@ -35,6 +45,11 @@ describe("New User", () => {
     userEvent.type(screen.getByLabelText(/name/i), testName);
     userEvent.clear(screen.getByLabelText(/email address/i));
     userEvent.type(screen.getByLabelText(/email address/i), testEmail);
+    userEvent.clear(screen.getByLabelText(/phone number/i));
+    userEvent.type(screen.getByLabelText(/phone number/i), testPhoneNumber);
+    if (testAcceptsReminders) {
+      userEvent.click(screen.getByLabelText(/accepts sms reminders/i));
+    }
     userEvent.click(screen.getByText(/create/i));
   });
 
@@ -42,7 +57,7 @@ describe("New User", () => {
     render(
       <UserForm
         defaultValues={null}
-        onSubmit={({ name, email, isAdmin }) => {
+        onSubmit={({ name, email, phoneNumber, acceptsReminders, isAdmin }) => {
           expect(name).toEqual(testName);
           expect(email).toEqual(testEmail);
           expect(isAdmin).toEqual(true);
@@ -55,15 +70,18 @@ describe("New User", () => {
     userEvent.type(screen.getByLabelText(/name/i), testName);
     userEvent.clear(screen.getByLabelText(/email address/i));
     userEvent.type(screen.getByLabelText(/email address/i), testEmail);
+    userEvent.clear(screen.getByLabelText(/phone number/i));
+    userEvent.type(screen.getByLabelText(/phone number/i), testPhoneNumber);
+    if (testAcceptsReminders) {
+      userEvent.click(screen.getByLabelText(/accepts sms reminders/i));
+    }
     userEvent.click(screen.getByLabelText(/administrator/i));
     userEvent.click(screen.getByText(/create/i));
   });
 
   test("Disable form controls in pending state", () => {
-    render(
-      <UserForm pending defaultValues={null} onSubmit={noop} />
-    );
-  
+    render(<UserForm pending defaultValues={null} onSubmit={noop} />);
+
     screen.getByText(/creating/i);
   });
 });
@@ -73,18 +91,17 @@ describe("Existing User", () => {
     render(
       <UserForm
         defaultValues={testDefaultValues}
-        onSubmit={({ name, email }) => {
+        onSubmit={({ name, email, phoneNumber, acceptsReminders, isAdmin }) => {
           expect(name).toEqual(testName);
           expect(email).toEqual(testEmail);
+          expect(phoneNumber).toEqual(testPhoneNumber);
+          expect(acceptsReminders).toEqual(testAcceptsReminders);
+          expect(isAdmin).toEqual(false);
           done();
         }}
       />
     );
 
-    userEvent.clear(screen.getByLabelText(/name/i));
-    userEvent.type(screen.getByLabelText(/name/i), testName);
-    userEvent.clear(screen.getByLabelText(/email address/i));
-    userEvent.type(screen.getByLabelText(/email address/i), testEmail);
     userEvent.click(screen.getByText(/save/i));
   });
 
@@ -100,6 +117,7 @@ describe("Existing User", () => {
 
     userEvent.clear(screen.getByLabelText(/email address/i));
     userEvent.clear(screen.getByLabelText(/name/i));
+    userEvent.clear(screen.getByLabelText(/phone number/i));
     userEvent.click(screen.getByText(/save/i));
     expect(screen.getAllByText(/required/i)).toHaveLength(2);
   });
@@ -126,7 +144,7 @@ describe("Existing User", () => {
     render(
       <UserForm pending defaultValues={testDefaultValues} onSubmit={noop} />
     );
-  
+
     screen.getByText(/saving/i);
   });
 });

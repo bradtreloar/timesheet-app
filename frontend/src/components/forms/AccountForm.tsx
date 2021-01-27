@@ -8,11 +8,13 @@ import { Alert, Button } from "react-bootstrap";
 export interface AccountFormValues {
   name: string;
   email: string;
+  phoneNumber: string;
+  acceptsReminders: boolean;
 }
 
 const validate = (values: AccountFormValues) => {
   const errors = {} as { [key: string]: any };
-  const { name, email } = values;
+  const { name, email, phoneNumber, acceptsReminders } = values;
 
   if (name === "") {
     errors.name = `Required`;
@@ -22,6 +24,17 @@ const validate = (values: AccountFormValues) => {
     errors.email = `Required`;
   } else if (EmailValidator.validate(email) === false) {
     errors.email = `Must be a valid email address`;
+  }
+
+  if (phoneNumber === "") {
+    errors.phoneNumber = `Required`;
+  } else {
+    const normalisedPhoneNumber = phoneNumber
+      .replace(/-/g, "")
+      .replace(/ /g, "");
+    if (normalisedPhoneNumber.match(/04[0-9]{8}/) === null) {
+      errors.phoneNumber = `Must be a valid Australian mobile number`;
+    }
   }
 
   return errors;
@@ -86,6 +99,40 @@ const AccountForm: React.FC<AccountFormProps> = ({
         {visibleErrors.email && (
           <Form.Control.Feedback type="invalid">
             {errors.email}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group controlId="phoneNumber">
+        <Form.Label>Phone number</Form.Label>
+        <Form.Control
+          disabled={pending}
+          type="text"
+          name="phoneNumber"
+          isInvalid={visibleErrors.phoneNumber}
+          value={values.phoneNumber}
+          onBlur={handleBlur}
+          onChange={handleChange}
+        />
+        {visibleErrors.phoneNumber && (
+          <Form.Control.Feedback type="invalid">
+            {errors.phoneNumber}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group controlId="acceptsReminders">
+        <Form.Check
+          name="acceptsReminders"
+          type="checkbox"
+          label="Receive SMS reminders"
+          isInvalid={visibleErrors.acceptsReminders}
+          checked={values.acceptsReminders}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          disabled={pending}
+        />
+        {visibleErrors.acceptsReminders && (
+          <Form.Control.Feedback type="invalid">
+            {errors.acceptsReminders}
           </Form.Control.Feedback>
         )}
       </Form.Group>

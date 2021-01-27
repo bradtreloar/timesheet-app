@@ -22,6 +22,7 @@ const testNewUser = randomUser();
 const testUpdatedUser = Object.assign({}, testUser, {
   name: faker.name.findName(),
   email: faker.internet.email(),
+  phoneNumber: faker.phone.phoneNumber("04## ### ###"),
 });
 
 const Fixture: React.FC<{
@@ -54,6 +55,8 @@ test("renders", async () => {
   expect(screen.getByRole("heading")).toHaveTextContent(/account settings/i);
   screen.getByLabelText(/name/i);
   screen.getByLabelText(/email/i);
+  screen.getByLabelText(/phone number/i);
+  screen.getByLabelText(/receive sms reminders/i);
 });
 
 test("handles form submit", async () => {

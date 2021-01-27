@@ -21,6 +21,8 @@ export const randomUser = (userIsAdmin?: boolean): User => {
     id: randomID(),
     name: faker.name.findName(),
     email: faker.internet.email(),
+    phoneNumber: faker.phone.phoneNumber("04## ### ###"),
+    acceptsReminders: true,
     isAdmin: userIsAdmin === true,
     defaultShiftValues: range(7).map((index) => randomShiftValues()),
   };

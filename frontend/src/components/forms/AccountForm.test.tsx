@@ -6,10 +6,17 @@ import AccountForm from "./AccountForm";
 import { randomUser } from "fixtures/random";
 import { noop } from "lodash";
 
-const { name: testName, email: testEmail } = randomUser();
+const {
+  name: testName,
+  email: testEmail,
+  phoneNumber: testPhoneNumber,
+  acceptsReminders: testAcceptsReminders,
+} = randomUser();
 const testDefaultValues = {
   name: testName,
   email: testEmail,
+  phoneNumber: testPhoneNumber,
+  acceptsReminders: testAcceptsReminders,
 };
 
 test("Form renders", () => {
@@ -20,9 +27,11 @@ test("Form submission succeeds", (done) => {
   render(
     <AccountForm
       defaultValues={testDefaultValues}
-      onSubmit={({ name, email }) => {
+      onSubmit={({ name, email, phoneNumber, acceptsReminders }) => {
         expect(name).toEqual(testName);
         expect(email).toEqual(testEmail);
+        expect(phoneNumber).toEqual(testPhoneNumber);
+        expect(acceptsReminders).toEqual(testAcceptsReminders);
         done();
       }}
     />
@@ -32,6 +41,8 @@ test("Form submission succeeds", (done) => {
   userEvent.type(screen.getByLabelText(/name/i), testName);
   userEvent.clear(screen.getByLabelText(/email address/i));
   userEvent.type(screen.getByLabelText(/email address/i), testEmail);
+  userEvent.clear(screen.getByLabelText(/phone number/i));
+  userEvent.type(screen.getByLabelText(/phone number/i), testPhoneNumber);
   userEvent.click(screen.getByText(/save/i));
 });
 
@@ -47,11 +58,12 @@ test("Empty form submission fails", () => {
 
   userEvent.clear(screen.getByLabelText(/email address/i));
   userEvent.clear(screen.getByLabelText(/name/i));
+  userEvent.clear(screen.getByLabelText(/phone number/i));
   userEvent.click(screen.getByText(/save/i));
-  expect(screen.getAllByText(/required/i)).toHaveLength(2);
+  expect(screen.getAllByText(/required/i)).toHaveLength(3);
 });
 
-test("Reject invalid form input", () => {
+test("Reject invalid email input", () => {
   const invalidEmail = testEmail.replace("@", "_");
 
   render(
@@ -67,6 +79,24 @@ test("Reject invalid form input", () => {
   userEvent.type(screen.getByLabelText(/email address/i), invalidEmail);
   userEvent.click(screen.getByText(/save/i));
   screen.getByText(/must be a valid email address/i);
+});
+
+test("Reject invalid Australian phone number input", () => {
+  const invalidPhoneNumber = "grault";
+
+  render(
+    <AccountForm
+      defaultValues={testDefaultValues}
+      onSubmit={() => {
+        throw new Error("onSubmit should not be called.");
+      }}
+    />
+  );
+
+  userEvent.clear(screen.getByLabelText(/phone number/i));
+  userEvent.type(screen.getByLabelText(/phone number/i), invalidPhoneNumber);
+  userEvent.click(screen.getByText(/save/i));
+  screen.getByText(/must be a valid australian mobile number/i);
 });
 
 test("Disable form controls in pending state", () => {

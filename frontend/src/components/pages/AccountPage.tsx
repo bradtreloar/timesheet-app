@@ -41,6 +41,8 @@ const AccountPage: React.FC = () => {
           defaultValues={{
             name: user.name,
             email: user.email,
+            phoneNumber: user.phoneNumber,
+            acceptsReminders: user.acceptsReminders,
           }}
           onSubmit={handleSubmit}
           pending={formPending}

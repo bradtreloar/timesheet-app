@@ -8,6 +8,8 @@ import { Alert, Button } from "react-bootstrap";
 export interface UserFormValues {
   name: string;
   email: string;
+  phoneNumber: string;
+  acceptsReminders: boolean;
   isAdmin: boolean;
 }
 
@@ -44,7 +46,13 @@ const UserForm: React.FC<UserFormProps> = ({
   const isNewUser = defaultValues === null;
   const initialValues = defaultValues
     ? defaultValues
-    : { name: "", email: "", isAdmin: false };
+    : {
+        name: "",
+        email: "",
+        phoneNumber: "",
+        acceptsReminders: false,
+        isAdmin: false,
+      };
 
   const {
     values,
@@ -93,6 +101,40 @@ const UserForm: React.FC<UserFormProps> = ({
         {visibleErrors.email && (
           <Form.Control.Feedback type="invalid">
             {errors.email}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group controlId="phoneNumber">
+        <Form.Label>Phone number</Form.Label>
+        <Form.Control
+          type="text"
+          name="phoneNumber"
+          isInvalid={visibleErrors.phoneNumber}
+          value={values.phoneNumber}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          disabled={pending}
+        />
+        {visibleErrors.phoneNumber && (
+          <Form.Control.Feedback type="invalid">
+            {errors.phoneNumber}
+          </Form.Control.Feedback>
+        )}
+      </Form.Group>
+      <Form.Group controlId="acceptsReminders">
+        <Form.Check
+          name="acceptsReminders"
+          type="checkbox"
+          label="Accepts SMS Reminders"
+          isInvalid={visibleErrors.acceptsReminders}
+          checked={values.acceptsReminders}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          disabled={pending}
+        />
+        {visibleErrors.acceptsReminders && (
+          <Form.Control.Feedback type="invalid">
+            {errors.acceptsReminders}
           </Form.Control.Feedback>
         )}
       </Form.Group>
