@@ -22,7 +22,7 @@ class UserDataResponse extends JsonResponse
         $data = [
             'id' => $user->id,
             'email' => $user->email,
-            'phone_number' => $user->phone_number,
+            'phone_number' => $user->phone_number ?: "",
             'accepts_reminders' => $user->accepts_reminders,
             'name' => $user->name,
             'is_admin' => $user->is_admin,
