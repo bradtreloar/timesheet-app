@@ -33,6 +33,7 @@ export const reasons = {
   "annual-leave": "Annual leave",
   "long-service": "Long service leave",
   "unpaid-leave": "Unpaid leave",
+  "public-holiday": "Public Holiday",
   "rostered-day-off": "Rostered day off",
 } as const;
 
