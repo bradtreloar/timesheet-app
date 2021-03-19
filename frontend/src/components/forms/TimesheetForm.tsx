@@ -33,6 +33,7 @@ export const reasons = {
   "annual-leave": "Annual leave",
   "long-service": "Long service leave",
   "unpaid-leave": "Unpaid leave",
+  "public-holiday": "Public Holiday",
   "rostered-day-off": "Rostered day off",
 } as const;
 
@@ -301,10 +302,12 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const isActive = event.target.checked;
-    const newValues = {} as { [key: string]: "" | boolean };
+    const newValues = {} as { [key: string]: string | boolean };
     const newTouchedValues = {} as { [key: string]: false };
     newValues[`${name}.isActive`] = isActive;
     if (!isActive) {
+      // Clear the reason.
+      newValues[`${name}.reason`] = "none";
       // Clear the time values for the shift and flag the time inputs
       // as untouched.
       shiftTimesInputNames.forEach((inputName) => {
