@@ -85,7 +85,9 @@ const timesheetsSlice = createSlice({
       })
       .addCase(addTimesheet.fulfilled, (state, action) => {
         state.status = "fulfilled";
-        state.timesheets.push(action.payload);
+        // Insert new timesheet at the start of the list because
+        // timesheets are sorted by descending creation date.
+        state.timesheets = [action.payload, ...state.timesheets];
       })
       .addCase(addTimesheet.rejected, (state, action) => {
         state.status = "rejected";
