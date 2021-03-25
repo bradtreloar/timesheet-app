@@ -1,4 +1,3 @@
-import { User } from "types";
 
 interface MenuItem {
   label: string;

@@ -1,5 +1,4 @@
 import React from "react";
-import { Settings } from "types";
 import { Button, Form } from "react-bootstrap";
 import useForm from "hooks/useForm";
 

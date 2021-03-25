@@ -1,5 +1,4 @@
 import { within } from "@testing-library/react";
-import { Shift, ShiftValues } from "types";
 
 const paddedValue = (value: string) =>
   value === "" ? value : value.padStart(2, "0");

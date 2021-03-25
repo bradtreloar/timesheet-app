@@ -6,7 +6,7 @@ import { MessagesProvider } from "context/messages";
  * Doesn't render anything until user is initialised.
  */
 export const AuthFixture: React.FC = ({ children }) => {
-  const { userInitialised, user } = useAuth();
+  const { userInitialised } = useAuth();
 
   return userInitialised ? <>{children}</> : null;
 };

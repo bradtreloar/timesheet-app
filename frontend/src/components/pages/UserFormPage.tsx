@@ -10,7 +10,6 @@ import { useHistory, useParams } from "react-router";
 import NotFoundPage from "./NotFoundPage";
 import { useMessages } from "context/messages";
 import store from "store";
-import { ShiftValues, User } from "types";
 import { range } from "lodash";
 import Messages from "components/Messages";
 

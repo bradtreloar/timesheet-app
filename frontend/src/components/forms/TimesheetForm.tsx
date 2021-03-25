@@ -6,7 +6,6 @@ import {
   InvalidTimeException,
   Time,
 } from "services/date";
-import { Absence, Shift, ShiftValues } from "types";
 import useForm, { FormErrors } from "hooks/useForm";
 import WeekSelect from "components/inputs/WeekSelect";
 import TimeInput from "components/inputs/TimeInput";

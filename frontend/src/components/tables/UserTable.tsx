@@ -2,7 +2,6 @@ import usePagination from "hooks/usePagination";
 import { orderBy } from "lodash";
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { User } from "types";
 
 interface UserTableProps {
   users: User[];

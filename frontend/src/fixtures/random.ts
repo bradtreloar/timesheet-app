@@ -1,12 +1,3 @@
-import {
-  Reason,
-  Setting,
-  Settings,
-  Shift,
-  ShiftValues,
-  Timesheet,
-  User,
-} from "types";
 import randomstring from "randomstring";
 import { Time } from "services/date";
 import faker from "faker";

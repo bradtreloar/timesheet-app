@@ -13,7 +13,6 @@ import {
   randomTimesheets,
   randomUser,
 } from "fixtures/random";
-import { Shift } from "types";
 jest.mock("services/datastore");
 
 beforeEach(() => {

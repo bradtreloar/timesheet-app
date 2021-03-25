@@ -1,4 +1,3 @@
-import { Setting } from "types";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import * as datastore from "services/datastore";
 import { RootState } from ".";

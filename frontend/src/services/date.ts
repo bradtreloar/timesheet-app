@@ -1,5 +1,4 @@
 import { DateTime } from "luxon";
-import { Shift, ShiftValues, Timesheet } from "types";
 
 /**
  * A class for storing a time with only hours and minute.

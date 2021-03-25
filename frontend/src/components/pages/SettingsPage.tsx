@@ -4,7 +4,6 @@ import PageTitle from "components/PageTitle";
 import DefaultLayout from "components/layouts/DefaultLayout";
 import { selectSettings, updateSettings } from "store/settings";
 import useFormController from "hooks/useFormController";
-import { Settings } from "types";
 import store from "store";
 import SettingsForm from "components/forms/SettingsForm";
 import { Alert } from "react-bootstrap";

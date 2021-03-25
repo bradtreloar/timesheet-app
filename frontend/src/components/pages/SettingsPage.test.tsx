@@ -8,7 +8,6 @@ import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
 import store from "store";
 import { clearSettings, setSettings } from "store/settings";
-import { Shift } from "types";
 import { getTimesFromShift } from "services/adaptors";
 import SettingsPage from "./SettingsPage";
 import { DateTime } from "luxon";

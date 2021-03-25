@@ -2,7 +2,6 @@ import React from "react";
 import { DateTime } from "luxon";
 import { Link } from "react-router-dom";
 import { getTimesheetTotalHours } from "services/date";
-import { Timesheet } from "types";
 import usePagination from "hooks/usePagination";
 
 interface TimesheetTableProps {

@@ -1,16 +1,4 @@
 import { getShiftHoursFromTimes } from "services/date";
-import {
-  Absence,
-  AbsenceResource,
-  SettingResource,
-  ShiftResource,
-  ShiftValues,
-  TimesheetResource,
-  User,
-  UserData,
-  UserResource,
-} from "types";
-import { Setting, Shift, Timesheet } from "types";
 import { Time } from "./date";
 
 export const parseSetting = (resource: SettingResource): Setting => {

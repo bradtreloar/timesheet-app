@@ -7,7 +7,6 @@ import LoginPage from "components/pages/LoginPage";
 import NotFoundPage from "components/pages/NotFoundPage";
 import store from "store";
 import { clearTimesheets, fetchTimesheets } from "store/timesheets";
-import { User } from "types";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import PasswordPage from "./pages/PasswordPage";
 import TimesheetFormPage from "./pages/TimesheetFormPage";

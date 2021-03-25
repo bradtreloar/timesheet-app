@@ -7,7 +7,6 @@ import useFormController from "hooks/useFormController";
 import DefaultLayout from "components/layouts/DefaultLayout";
 import store from "store";
 import { addTimesheet, selectTimesheets } from "store/timesheets";
-import { Absence, Shift, ShiftValues, Timesheet, User } from "types";
 import { useHistory } from "react-router";
 import Messages from "components/Messages";
 import { Button } from "react-bootstrap";

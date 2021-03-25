@@ -14,7 +14,6 @@ import * as datastore from "services/datastore";
 import { Provider } from "react-redux";
 import store from "store";
 import { setSettings } from "store/settings";
-import { Shift, ShiftValues } from "types";
 import { getTimesFromShift } from "services/adaptors";
 import { DateTime } from "luxon";
 import { cloneDeep } from "lodash";

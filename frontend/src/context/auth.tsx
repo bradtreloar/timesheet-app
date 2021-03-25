@@ -1,7 +1,5 @@
 import React, { useContext, createContext, useCallback } from "react";
-import { User } from "types";
 import * as datastore from "services/datastore";
-import { isEqual } from "lodash";
 
 type Status = "idle" | "pending" | "fulfilled" | "rejected";
 
@@ -50,7 +48,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const refreshUser = useCallback(async () => {
     const currentUser = await datastore.fetchCurrentUser();
     setUser(currentUser);
-  }, [user, setUser]);
+  }, [setUser]);
 
   /**
    * Authenticates the user.

@@ -7,7 +7,6 @@ import randomstring from "randomstring";
 import { enterShiftValues, eraseShiftValues } from "fixtures/userInput";
 import { expectTimesEqual, expectValidShift } from "fixtures/expect";
 import { noop, range } from "lodash";
-import { ShiftValues } from "types";
 import { DateTime } from "luxon";
 
 export const EMPTY_SHIFT_TIMES = {

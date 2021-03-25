@@ -1,6 +1,5 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Message, MessageType } from "types";
 import { DateTime } from "luxon";
 
 /**

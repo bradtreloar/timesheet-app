@@ -1,15 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import {
-  Absence,
-  AbsenceResource,
-  Setting,
-  Shift,
-  Timesheet,
-  User,
-  UserData,
-  UserResource,
-} from "types";
-import { SettingResource, ShiftResource, TimesheetResource } from "types";
 import { API_HOST } from "settings";
 import {
   parseTimesheet,
