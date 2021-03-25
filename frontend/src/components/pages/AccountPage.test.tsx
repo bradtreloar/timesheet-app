@@ -42,7 +42,6 @@ const Fixture: React.FC<{
 beforeAll(() => {
   store.dispatch(clearUsers);
   jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(testUser);
-  localStorage.setItem("user", JSON.stringify(testUser));
   store.dispatch(setUsers([testUser]));
   jest.spyOn(datastore, "updateUser").mockResolvedValue(testUpdatedUser);
 });

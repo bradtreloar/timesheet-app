@@ -87,7 +87,6 @@ const LogoutFixture = () => {
 
 beforeEach(() => {
   mockClient.onGet("/csrf-cookie").reply(204);
-  localStorage.clear();
 });
 
 afterEach(() => {
@@ -235,7 +234,6 @@ describe("unauthenticated user", () => {
 
 describe("authenticated user", () => {
   beforeEach(() => {
-    localStorage.setItem("user", JSON.stringify(mockUser));
     mockClient.onGet("/user").reply(200, makeUserData(mockUser));
   });
 
@@ -285,7 +283,6 @@ describe("authenticated user", () => {
 
 describe("admin user", () => {
   beforeEach(() => {
-    localStorage.setItem("user", JSON.stringify(mockAdminUser));
     mockClient.onGet("/user").reply(200, makeUserData(mockAdminUser));
   });
 

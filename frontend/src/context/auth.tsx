@@ -38,33 +38,18 @@ export const useAuth = () => {
 };
 
 const AuthProvider: React.FC = ({ children }) => {
-  // Rehydrate the user value from local storage.
-  const storedUserData = localStorage.getItem("user");
-  const initialUser: User | null = storedUserData
-    ? JSON.parse(storedUserData)
-    : null;
   const [userInitialised, setUserInitialised] = React.useState(false);
-  const [user, setUser] = React.useState(initialUser);
+  const [user, setUser] = React.useState<User | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const isAuthenticated = user !== null;
   const isAdmin = user !== null && user.isAdmin;
-
-  /**
-   * Persist the user's information locally.
-   */
-  React.useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
-  }, [user]);
 
   /**
    * Refreshes the user from the server.
    */
   const refreshUser = useCallback(async () => {
     const currentUser = await datastore.fetchCurrentUser();
-    // Update the user if the logged in user differs from the stored user.
-    if (!isEqual(user, currentUser)) {
-      setUser(currentUser);
-    }
+    setUser(currentUser);
   }, [user, setUser]);
 
   /**

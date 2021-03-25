@@ -17,15 +17,24 @@ import { setSettings } from "store/settings";
 import { Shift, ShiftValues } from "types";
 import { getTimesFromShift } from "services/adaptors";
 import { DateTime } from "luxon";
+import { cloneDeep } from "lodash";
 
 jest.mock("services/datastore");
-const testUser = randomUser();
-const testTimesheet = randomTimesheet(testUser);
-testTimesheet.comment = "";
-const testShifts = testTimesheet.shifts as Shift[];
-// Make the user's default shift times coincide with the test timesheet's times.
-testUser.defaultShiftValues = testShifts.map((shift) => getTimesFromShift(shift));
-const testSettings = randomSettings();
+
+const getFixtures = () => {
+  const testUser = randomUser();
+  const testTimesheet = randomTimesheet(testUser);
+  testTimesheet.comment = "";
+  const testShifts = testTimesheet.shifts as Shift[];
+  // Make the user's default shift times coincide with the test timesheet's times.
+  testUser.defaultShiftValues = testShifts.map((shift) => getTimesFromShift(shift));
+
+  return {
+    testTimesheet,
+    testShifts,
+    testUser,
+  };
+}
 
 export const EMPTY_SHIFT_TIMES = {
   isActive: false,
@@ -52,13 +61,19 @@ const Fixture: React.FC = () => {
   );
 };
 
-beforeAll(() => {
-  jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(testUser);
-  localStorage.setItem("user", JSON.stringify(testUser));
+beforeEach(() => {
+  const testSettings = randomSettings();
   store.dispatch(setSettings(testSettings));
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 test("renders timesheet page", async () => {
+  const { testUser } = getFixtures();
+  jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(testUser);
+  
   await act(async () => {
     render(<Fixture />);
   });
@@ -67,6 +82,8 @@ test("renders timesheet page", async () => {
 });
 
 test("handles timesheet submission", async () => {
+  const { testShifts, testTimesheet, testUser } = getFixtures();
+  jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(testUser);
   jest.spyOn(datastore, "createTimesheet").mockResolvedValue(testTimesheet);
   jest.spyOn(datastore, "createShifts").mockResolvedValue(testShifts);
   jest.spyOn(datastore, "completeTimesheet").mockResolvedValue(testTimesheet);
@@ -89,6 +106,9 @@ test("handles timesheet submission", async () => {
 });
 
 test("displays error when timesheet creation fails", async () => {
+  const { testTimesheet, testUser } = getFixtures();
+  jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(testUser);
+
   const errorMessage = "unable to create timesheet";
   jest
     .spyOn(datastore, "createTimesheet")
@@ -112,9 +132,12 @@ test("displays error when timesheet creation fails", async () => {
 });
 
 test("updates the user's default shifts and shows a confirmation message", async () => {
-  const updatedTestUser = { ...testUser };
-  updatedTestUser.defaultShiftValues[0] = EMPTY_SHIFT_TIMES;
-  jest.spyOn(datastore, "updateUser").mockResolvedValue(updatedTestUser);
+  const { testUser } = getFixtures();
+  jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(testUser);
+
+  const expectedTestUser = cloneDeep(testUser);
+  expectedTestUser.defaultShiftValues[0] = EMPTY_SHIFT_TIMES;
+  jest.spyOn(datastore, "updateUser").mockResolvedValue(expectedTestUser);
 
   await act(async () => {
     render(<Fixture />);
@@ -127,5 +150,5 @@ test("updates the user's default shifts and shows a confirmation message", async
     userEvent.click(screen.getByText(/save these shifts as my default/i));
   });
   await screen.findByText(/your default shifts have been updated/i);
-  expect(datastore.updateUser).toHaveBeenCalledWith(updatedTestUser);
+  expect(datastore.updateUser).toHaveBeenCalledWith(expectedTestUser);
 });

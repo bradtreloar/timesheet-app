@@ -25,7 +25,6 @@ const Fixture = () => (
 );
 
 beforeEach(() => {
-  window.localStorage.clear();
   jest.clearAllMocks();
 });
 
@@ -40,7 +39,6 @@ test("redirects to /login when not authenticated", async () => {
 test("renders protected route when authenticated", async () => {
   const mockUser = randomUser();
   mockClient.onGet("/user").reply(200, makeUserData(mockUser));
-  localStorage.setItem("user", JSON.stringify(mockUser));
   await act(async () => {
     render(<Fixture />);
   });

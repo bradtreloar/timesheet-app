@@ -94,7 +94,6 @@ describe("unauthenticated user", () => {
 describe("authenticated user", () => {
   beforeEach(() => {
     // Store a current user in state.
-    localStorage.setItem("user", JSON.stringify(mockUser));
     jest.spyOn(datastore, "fetchCurrentUser").mockResolvedValue(mockUser);
     jest.spyOn(datastore, "fetchTimesheets").mockResolvedValue(testTimesheets);
   });

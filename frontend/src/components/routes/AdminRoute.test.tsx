@@ -25,7 +25,6 @@ const Fixture = () => (
 );
 
 beforeEach(() => {
-  window.localStorage.clear();
   jest.clearAllMocks();
 });
 
@@ -40,7 +39,6 @@ test("redirects to /login when not authenticated", async () => {
 test("renders admin route when authenticated as admin", async () => {
   const testUser = randomUser(true);
   mockClient.onGet("/user").reply(200, makeUserData(testUser));
-  localStorage.setItem("user", JSON.stringify(testUser));
   await act(async () => {
     render(<Fixture />);
   });
@@ -50,7 +48,6 @@ test("renders admin route when authenticated as admin", async () => {
 test("renders access denied route when authenticated but not admin", async () => {
   const testUser = randomUser();
   mockClient.onGet("/user").reply(200, makeUserData(testUser));
-  localStorage.setItem("user", JSON.stringify(testUser));
   await act(async () => {
     render(<Fixture />);
   });
