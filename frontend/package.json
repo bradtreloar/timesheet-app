@@ -56,7 +56,9 @@
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "prettier": "prettier --write ./src/**.ts* ./src/**/*.ts*",
     "lint": "eslint ./src/**.ts* ./src/**/*.ts*",
-    "deploy": "ssh allbizsupplies.biz \"rm -rf timesheet/frontend/\" && scp -r build/ allbizsupplies.biz:timesheet/frontend/"
+    "deploy": "ssh allbizsupplies.biz \"rm -rf timesheet/frontend/\" && scp -r build/ allbizsupplies.biz:timesheet/frontend/",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -81,5 +83,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^6.1.21",
+    "@storybook/addon-essentials": "^6.1.21",
+    "@storybook/addon-links": "^6.1.21",
+    "@storybook/node-logger": "^6.1.21",
+    "@storybook/preset-create-react-app": "^3.1.7",
+    "@storybook/react": "^6.1.21"
   }
 }
