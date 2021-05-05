@@ -65,7 +65,7 @@ const getShiftValuesFromFormValues = (
 const buildInitialValues = (defaultShiftValues: ShiftValues[]) => ({
   weekStartDateTime: DateTime.fromObject({
     weekday: 1,
-  }),
+  }).minus({ weeks: 1 }),
   comment: "",
   ...range(7).reduce((values, index) => {
     const dv = defaultShiftValues[index];

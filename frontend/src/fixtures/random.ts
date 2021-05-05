@@ -110,7 +110,7 @@ export const randomTimesheet = (user: User): Timesheet => {
     minute: 0,
     second: 0,
     millisecond: 0,
-  });
+  }).minus({ weeks: 1 });
 
   return {
     id: randomID(),
