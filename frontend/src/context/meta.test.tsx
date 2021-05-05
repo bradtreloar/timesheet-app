@@ -1,19 +1,19 @@
 import React, { version } from "react";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import useMeta from "hooks/useMeta";
 import { act, render, screen } from "@testing-library/react";
+import { MetaProvider, useMeta } from "./meta";
 
 const mockClient = new MockAdapter(axios);
 
 const Fixture: React.FC = () => {
-  const { hasNewVersion, isLoadingMeta, version } = useMeta();
+  const { hasNewVersion, isLoadingMeta, currentVersion } = useMeta();
 
   return (
     <>
       <div data-testid="isLoadingMeta">{isLoadingMeta.toString()}</div>
       <div data-testid="hasNewVersion">{hasNewVersion.toString()}</div>
-      <div data-testid="version">{version}</div>
+      <div data-testid="currentVersion">{currentVersion}</div>
     </>
   );
 };
@@ -21,7 +21,7 @@ const Fixture: React.FC = () => {
 const expectMeta = (isLoadingMeta: boolean, hasNewVersion: boolean, version: string) => {
   expect(screen.getByTestId("isLoadingMeta")).toHaveTextContent(isLoadingMeta.toString());
   expect(screen.getByTestId("hasNewVersion")).toHaveTextContent(hasNewVersion.toString());
-  expect(screen.getByTestId("version")).toHaveTextContent(version);
+  expect(screen.getByTestId("currentVersion")).toHaveTextContent(version);
 }
 
 afterEach(() => {
@@ -36,7 +36,7 @@ test("detects new major version", async () => {
   });
 
   await act(async () => {
-    render(<Fixture />);
+    render(<MetaProvider><Fixture /></MetaProvider>);
   });
 
   expectMeta(false, true, "1.0.0");
@@ -49,7 +49,7 @@ test("detects new minor version", async () => {
   });
 
   await act(async () => {
-    render(<Fixture />);
+    render(<MetaProvider><Fixture /></MetaProvider>);
   });
 
   expectMeta(false, true, "1.0.0");
@@ -62,7 +62,7 @@ test("detects new patch version", async () => {
   });
 
   await act(async () => {
-    render(<Fixture />);
+    render(<MetaProvider><Fixture /></MetaProvider>);
   });
 
   expectMeta(false, true, "1.0.0");
@@ -75,7 +75,7 @@ test("detects same version", async () => {
   });
 
   await act(async () => {
-    render(<Fixture />);
+    render(<MetaProvider><Fixture /></MetaProvider>);
   });
 
   expectMeta(false, false, "1.0.0");
@@ -88,7 +88,7 @@ test("detects loading state", async () => {
   });
 
   await act(async () => {
-    render(<Fixture />);
+    render(<MetaProvider><Fixture /></MetaProvider>);
   });
 
   expectMeta(false, false, "1.0.0");

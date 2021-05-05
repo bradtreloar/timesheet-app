@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import packageJson from "../../package.json";
+
+interface Meta {
+  version: string;
+};
 
 const isNewerVersion = (latestVersion: string, currentVersion: string) => {
   const versionsA = latestVersion.split(/\./g);
@@ -15,11 +18,27 @@ const isNewerVersion = (latestVersion: string, currentVersion: string) => {
   return false;
 };
 
-interface Meta {
-  version: string;
+interface MetaContextState {
+  isLoadingMeta: boolean;
+  hasNewVersion: boolean;
+  currentVersion: string | null;
+}
+
+const MetaContext = createContext<MetaContextState | undefined>(undefined);
+
+/**
+ * Custom hook. Returns the neta context. Only works inside components wrapped
+ * by MetaProvider.
+ */
+export const useMeta = () => {
+  const netaContext = useContext(MetaContext);
+  if (netaContext === undefined) {
+    throw new Error("MetaContext is undefined");
+  }
+  return netaContext;
 };
 
-const useMeta = () => {
+const MetaProvider: React.FC = ({ children }) => {
   const [isLoadingMeta, setIsLoadingMeta] = useState(true);
   const [hasNewVersion, setHasNewVersion] = useState(false);
   const [currentVersion] = useState(localStorage.getItem("version"));
@@ -40,11 +59,13 @@ const useMeta = () => {
     })();
   }, []);
 
-  return {
+  const value = {
     isLoadingMeta,
     hasNewVersion,
-    version: currentVersion,
+    currentVersion,
   };
+
+  return <MetaContext.Provider value={value}>{children}</MetaContext.Provider>;
 };
 
-export default useMeta;
+export { MetaProvider };
