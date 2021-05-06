@@ -1,9 +1,12 @@
+import Throbber from "components/Throbber";
 import * as React from "react";
+import "./LoadingPage.scss";
 
 const LoadingPage = () => (
-  <div className="page">
-    <div className="container">
-      <p className="my-3">
+  <div className="page loading-page">
+    <div className="d-flex h-100 justify-content-center align-items-center">
+      <Throbber />
+      <p className="sr-only">
         Loading...
       </p>
     </div>
