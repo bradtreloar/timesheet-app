@@ -54,14 +54,16 @@ class RemindUsers extends Command
         if ($timesheets) {
             foreach ($timesheets as $timesheet) {
                 $shifts = $timesheet->shifts;
+                // Timesheet is current if at least one of the shifts or
+                // absences falls within the last 7 days.
                 foreach ($shifts as $shift) {
-                    if ($shift->start->diffInDays(null, false) <= 0) {
+                    if ($shift->start->diffInDays(null, false) <= 7) {
                         return true;
                     }
                 }
                 $absences = $timesheet->absences;
                 foreach ($absences as $absence) {
-                    if ($absence->date->diffInDays(null, false) <= 0) {
+                    if ($absence->date->diffInDays(null, false) <= 7) {
                         return true;
                     }
                 }

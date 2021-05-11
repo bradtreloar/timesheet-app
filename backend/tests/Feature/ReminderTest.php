@@ -25,8 +25,8 @@ class ReminderTest extends TestCase
         $user = $timesheet->user;
         $today_shift = Shift::factory()->create([
             'timesheet_id' => $timesheet->id,
-            'start' => Carbon::today(),
-            'end' => Carbon::today()->addHours(8),
+            'start' => Carbon::today()->subDays(7),
+            'end' => Carbon::today()->subDays(7)->addHours(8),
         ]);
         $command = new RemindUsers();
         $this->assertTrue($command->userHasCurrentTimesheet($user));
