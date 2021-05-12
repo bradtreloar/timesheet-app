@@ -13,7 +13,7 @@ class TimesheetPDF
      */
     public static function create($timesheet)
     {
-        $filename = "timesheet_{$timesheet->created_at->getTimestamp()}_{$timesheet->user->id}.pdf";
+        $filename = "timesheet_{$timesheet->created_at->getTimestamp()}_{$timesheet->user->snakecase_name}.pdf";
         $storage = Storage::disk('temporary');
 
         if ($storage->missing($filename)) {
