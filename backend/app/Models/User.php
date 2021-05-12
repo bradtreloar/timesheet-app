@@ -26,6 +26,13 @@ class User extends Authenticatable
     ];
 
     /**
+     * Calculated attributes.
+     */
+    protected $appends = [
+        'snakecase_name',
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -48,6 +55,19 @@ class User extends Authenticatable
     public function timesheets()
     {
         return $this->hasMany(Timesheet::class);
+    }
+
+    /**
+     * Returns a snakecase version of the user's name, with whitespace, hyphens,
+     * apostrophes and punctuation replaced by underscores or just removed.
+     */
+    public function getSnakecaseNameAttribute()
+    {
+        $name = $this->name;
+        $name = strtolower($name);
+        $name = str_replace([' ', '-'], '_', $name);
+        $name = str_replace(['\'', '’', ','], '', $name);
+        return $name;
     }
 
     protected static function booted()
