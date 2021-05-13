@@ -6,6 +6,7 @@ use App\Models\Absence;
 use App\Models\Shift;
 use App\Models\Timesheet;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Sebdesign\SM\Facade as StateMachine;
@@ -38,15 +39,20 @@ class FakeTimesheet extends Command
             $timesheet = Timesheet::factory()->create([
                 'user_id' => $user->id,
             ]);
-            for ($i = 0; $i < 3; $i++) {
-                Shift::factory()->create([
-                    'timesheet_id' => $timesheet->id,
-                ]);
-            }
-            for ($i = 0; $i < 2; $i++) {
-                Absence::factory()->create([
-                    'timesheet_id' => $timesheet->id,
-                ]);
+            for ($i = 0; $i < 7; $i++) {
+                $date = Carbon::yesterday()->startOfWeek()->addDays($i);
+                if (random_int(0, 1)) {
+                    Shift::factory()->create([
+                        'timesheet_id' => $timesheet->id,
+                        'start' => $date,
+                        'end' => $date->addHours(8),
+                    ]);
+                } else {
+                    Absence::factory()->create([
+                        'timesheet_id' => $timesheet->id,
+                        'date' => $date,
+                    ]);
+                }
             }
             $timesheet->save();
             $stateMachine = StateMachine::get($timesheet, 'timesheetState');

@@ -15,7 +15,8 @@ class Shift extends Model
     ];
 
     protected $appends = [
-        'hours'
+        'hours',
+        'date',
     ];
 
     protected $dates = [
@@ -28,6 +29,10 @@ class Shift extends Model
         $shift_minutes = $this->end->diffInMinutes($this->start) - $this->break_duration;
         $shift_hours = $shift_minutes / 60;
         return number_format($shift_hours, 2);
+    }
+
+    public function getDateAttribute() {
+        return $this->start;
     }
 
     public function timesheet(): BelongsTo
