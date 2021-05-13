@@ -58,10 +58,10 @@
             @endif
         @endforeach
         <tr>
-            <td style="text-align:left">
+            <td colspan="4" style="text-align:left">
                 <strong>Total Weekday Hours</strong>
             </td>
-            <td colspan="4" style="text-align:right">
+            <td style="text-align:right">
                 {{ $timesheet->totalWeekdayHours }} hours
             </td>
         </tr>

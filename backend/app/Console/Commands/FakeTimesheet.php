@@ -40,17 +40,16 @@ class FakeTimesheet extends Command
                 'user_id' => $user->id,
             ]);
             for ($i = 0; $i < 7; $i++) {
-                $date = Carbon::yesterday()->startOfWeek()->addDays($i);
                 if (random_int(0, 1)) {
                     Shift::factory()->create([
                         'timesheet_id' => $timesheet->id,
-                        'start' => $date,
-                        'end' => $date->addHours(8),
+                        'start' => Carbon::yesterday()->startOfWeek()->addDays($i),
+                        'end' => Carbon::yesterday()->startOfWeek()->addDays($i)->addHours(8),
                     ]);
                 } else {
                     Absence::factory()->create([
                         'timesheet_id' => $timesheet->id,
-                        'date' => $date,
+                        'date' => Carbon::yesterday()->startOfWeek()->addDays($i),
                     ]);
                 }
             }

@@ -48,113 +48,92 @@ th {
                 </tr>
             </tbody>
         </table>
-        <h2>Shifts</h2>
-        @if (count($timesheet->shifts) > 0)
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width:100%">
-                            Date
-                        </th>
-                        <th style="text-align:right;white-space:nowrap">
-                            Start
-                        </th>
-                        <th style="text-align:right;white-space:nowrap">
-                            End
-                        </th>
-                        <th style="text-align:right;white-space:nowrap">
-                            Break
-                        </th>
-                        <th style="text-align:right;white-space:nowrap">
-                            Hours
-                        </th>
-                    </tr>
-                </thead>
-                <tbody style="text-align: left;vertical-align:top;">
-                    @foreach ($timesheet->shifts->sortBy('start') as $shift)
-                        @if ($shift->start->dayOfWeekIso <= 5)
-                            <tr>
-                                <td style="width:100%">
-                                    {{ $shift->start->format("D, d-m-Y") }}
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->start->format("H:i") }}
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->end->format("H:i") }}
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->break_duration }} min
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->hours }} hours
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
-                    <tr>
-                        <td colspan="4" style="text-align:right;white-space:nowrap">
-                            <strong>Total Weekday Hours</strong>
-                        </td>
-                        <td style="text-align:right;white-space:nowrap">
-                            {{ $timesheet->totalWeekdayHours }} hours
-                        </td>
-                    </tr>
-                    @foreach ($timesheet->shifts->sortBy('start') as $shift)
-                        @if ($shift->start->dayOfWeekIso > 5)
-                            <tr>
-                                <td style="width:100%">
-                                    {{ $shift->start->format("D, d-m-Y") }}
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->start->format("H:i") }}
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->end->format("H:i") }}
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->break_duration }} min
-                                </td>
-                                <td style="text-align:right;white-space:nowrap">
-                                    {{ $shift->hours }} hours
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
-                </tbody>
-            </table>
-        @else
-            <p>No shifts.</p>
-        @endif
-        <h2>Leave and Absences</h2>
-        @if (count($timesheet->absences) > 0)
+        <h2>Shifts, Leave and Absences</h2>
         <table>
             <thead>
                 <tr>
-                    <td style="width:100%">
+                    <th style="width:100%">
                         Date
                     </th>
                     <th style="text-align:right;white-space:nowrap">
-                        Reason
+                        Start
+                    </th>
+                    <th style="text-align:right;white-space:nowrap">
+                        End
+                    </th>
+                    <th style="text-align:right;white-space:nowrap">
+                        Break
+                    </th>
+                    <th style="text-align:right;white-space:nowrap">
+                        Hours
                     </th>
                 </tr>
             </thead>
             <tbody style="text-align: left;vertical-align:top;">
-                @foreach ($timesheet->absences->sortBy('date') as $absence)
-                    <tr>
-                        <td style="width:100%;">
-                            {{ $absence->date->format("D, d-m-Y") }}
-                        </td>
-                        <td style="white-space:nowrap">
-                            {{ $absence->reasonLabel }}
-                        </td>
-                    </tr>
+                @foreach ($timesheet->shifts_and_absences as $entry)
+                    @if ($entry->date->dayOfWeekIso <= 5)
+                        <tr>
+                            <td style="width:100%">
+                                {{ $entry->date->format("D, d-m-Y") }}
+                            </td>
+                            @if (get_class($entry) == "App\Models\Shift")
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->start->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->end->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->break_duration }} min
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->hours }} hours
+                                </td>
+                            @else
+                                <td colspan="4" style="text-align:right;white-space:nowrap">
+                                    {{ $entry->reasonLabel }}
+                                </td>
+                            @endif
+                        </tr>
+                    @endif
+                @endforeach
+                <tr>
+                    <td colspan="4" style="text-align:right;white-space:nowrap">
+                        <strong>Total Weekday Hours</strong>
+                    </td>
+                    <td style="text-align:right;white-space:nowrap">
+                        {{ $timesheet->totalWeekdayHours }} hours
+                    </td>
+                </tr>
+                @foreach ($timesheet->shifts_and_absences as $entry)
+                    @if ($entry->date->dayOfWeekIso > 5)
+                        <tr>
+                            <td style="width:100%">
+                                {{ $entry->date->format("D, d-m-Y") }}
+                            </td>
+                            @if (get_class($entry) == "App\Models\Shift")
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->start->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->end->format("H:i") }}
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->break_duration }} min
+                                </td>
+                                <td style="text-align:right;white-space:nowrap">
+                                    {{ $entry->hours }} hours
+                                </td>
+                            @else
+                                <td colspan="4" style="text-align:right;white-space:nowrap">
+                                    {{ $entry->reasonLabel }}
+                                </td>
+                            @endif
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>
-        @else
-            <p>No leave or absences.</p>
-        @endif
         <h2>Comment</h2>
         <p>{{ $timesheet->comment ? $timesheet->comment : "none" }}</p>
     </div>
