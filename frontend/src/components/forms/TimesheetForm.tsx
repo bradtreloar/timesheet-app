@@ -134,13 +134,11 @@ const processTimesheet = (
       };
       shifts.push(shift);
     } else {
-      if (shiftValues.reason !== "rostered-day-off") {
-        const absence: Absence = {
-          date: shiftDate.toISO(),
-          reason: shiftValues.reason,
-        };
-        absences.push(absence);
-      }
+      const absence: Absence = {
+        date: shiftDate.toISO(),
+        reason: shiftValues.reason,
+      };
+      absences.push(absence);
     }
   });
 
