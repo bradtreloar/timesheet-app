@@ -62,27 +62,36 @@ const getShiftValuesFromFormValues = (
  * @returns
  *   An object containing the default value for each form input.
  */
-const buildInitialValues = (defaultShiftValues: ShiftValues[]) => ({
-  weekStartDateTime: DateTime.fromObject({
-    weekday: 1,
-  }).minus({ weeks: 1 }),
-  comment: "",
-  ...range(7).reduce((values, index) => {
-    const dv = defaultShiftValues[index];
-    const name = `shift.${index}`;
-    values[`${name}.isActive`] = dv.isActive;
-    values[`${name}.reason`] = dv.reason;
-    shiftTimesNames.forEach((shiftTimesName) => {
-      values[`${name}.${shiftTimesName}.hour`] = dv[
-        shiftTimesName
-      ].hour.toString();
-      values[`${name}.${shiftTimesName}.minute`] = dv[
-        shiftTimesName
-      ].minute.toString();
-    });
-    return values;
-  }, {} as any),
-});
+const buildInitialValues = (defaultShiftValues: ShiftValues[]) => {
+  const todayIsWeekStart = DateTime.now().weekday === 1;
+  const weekStartDateTime = todayIsWeekStart
+    ? DateTime.fromObject({
+        weekday: 1,
+      }).minus({ weeks: 1 })
+    : DateTime.fromObject({
+        weekday: 1,
+      });
+
+  return {
+    weekStartDateTime,
+    comment: "",
+    ...range(7).reduce((values, index) => {
+      const dv = defaultShiftValues[index];
+      const name = `shift.${index}`;
+      values[`${name}.isActive`] = dv.isActive;
+      values[`${name}.reason`] = dv.reason;
+      shiftTimesNames.forEach((shiftTimesName) => {
+        values[`${name}.${shiftTimesName}.hour`] = dv[
+          shiftTimesName
+        ].hour.toString();
+        values[`${name}.${shiftTimesName}.minute`] = dv[
+          shiftTimesName
+        ].minute.toString();
+      });
+      return values;
+    }, {} as any),
+  };
+};
 
 /**
  * Processes form values into an array of ShiftValues objects
@@ -519,11 +528,23 @@ const TimesheetForm: React.FC<TimesheetFormProps> = ({
       </Form.Group>
       <div className="my-3 d-md-flex flex-row-reverse justify-content-between align-items-center">
         <div className="d-md-flex flex-row-reverse align-items-center">
-          <Button className="mb-3" variant="success" size="lg" type="submit" disabled={pending}>
+          <Button
+            className="mb-3"
+            variant="success"
+            size="lg"
+            type="submit"
+            disabled={pending}
+          >
             {pending ? `Submitting timesheet` : `Submit timesheet`}
           </Button>
           &nbsp;
-          <Button className="mb-3" variant="outline-secondary" size="lg" type="reset" disabled={pending}>
+          <Button
+            className="mb-3"
+            variant="outline-secondary"
+            size="lg"
+            type="reset"
+            disabled={pending}
+          >
             Reset form
           </Button>
         </div>
