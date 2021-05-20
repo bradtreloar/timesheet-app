@@ -63,14 +63,10 @@ const getShiftValuesFromFormValues = (
  *   An object containing the default value for each form input.
  */
 const buildInitialValues = (defaultShiftValues: ShiftValues[]) => {
-  const todayIsWeekStart = DateTime.now().weekday === 1;
-  const weekStartDateTime = todayIsWeekStart
-    ? DateTime.fromObject({
-        weekday: 1,
-      }).minus({ weeks: 1 })
-    : DateTime.fromObject({
-        weekday: 1,
-      });
+  const weekStartDateTime =
+    DateTime.now().weekday === 1
+      ? DateTime.now().startOf("week").minus({ weeks: 1 })
+      : DateTime.now().startOf("week");
 
   return {
     weekStartDateTime,

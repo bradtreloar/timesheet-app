@@ -104,22 +104,10 @@ export const randomShift = (dateTime: DateTime): Shift => {
 };
 
 export const randomTimesheet = (user: User): Timesheet => {
-  const todayIsWeekStart = DateTime.now().weekday === 1;
-  const weekStartDateTime = todayIsWeekStart
-    ? DateTime.fromObject({
-        weekday: 1,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        millisecond: 0,
-      }).minus({ weeks: 1 })
-    : DateTime.fromObject({
-        weekday: 1,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        millisecond: 0,
-      });
+  const weekStartDateTime =
+    DateTime.now().weekday === 1
+      ? DateTime.now().startOf("week").minus({ weeks: 1 })
+      : DateTime.now().startOf("week");
 
   return {
     id: randomID(),
