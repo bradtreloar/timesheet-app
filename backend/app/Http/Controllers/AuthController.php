@@ -19,12 +19,6 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class AuthController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-     *
-     * @param  \App\Http\Requests\Auth\LoginRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function login(LoginRequest $request)
     {
         $request->authenticate();
@@ -33,12 +27,6 @@ class AuthController extends Controller
         return new UserDataResponse($user);
     }
 
-    /**
-     * Destroy an authenticated session.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function logout(Request $request)
     {
         $request->session()->invalidate();
@@ -46,9 +34,6 @@ class AuthController extends Controller
         return new NoContentResponse();
     }
 
-    /**
-     * Handle request for current user's details
-     */
     public function currentUser(Request $request)
     {
         $user = $request->user();
@@ -61,11 +46,6 @@ class AuthController extends Controller
 
     /**
      * Handle an incoming password reset link request.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function forgotPassword(Request $request)
     {
@@ -93,11 +73,6 @@ class AuthController extends Controller
 
     /**
      * Handle an incoming new password request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function resetPassword(Request $request)
     {
