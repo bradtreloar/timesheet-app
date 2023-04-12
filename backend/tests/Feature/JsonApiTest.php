@@ -60,7 +60,7 @@ class JsonApiTest extends TestCase
      */
     protected function fakeTimesheetData(User $user): array
     {
-        return  [
+        return [
             "type" => "timesheets",
             "attributes" => [
                 "comment" => Str::random(),
@@ -136,7 +136,8 @@ class JsonApiTest extends TestCase
     /**
      * Create user data from a user object
      */
-    protected function userDataFromUser(User $user) {
+    protected function userDataFromUser(User $user)
+    {
         $user_data = [
             "type" => "users",
             "attributes" => [
@@ -166,6 +167,7 @@ class JsonApiTest extends TestCase
     public function testCreateUser()
     {
         $this->seed();
+        $currentUser = User::find(1);
         $this->assertDatabaseCount('users', 2);
         $user = User::factory()->make();
 
@@ -173,7 +175,7 @@ class JsonApiTest extends TestCase
             "data" => $this->userDataFromUser($user),
         ];
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($currentUser)
             ->jsonApi("POST", "/users", $request_data);
         $response->assertStatus(201);
         $response->assertJson([
