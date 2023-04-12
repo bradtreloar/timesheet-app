@@ -1,0 +1,88 @@
+version: "3.3"
+
+services:
+  httpd:
+    build:
+      context: .
+      dockerfile: ./etc/httpd.Dockerfile
+      args:
+        USER_ID: 1000
+        GROUP_ID: 1000
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./backend:/app
+      - ./etc/apache_vhosts.conf:/etc/apache2/sites-available/vhosts.conf
+    depends_on:
+      - phpfpm
+
+  phpfpm:
+    build:
+      context: .
+      dockerfile: ./etc/phpfpm.Dockerfile
+      args:
+        USER_ID: 1000
+        GROUP_ID: 1000
+    ports:
+      - 465:465
+    volumes:
+      - ./backend:/app
+      - ./etc/php/fpm.php.ini:/usr/local/etc/php/conf.d/fpm.php.ini
+      - ./etc/php/xdebug.php.ini:/usr/local/etc/php/conf.d/xdebug.php.ini
+    depends_on:
+      - db
+
+  php:
+    build:
+      context: .
+      dockerfile: ./etc/phpcli.Dockerfile
+    user: "1000:1000"
+    environment:
+      - XDEBUG_TRIGGER=1
+    volumes:
+      - ./backend:/app
+      - ./etc/php/cli.php.ini:/usr/local/etc/php/conf.d/cli.php.ini
+      - ./etc/php/xdebug.php.ini:/usr/local/etc/php/conf.d/xdebug.php.ini
+    depends_on:
+      - db
+
+  artisan:
+    build:
+      context: .
+      dockerfile: ./etc/artisan.Dockerfile
+    user: "1000:1000"
+    environment:
+      - XDEBUG_TRIGGER=1
+    volumes:
+      - ./backend:/app
+      - ./etc/php/cli.php.ini:/usr/local/etc/php/conf.d/cli.php.ini
+      - ./etc/php/xdebug.php.ini:/usr/local/etc/php/conf.d/xdebug.php.ini
+    depends_on:
+      - db
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: app
+    volumes:
+      - ./etc/php/pma.php.ini:/usr/local/etc/php/conf.d/pma.php.ini
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:latest
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_ROOT_PASSWORD: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+
+volumes:
+  mysqldata:
