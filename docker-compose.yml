@@ -47,20 +47,6 @@ services:
     depends_on:
       - db
 
-  artisan:
-    build:
-      context: .
-      dockerfile: ./etc/artisan.Dockerfile
-    user: "1000:1000"
-    environment:
-      - XDEBUG_TRIGGER=1
-    volumes:
-      - ./backend:/app
-      - ./etc/php/cli.php.ini:/usr/local/etc/php/conf.d/cli.php.ini
-      - ./etc/php/xdebug.php.ini:/usr/local/etc/php/conf.d/xdebug.php.ini
-    depends_on:
-      - db
-
   pma:
     image: phpmyadmin/phpmyadmin
     ports:
