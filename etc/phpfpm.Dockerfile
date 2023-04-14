@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:7.4-fpm
 LABEL maintainer="Brad Treloar"
 WORKDIR /app
 
