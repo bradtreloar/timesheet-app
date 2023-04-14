@@ -1,0 +1,20 @@
+
+.time-input-inner {
+  display: flex;
+  flex: none;
+
+  input, span {
+    display: block;
+  }
+
+  input {
+    width: 1.2em;
+    text-align: right;
+    padding: 0;
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

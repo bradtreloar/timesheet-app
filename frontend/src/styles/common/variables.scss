@@ -1,0 +1,35 @@
+
+$allbiz-yellow:   #FFD400;
+$allbiz-blue:     #0075BF;
+$allbiz-red:      #E31F28;
+$allbiz-black:    #000000;
+$allbiz-silver:   #f0f0f0;
+$allbiz-mdgrey:   #5d5f6b;
+$allbiz-dkgrey:   rgb(57, 57, 61);
+$allbiz-charcoal: #1a1a1a;
+$allbiz-bluegrey: #1e282f;
+
+$blue: $allbiz-blue;
+$red: $allbiz-red;
+$yellow: $allbiz-yellow;
+
+$white: #ffffff;
+
+$navbar-padding-y: 0.25rem;
+$navbar-nav-link-padding-x: 1rem;
+
+$enable-responsive-font-sizes: true;
+
+$font-size-base: 1rem;
+$h1-font-size: $font-size-base * 2.25;
+$h2-font-size: $font-size-base * 1.5;
+$h3-font-size: $font-size-base * 1.25;
+$h4-font-size: $font-size-base * 1.15;
+$h5-font-size: $font-size-base * 1.1;
+$h6-font-size: $font-size-base;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+) !default;
