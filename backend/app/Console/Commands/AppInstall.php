@@ -99,10 +99,10 @@ class AppInstall extends Command
 
     protected function setTimesheetRecipients(string $timesheetRecipients)
     {
-        $setting = new Setting([
-            'name' => 'timesheetRecipients',
-            'value' => $timesheetRecipients,
-        ]);
+        $setting = new Setting();
+        $setting->name = 'timesheetRecipients';
+        $setting->value = $timesheetRecipients;
+        $setting->is_restricted = true;
         $setting->save();
     }
 }
