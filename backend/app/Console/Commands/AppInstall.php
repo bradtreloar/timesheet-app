@@ -43,16 +43,16 @@ class AppInstall extends Command
                 $this->getUserDefaultValues()
             );
         } catch (QueryException $ex) {
-            print("Unable to create admin user.\n");
+            print('Unable to create admin user.\n');
             return 1;
         }
 
         try {
             $this->setTimesheetRecipients(
-                $this->option("timesheet-recipients")
+                $this->option('timesheet-recipients')
             );
         } catch (QueryException $ex) {
-            print("Unable to set timesheet recipients.\n");
+            print('Unable to set timesheet recipients.\n');
             return 1;
         }
 
@@ -64,19 +64,19 @@ class AppInstall extends Command
         $default_values = [];
         for ($i = 0; $i < 7; $i++) {
             $default_values[] = [
-                "isActive" => false,
-                "reason" => "rostered-day-off",
-                "startTime" => [
-                    "hour" => "",
-                    "minute" => "",
+                'isActive' => false,
+                'reason' => 'rostered-day-off',
+                'startTime' => [
+                    'hour' => '',
+                    'minute' => '',
                 ],
-                "endTime" => [
-                    "hour" => "",
-                    "minute" => "",
+                'endTime' => [
+                    'hour' => '',
+                    'minute' => '',
                 ],
-                "breakDuration" => [
-                    "hour" => "",
-                    "minute" => "",
+                'breakDuration' => [
+                    'hour' => '',
+                    'minute' => '',
                 ],
             ];
         }
@@ -87,8 +87,8 @@ class AppInstall extends Command
     protected function createAdminUser(string $name, string $email, string $password, array $default_values)
     {
         $user = new User([
-            "name" => $name,
-            "email" => $email,
+            'name' => $name,
+            'email' => $email,
             'is_admin' => true,
             'default_values' => json_encode($default_values),
         ]);
@@ -100,8 +100,8 @@ class AppInstall extends Command
     protected function setTimesheetRecipients(string $timesheetRecipients)
     {
         $setting = new Setting([
-            "name" => "timesheetRecipients",
-            "value" => $timesheetRecipients,
+            'name' => 'timesheetRecipients',
+            'value' => $timesheetRecipients,
         ]);
         $setting->save();
     }
