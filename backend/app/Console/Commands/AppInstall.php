@@ -35,6 +35,32 @@ class AppInstall extends Command
      */
     public function handle()
     {
+        try {
+            $this->createAdminUser(
+                $this->option('admin-name'),
+                $this->option('admin-email'),
+                $this->option('admin-pass'),
+                $this->getUserDefaultValues()
+            );
+        } catch (QueryException $ex) {
+            print("Unable to create admin user.\n");
+            return 1;
+        }
+
+        try {
+            $this->setTimesheetRecipients(
+                $this->option("timesheet-recipients")
+            );
+        } catch (QueryException $ex) {
+            print("Unable to set timesheet recipients.\n");
+            return 1;
+        }
+
+        return 0;
+    }
+
+    protected function getUserDefaultValues()
+    {
         $default_values = [];
         for ($i = 0; $i < 7; $i++) {
             $default_values[] = [
@@ -55,32 +81,28 @@ class AppInstall extends Command
             ];
         }
 
-        try {
-            $user = new User([
-                "name" => $this->option("admin-name"),
-                "email" => $this->option("admin-email"),
-                'is_admin' => true,
-                'default_values' => json_encode($default_values),
-            ]);
-            $user->password = Hash::make($this->option("admin-pass"));
-            $user->markEmailAsVerified();
-            $user->save();
-            return 0;
-        } catch (QueryException $ex) {
-            print("Unable to create user.\n");
-            return 1;
-        }
+        return $default_values;
+    }
 
-        try {
-            $setting = new Setting([
-                "name" => "timesheetRecipients",
-                "value" => $this->option("timesheet-recipients"),
-            ]);
-            $setting->save();
-            return 0;
-        } catch (QueryException $ex) {
-            print("Unable to create user.\n");
-            return 1;
-        }
+    protected function createAdminUser(string $name, string $email, string $password, array $default_values)
+    {
+        $user = new User([
+            "name" => $name,
+            "email" => $email,
+            'is_admin' => true,
+            'default_values' => json_encode($default_values),
+        ]);
+        $user->password = Hash::make($password);
+        $user->markEmailAsVerified();
+        $user->save();
+    }
+
+    protected function setTimesheetRecipients(string $timesheetRecipients)
+    {
+        $setting = new Setting([
+            "name" => "timesheetRecipients",
+            "value" => $timesheetRecipients,
+        ]);
+        $setting->save();
     }
 }
