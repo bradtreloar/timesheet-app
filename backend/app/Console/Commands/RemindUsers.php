@@ -41,6 +41,8 @@ class RemindUsers extends Command
                 Event::dispatch(new TimesheetDue($user));
             }
         }
+
+        return 0;
     }
 
     /**
