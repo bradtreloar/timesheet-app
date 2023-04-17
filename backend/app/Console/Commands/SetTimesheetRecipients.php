@@ -46,7 +46,7 @@ class SetTimesheetRecipients extends Command
             }
             return 0;
         } catch (QueryException $ex) {
-            print("Unable to set timesheet recipients.\n");
+            print("Unable to set timesheet recipients.\n{$ex->getMessage()}\n");
             return 1;
         }
     }

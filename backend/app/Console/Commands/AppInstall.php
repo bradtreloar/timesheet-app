@@ -43,7 +43,7 @@ class AppInstall extends Command
                 $this->getUserDefaultValues()
             );
         } catch (QueryException $ex) {
-            print('Unable to create admin user.\n');
+            print("Unable to create admin user.\n{$ex->getMessage()}\n");
             return 1;
         }
 
@@ -52,7 +52,7 @@ class AppInstall extends Command
                 $this->option('timesheet-recipients')
             );
         } catch (QueryException $ex) {
-            print('Unable to set timesheet recipients.\n');
+            print("Unable to set timesheet recipients.\n{$ex->getMessage()}\n");
             return 1;
         }
 

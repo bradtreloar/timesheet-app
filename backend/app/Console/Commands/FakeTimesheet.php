@@ -59,7 +59,7 @@ class FakeTimesheet extends Command
             $timesheet->save();
             return 0;
         } catch (QueryException $ex) {
-            print("Unable to create timesheet.\n");
+            print("Unable to create timesheet.\n{$ex->getMessage()}\n");
             return 1;
         }
     }

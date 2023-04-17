@@ -61,7 +61,7 @@ class UserCreate extends Command
             $user->save();
             return 0;
         } catch (QueryException $ex) {
-            print("Unable to create user.\n");
+            print("Unable to create user.\n{$ex->getMessage()}\n");
             return 1;
         }
     }
