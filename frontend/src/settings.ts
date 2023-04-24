@@ -1,9 +1,9 @@
 export const HOST =
-  process?.env?.NODE_ENV === "development"
-    ? "http://localhost"
+  process?.env?.REACT_APP_ENV === "dev"
+    ? "http://localhost:8000"
     : "https://timesheet.allbizsupplies.biz";
 
 export const API_HOST =
-  process?.env?.NODE_ENV === "development"
+  process?.env?.REACT_APP_ENV === "dev"
     ? "http://localhost"
     : "https://api.timesheet.allbizsupplies.biz";
