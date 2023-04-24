@@ -3,6 +3,12 @@
     "cypress:open": "cypress open"
   },
   "devDependencies": {
-    "cypress": "^12.10.0"
+    "cypress": "^12.10.0",
+    "eslint-plugin-cypress": "^2.13.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:cypress/recommended"
+    ]
   }
 }
