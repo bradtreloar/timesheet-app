@@ -1,6 +1,6 @@
 FROM php:7.4-fpm
 LABEL maintainer="Brad Treloar"
-WORKDIR /app
+WORKDIR /app/backend
 
 # Re-create the FPM user with the given user and group IDs
 # If USER_ID and GROUP_ID are set to those belonging to the host user, then the

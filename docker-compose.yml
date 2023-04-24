@@ -10,10 +10,10 @@ services:
         GROUP_ID: 1000
     ports:
       - 80:80
-      - 443:443
+      - 8000:8000
     volumes:
-      - ./backend:/app
-      - ./etc/apache_vhosts.conf:/etc/apache2/sites-available/vhosts.conf
+      - .:/app
+      - ./etc/httpd/vhosts.conf:/etc/apache2/sites-available/vhosts.conf
     depends_on:
       - phpfpm
 
@@ -24,10 +24,12 @@ services:
       args:
         USER_ID: 1000
         GROUP_ID: 1000
+    environment:
+      - XDEBUG_TRIGGER=1
     ports:
       - 465:465
     volumes:
-      - ./backend:/app
+      - .:/app
       - ./etc/php/fpm.php.ini:/usr/local/etc/php/conf.d/fpm.php.ini
       - ./etc/php/xdebug.php.ini:/usr/local/etc/php/conf.d/xdebug.php.ini
     depends_on:
@@ -41,7 +43,7 @@ services:
     environment:
       - XDEBUG_TRIGGER=1
     volumes:
-      - ./backend:/app
+      - .:/app
       - ./etc/php/cli.php.ini:/usr/local/etc/php/conf.d/cli.php.ini
       - ./etc/php/xdebug.php.ini:/usr/local/etc/php/conf.d/xdebug.php.ini
     depends_on:
