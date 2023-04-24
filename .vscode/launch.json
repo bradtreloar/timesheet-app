@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Listen for XDebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9003,
+      "pathMappings": {
+        "/app/backend": "${workspaceRoot}/backend"
+      }
+    },
+    {
+      "name": "Debug CRA Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/frontend/node_modules/.bin/react-scripts",
+      "runtimeArgs": ["--inspect-brk", "test"],
+      "args": ["--runInBand", "--no-cache", "--env=jsdom"],
+      "cwd": "${workspaceRoot}/frontend",
+      "protocol": "inspector",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}
