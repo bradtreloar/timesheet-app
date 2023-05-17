@@ -2,7 +2,6 @@ import artisan from "../services/artisan";
 import dockerCompose from "../services/dockerCompose";
 import frontendYarn from "../services/frontendYarn";
 import { randomUserAttributes } from "../factories/random";
-import { getButtonByText, getByLabel } from "../helpers";
 
 before(() => {
   frontendYarn.buildDev();
@@ -24,6 +23,7 @@ describe("Authentication", () => {
       ...randomUserAttributes(),
       isAdmin: true,
     };
+    const { name, email, password } = userAttributes;
     artisan.seedDatabase({
       users: [
         {
@@ -34,10 +34,12 @@ describe("Authentication", () => {
     });
 
     cy.visit("http://localhost:8000");
-    getByLabel("Email Address").type(userAttributes.email);
-    getByLabel("Password").type(userAttributes.password);
-    getButtonByText("Log in").click();
-
-    cy.contains("Create new timesheet");
+    cy.getByLabel("Email Address").type(email);
+    cy.getByLabel("Password").type(password);
+    cy.getButtonByText("Log in").click();
+    cy.getLinkByText(name).click();
+    cy.getLinkByText("Log out").click();
+    cy.contains(`${name} has logged out.`);
+    cy.getButtonByText("Log in");
   });
 });
