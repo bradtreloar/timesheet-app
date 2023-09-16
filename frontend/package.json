@@ -6,7 +6,8 @@
   "scripts": {
     "start": "BROWSER=/usr/bin/google-chrome-stable react-scripts start",
     "build": "react-scripts build",
-    "build:dev": "REACT_APP_ENV=dev react-scripts build",
+    "build:dev": "env-cmd -f .env.dev react-scripts build",
+    "build:test": "env-cmd -f .env.test react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "prettier": "prettier --write ./src/**.ts* ./src/**/*.ts*",
     "lint": "eslint ./src/**.ts* ./src/**/*.ts*",

@@ -5,6 +5,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "cypress": "^12.10.0",
+    "env-cmd": "^10.1.0",
     "eslint-plugin-cypress": "^2.13.2"
   },
   "eslintConfig": {

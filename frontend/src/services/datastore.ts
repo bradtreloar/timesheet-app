@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { API_HOST } from "settings";
 import {
   parseTimesheet,
   makeTimesheetResource,
@@ -16,7 +15,7 @@ import {
 import { orderBy } from "lodash";
 
 export const client = axios.create({
-  baseURL: `${API_HOST}`,
+  baseURL: `${process.env.REACT_APP_API_HOST}`,
   withCredentials: true,
   headers: {
     Accept: "application/json",
@@ -25,7 +24,7 @@ export const client = axios.create({
 });
 
 export const jsonAPIClient = axios.create({
-  baseURL: `${API_HOST}`,
+  baseURL: `${process.env.REACT_APP_API_HOST}`,
   withCredentials: true,
   headers: {
     Accept: "application/vnd.api+json",
