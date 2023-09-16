@@ -6,16 +6,17 @@ use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 
-class AppInstall extends Command
+class DevRebuild extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:install
+    protected $signature = 'dev:rebuild
                             {--timesheet-recipients=timesheet@example.com}
                             {--admin-email=admin@example.com}
                             {--admin-name=admin}
@@ -35,6 +36,8 @@ class AppInstall extends Command
      */
     public function handle()
     {
+        Artisan::call('migrate:fresh');
+
         try {
             $this->createAdminUser(
                 $this->option('admin-name'),
