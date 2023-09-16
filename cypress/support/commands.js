@@ -41,5 +41,4 @@ Cypress.Commands.add("submitLoginForm", (email, password) => {
   cy.getByLabel("Email Address").type(email);
   cy.getByLabel("Password").type(password);
   cy.getButtonByText("Log in").click();
-  cy.getLinkByText(name).click();
 });
