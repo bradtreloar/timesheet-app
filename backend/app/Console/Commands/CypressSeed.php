@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class AppInstall extends Command
+class CypressSeed extends Command
 {
     protected $signature = 'cypress:seed {json : The fixtures data}';
 
