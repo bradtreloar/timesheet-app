@@ -43,5 +43,3 @@ Cypress.Commands.add("submitLoginForm", (email, password) => {
   cy.getButtonByText("Log in").click();
   cy.getLinkByText(name).click();
 });
-
-Cypress.Commands.add("getLinkByText", (text) => cy.contains("a", text));
