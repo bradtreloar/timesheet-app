@@ -36,3 +36,12 @@ Cypress.Commands.add("getByLabel", (label) =>
 Cypress.Commands.add("getButtonByText", (text) => cy.contains("button", text));
 
 Cypress.Commands.add("getLinkByText", (text) => cy.contains("a", text));
+
+Cypress.Commands.add("submitLoginForm", (email, password) => {
+  cy.getByLabel("Email Address").type(email);
+  cy.getByLabel("Password").type(password);
+  cy.getButtonByText("Log in").click();
+  cy.getLinkByText(name).click();
+});
+
+Cypress.Commands.add("getLinkByText", (text) => cy.contains("a", text));
