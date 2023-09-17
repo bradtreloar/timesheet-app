@@ -13,7 +13,6 @@ export const randomAustralianMobileNumber = () => {
     `04${d(8)}`,
     `04${d(2)} ${d(3)} ${d(3)}`,
     `04${d(2)}-${d(3)}-${d(3)}`,
-    `+61${d(2)}${d(3)}${d(3)}`,
   ];
   return formats[Math.floor(Math.random() * formats.length)];
 };
